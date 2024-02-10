@@ -14,7 +14,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String registerUser(UserDto userDto) {
+    public User registerUser(UserDto userDto) {
 
         //Creates user class and fills it with data from the DTO
         User user = new User();
@@ -24,10 +24,8 @@ public class UserService {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
 
-        //Saves it and returns the username
-        User savedUser = userRepository.save(user);
-
-        return savedUser.getUsername();
+        //Saves it and returns the user
+        return userRepository.save(user);
 
     }
 

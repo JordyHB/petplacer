@@ -2,49 +2,26 @@ package nl.jordy.petplacer.models;
 
 //imports
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import nl.jordy.petplacer.interfaces.HasFetchableId;
 
 @Entity
+@Data
 @Table(name = "users")
-public class User {
+public class User implements HasFetchableId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // blocks the setter for ID
+    @Setter(AccessLevel.NONE)
     private Long id;
+
     private String username;
     private String firstName;
     private String lastName;
     private String email;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
 }
