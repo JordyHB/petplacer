@@ -2,18 +2,16 @@ package nl.jordy.petplacer.controllers;
 
 
 import jakarta.validation.Valid;
-import nl.jordy.petplacer.dtos.UserDto;
+import nl.jordy.petplacer.dtos.input.UserInputDTO;
+import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.helpers.BuildUri;
-import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriBuilder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("users")
@@ -26,10 +24,11 @@ public class UserController {
     }
 
 
-    @PostMapping("/register")
-        public ResponseEntity<String> registerUser(
+    // Posts
+    @PostMapping()
+        public ResponseEntity<UserOutputDTO> registerUser(
                 @Valid
-                @RequestBody UserDto userDto,
+                @RequestBody UserInputDTO userInputDTO,
                 BindingResult bindingResult
     ) {
         //catches errors and sends them back to the user
@@ -38,12 +37,22 @@ public class UserController {
         }
 
         //hands it off for saving and returns the created user
-        User user = userService.registerUser(userDto);
+        UserOutputDTO userOutputDTO = userService.registerUser(userInputDTO);
 
 
-
-
-        return ResponseEntity.created(BuildUri.buildUri(user)).body("User created");
+        return ResponseEntity.created(BuildUri.buildUri(userOutputDTO)).body(userOutputDTO);
     }
+
+    // Gets
+    @GetMapping()
+    public ResponseEntity<List<UserOutputDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    // Puts
+
+    // Deletes
+
+    // Patches
 
 }

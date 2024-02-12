@@ -1,9 +1,12 @@
 package nl.jordy.petplacer.services;
 
-import nl.jordy.petplacer.dtos.UserDto;
+import nl.jordy.petplacer.dtos.input.UserInputDTO;
+import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 public class UserService {
@@ -14,19 +17,47 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(UserDto userDto) {
-
-        //Creates user class and fills it with data from the DTO
+    // transforms the DTO to a User
+    public User setDTOtoUser(UserInputDTO userInputDTO) {
         User user = new User();
+        user.setUsername(userInputDTO.getUsername());
+        user.setFirstName(userInputDTO.getFirstName());
+        user.setLastName(userInputDTO.getLastName());
+        user.setEmail(userInputDTO.getEmail());
+        return user;
+    }
 
-        user.setUsername(userDto.getUsername());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
+    // Transforms the User to a DTO
+    public UserOutputDTO setUserToDTO(User user) {
+        UserOutputDTO userOutputDTO = new UserOutputDTO();
+        userOutputDTO.setId(user.getId());
+        userOutputDTO.setUsername(user.getUsername());
+        userOutputDTO.setFirstName(user.getFirstName());
+        userOutputDTO.setLastName(user.getLastName());
+        userOutputDTO.setEmail(user.getEmail());
+        return userOutputDTO;
+    }
 
-        //Saves it and returns the user
-        return userRepository.save(user);
+    public UserOutputDTO registerUser(UserInputDTO userDto) {
 
+        User user = setDTOtoUser(userDto);
+
+        //Saves the user to the database
+        userRepository.save(user);
+
+        //Transforms the user to a DTO and returns it
+        return setUserToDTO(user);
+    }
+
+    public List<UserOutputDTO> findAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserOutputDTO> outputDtos = new ArrayList<>();
+
+        for (User user: users) {
+            outputDtos.add(setUserToDTO(user));
+        }
+
+        return outputDtos;
     }
 
 }
