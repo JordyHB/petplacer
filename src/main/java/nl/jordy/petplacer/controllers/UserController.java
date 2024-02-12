@@ -49,14 +49,32 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.findUserById(userId));
+    @GetMapping("/{userID}")
+    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable Long userID) {
+        return ResponseEntity.ok(userService.findUserById(userID));
     }
 
     // Puts
+    @PutMapping("/{userID}")
+    public ResponseEntity<UserOutputDTO>updateUserByID(
+            @PathVariable Long userID,
+            @Valid
+            @RequestBody UserInputDTO userInputDTO,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(bindingResult);
+        }
 
+        // Hands the input off for processing in the service layer.
+        UserOutputDTO userOutputDTO = userService.updateUserByID(userID, userInputDTO);
+
+        return ResponseEntity.ok(userOutputDTO);
+    }
 
     // Deletes
-
+    @DeleteMapping("/{userID}")
+    public ResponseEntity<String> deleteUserByID(@PathVariable Long userID) {
+        return ResponseEntity.ok(userService.deleteUserByID(userID));
+    }
 }

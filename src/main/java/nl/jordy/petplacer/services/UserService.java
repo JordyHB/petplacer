@@ -2,7 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
-import nl.jordy.petplacer.exceptions.BadRequestException;
+import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class UserService {
     }
 
     // transforms the DTO to a User
-    public User setDTOtoUser(UserInputDTO userInputDTO) {
+    private User setDTOtoUser(UserInputDTO userInputDTO) {
         User user = new User();
         user.setUsername(userInputDTO.getUsername());
         user.setFirstName(userInputDTO.getFirstName());
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     // Transforms the User to a DTO
-    public UserOutputDTO setUserToDTO(User user) {
+    private UserOutputDTO setUserToDTO(User user) {
         UserOutputDTO userOutputDTO = new UserOutputDTO();
         userOutputDTO.setId(user.getId());
         userOutputDTO.setUsername(user.getUsername());
@@ -39,8 +39,15 @@ public class UserService {
         return userOutputDTO;
     }
 
-    public UserOutputDTO registerUser(UserInputDTO userDto) {
-        User user = setDTOtoUser(userDto);
+    private User fetchUserByID(Long userID) {
+        // Fetches the user by id and throws an exception if it doesn't exist
+        return userRepository.findById(userID).orElseThrow(
+                () -> new RecordNotFoundException("No user found with id: " + userID)
+        );
+    }
+
+    public UserOutputDTO registerUser(UserInputDTO userDTO) {
+        User user = setDTOtoUser(userDTO);
 
         //Saves the user to the database
         userRepository.save(user);
@@ -59,12 +66,26 @@ public class UserService {
         return outputDTOS;
     }
 
-    public UserOutputDTO findUserById(Long userId) {
-        // Gets the user
-        Optional<User> optionalUser = userRepository.findById(userId);
-        // extracts the user and throws an exception if none is present
-        User user = optionalUser.orElseThrow(() -> new BadRequestException("PLACEHOLDER"));
+    public UserOutputDTO findUserById(Long userID) {
+        // uses private method to fetch and validate the user exists
+        return setUserToDTO(fetchUserByID(userID));
+    }
+
+    public UserOutputDTO updateUserByID(Long userID, UserInputDTO userInputDTO) {
+        // uses private method to fetch and validate the user exists
+        User user = fetchUserByID(userID);
+        user.setUsername(userInputDTO.getUsername());
+        user.setFirstName(userInputDTO.getFirstName());
+        user.setLastName(userInputDTO.getLastName());
+        user.setEmail(userInputDTO.getEmail());
+        userRepository.save(user);
         return setUserToDTO(user);
+    }
+
+    public String deleteUserByID(Long userID) {
+        // uses private method to fetch and validate the user exists
+        userRepository.delete(fetchUserByID(userID));
+        return "User: " + userID + " has been successfully deleted.";
     }
 
 }
