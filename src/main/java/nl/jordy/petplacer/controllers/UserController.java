@@ -49,10 +49,14 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.findUserById(userId));
+    }
+
     // Puts
 
-    // Deletes
 
-    // Patches
+    // Deletes
 
 }

@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,6 @@ public class UserService {
     }
 
     public UserOutputDTO registerUser(UserInputDTO userDto) {
-
         User user = setDTOtoUser(userDto);
 
         //Saves the user to the database
@@ -51,13 +51,20 @@ public class UserService {
 
     public List<UserOutputDTO> findAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserOutputDTO> outputDtos = new ArrayList<>();
+        List<UserOutputDTO> outputDTOS = new ArrayList<>();
 
         for (User user: users) {
-            outputDtos.add(setUserToDTO(user));
+            outputDTOS.add(setUserToDTO(user));
         }
+        return outputDTOS;
+    }
 
-        return outputDtos;
+    public UserOutputDTO findUserById(Long userId) {
+        // Gets the user
+        Optional<User> optionalUser = userRepository.findById(userId);
+        // extracts the user and throws an exception if none is present
+        User user = optionalUser.orElseThrow(() -> new BadRequestException("PLACEHOLDER"));
+        return setUserToDTO(user);
     }
 
 }

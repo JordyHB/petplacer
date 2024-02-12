@@ -6,19 +6,14 @@ import org.springframework.validation.FieldError;
 
 public class BadRequestException extends RuntimeException {
 
-//    private final String errorMessage;
-
     // Constructor to handle simple messages
     public BadRequestException(String errorMessage) {
         super(errorMessage);
-//        this.errorMessage = errorMessage;
     }
 
     // Constructor that handles the input of BindingResults with multiple errors
     public BadRequestException(BindingResult bindingResult){
         super(buildErrorMessage(bindingResult));
-//        this.errorMessage = buildErrorMessage(bindingResult);
-
     }
 
     private static String buildErrorMessage(BindingResult bindingResult) {
