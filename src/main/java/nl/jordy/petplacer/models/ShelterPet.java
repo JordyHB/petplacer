@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.enums.ShelterPetStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,9 @@ public class ShelterPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ShelterPetStatus status;
+
     private Date dateOfArrival;
     private int monthsInShelter;
     private String medicalHistory;
@@ -31,4 +34,11 @@ public class ShelterPet extends Pet {
 
     @OneToMany
     private List<AdoptionRequest> adoptionRequests;
+
+    //filled when an adoption request is fulfilled
+
+    @OneToOne
+    private AdoptionRequest approvedNewHome;
+
+    private Date rehomeDate;
 }

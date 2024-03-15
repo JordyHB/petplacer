@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import nl.jordy.petplacer.enums.AdoptionRequestStatus;
 
 import java.util.Date;
 
@@ -29,6 +30,10 @@ public class AdoptionRequest {
 
     private Date submission_date;
     private String requestMessage;
-    private String status;
-    private boolean granted;
+
+    @Enumerated(EnumType.STRING)
+    private AdoptionRequestStatus status;
+
+    @OneToOne(mappedBy = "approvedNewHome")
+    private ShelterPet rehomedPet;
 }
