@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,9 +19,6 @@ public class ShelterPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
-    private Shelter shelter;
-
     private String status;
     private Date dateOfArrival;
     private int monthsInShelter;
@@ -28,4 +26,9 @@ public class ShelterPet extends Pet {
     private String specialNeeds;
     private String previousSituation;
 
+    @ManyToOne
+    private Shelter shelter;
+
+    @OneToMany
+    private List<AdoptionRequest> adoptionRequests;
 }

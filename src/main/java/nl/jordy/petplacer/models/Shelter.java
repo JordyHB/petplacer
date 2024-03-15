@@ -20,16 +20,26 @@ public class Shelter {
     private Long id;
 
     private String shelterName;
-
-    @OneToMany(mappedBy = "shelter")
-    private List<ShelterPet> shelterPets;
-
-    @ManyToMany
-    private List<User> managers;
-
     private String phoneNumber;
     private String email;
     private String address;
     private String city;
     private String postalCode;
+
+    @OneToMany(mappedBy = "shelter")
+    private List<ShelterPet> shelterPets;
+
+    @OneToMany(mappedBy = "receivingShelter")
+    private List<Donation> donations;
+
+    @OneToMany(mappedBy = "requestedPetShelter")
+    private List<AdoptionRequest> adoptionRequests;
+
+    @ManyToMany
+    @JoinTable(
+            name = "shelter_managers",
+            joinColumns = @JoinColumn(name = "shelter_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> managers;
 }

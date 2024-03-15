@@ -19,16 +19,20 @@ public class User {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+
     @ManyToMany(mappedBy = "managers")
     private List<Shelter> managedShelters;
 
     @OneToMany(mappedBy = "currentOwner")
     private List<UserOwnedPet> pets;
 
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
+    @OneToMany(mappedBy = "donator")
+    private List<Donation> donations;
 
-
+    @OneToMany(mappedBy = "requestedPet")
+    private List<AdoptionRequest> adoptionRequests;
 }
