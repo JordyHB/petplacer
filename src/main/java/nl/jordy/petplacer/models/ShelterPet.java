@@ -18,6 +18,9 @@ public class ShelterPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @ManyToOne
+    private Shelter shelter;
+
     private String status;
     private Date dateOfArrival;
     private int monthsInShelter;

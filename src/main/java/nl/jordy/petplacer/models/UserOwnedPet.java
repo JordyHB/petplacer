@@ -17,6 +17,9 @@ public class UserOwnedPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @ManyToOne
+    private User currentOwner;
+
     private boolean firsOwner;
     private boolean adopted;
     private int yearsOwned;

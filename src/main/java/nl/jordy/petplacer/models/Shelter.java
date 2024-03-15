@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import java.util.List;
 
 
 @Entity
@@ -19,9 +20,13 @@ public class Shelter {
     private Long id;
 
     private String shelterName;
-    // PLACEHOLDER LIST ANIMALS
-    private String LIST_ANIMALS;
-    // PLACEHOLDER LIST MANAGERS
+
+    @OneToMany(mappedBy = "shelter")
+    private List<ShelterPet> shelterPets;
+
+    @ManyToMany
+    private List<User> managers;
+
     private String phoneNumber;
     private String email;
     private String address;
