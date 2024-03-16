@@ -33,6 +33,6 @@ public class User {
     @OneToMany(mappedBy = "donator")
     private List<Donation> donations;
 
-    @OneToMany(mappedBy = "requestedPet")
+    @OneToMany(mappedBy = "adoptionApplicant")
     private List<AdoptionRequest> adoptionRequests;
 }

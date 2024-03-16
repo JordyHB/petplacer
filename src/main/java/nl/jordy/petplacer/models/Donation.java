@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @Table(name = "donations")
@@ -20,9 +22,9 @@ public class Donation {
     private User donator;
 
     @ManyToOne
-    private Shelter recievingShelter;
+    private Shelter receivingShelter;
 
-    private double donationAmount;
+    private BigDecimal donationAmount;
     private String donationMessage;
 
 }

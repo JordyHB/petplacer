@@ -21,7 +21,7 @@ public class UserOwnedPet extends Pet {
     private User currentOwner;
 
     private boolean firsOwner;
-    private boolean adopted;
+    private boolean isAdopted;
     private int yearsOwned;
 
 }
