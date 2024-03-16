@@ -2,29 +2,44 @@ package nl.jordy.petplacer.helpers;
 
 import nl.jordy.petplacer.dtos.input.PetInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
-import nl.jordy.petplacer.models.ShelterPet;
+import nl.jordy.petplacer.dtos.input.UserOwnedPetInputDTO;
+import nl.jordy.petplacer.models.Pet;
 
 public class MapPetDTOtoSubclass {
 
-    public static ShelterPet mapPetDTOtoSubclass(ShelterPetInputDTO ShelterPetInputDTO) {
+    public static <T extends Pet> T mapPetDTOtoSubclass(Object inputDTO, Class<T> subclass) {
 
-        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(ShelterPetInputDTO, ShelterPet.class);
+        T mappedSubclass =ModelMapperHelper.getModelMapper().map(inputDTO, subclass);
+        PetInputDTO petInputDTO = null;
 
-        PetInputDTO petInputDTO = ShelterPetInputDTO.getPet();
+        // typecast the inputDTO to a ShelterPetInputDTO
+        if (inputDTO instanceof ShelterPetInputDTO)  {
+            petInputDTO = ((ShelterPetInputDTO) inputDTO).getPet();
+        }
 
-        shelterPet.setName(petInputDTO.getName());
-        shelterPet.setAge(petInputDTO.getAge());
-        shelterPet.setSpecies(petInputDTO.getSpecies());
-        shelterPet.setBreed(petInputDTO.getBreed());
-        shelterPet.setColor(petInputDTO.getColor());
-        shelterPet.setGender(petInputDTO.getGender());
-        shelterPet.setSize(petInputDTO.getSize());
-        shelterPet.setDescription(petInputDTO.getDescription());
-        shelterPet.setSpayedNeutered(petInputDTO.isSpayedNeutered());
-        shelterPet.setGoodWithKids(petInputDTO.isGoodWithKids());
-        shelterPet.setGoodWithDogs(petInputDTO.isGoodWithDogs());
-        shelterPet.setGoodWithCats(petInputDTO.isGoodWithCats());
+        // typecast the inputDTO to a UserOwnedPetInputDTO
+        if (inputDTO instanceof UserOwnedPetInputDTO) {
+            petInputDTO = ((UserOwnedPetInputDTO) inputDTO).getPet();
+        }
 
-        return shelterPet;
+        // if the inputDTO does not contain a pet, throw an exception
+        if (petInputDTO == null) {
+            throw new IllegalArgumentException("The inputDTO does not contain a pet");
+        }
+
+        mappedSubclass.setName(petInputDTO.getName());
+        mappedSubclass.setAge(petInputDTO.getAge());
+        mappedSubclass.setSpecies(petInputDTO.getSpecies());
+        mappedSubclass.setBreed(petInputDTO.getBreed());
+        mappedSubclass.setColor(petInputDTO.getColor());
+        mappedSubclass.setGender(petInputDTO.getGender());
+        mappedSubclass.setSize(petInputDTO.getSize());
+        mappedSubclass.setDescription(petInputDTO.getDescription());
+        mappedSubclass.setSpayedNeutered(petInputDTO.isSpayedNeutered());
+        mappedSubclass.setGoodWithKids(petInputDTO.isGoodWithKids());
+        mappedSubclass.setGoodWithDogs(petInputDTO.isGoodWithDogs());
+        mappedSubclass.setGoodWithCats(petInputDTO.isGoodWithCats());
+
+        return mappedSubclass;
     }
 }

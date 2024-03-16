@@ -21,7 +21,7 @@ public class ShelterPetService {
     public ShelterPet registerNewShelterPet(ShelterPetInputDTO shelterPetInputDTO) {
 
         // Maps the DTO and adds a timestamp of arrival;
-        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO);
+        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class);
 
         shelterPet.setDateOfArrival(new Date());
         shelterPet.setStatus(ShelterPetStatus.AVAILABLE);

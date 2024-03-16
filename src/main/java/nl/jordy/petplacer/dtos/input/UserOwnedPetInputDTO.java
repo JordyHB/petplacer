@@ -2,7 +2,9 @@ package nl.jordy.petplacer.dtos.input;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class UserOwnedPetInputDTO {
 
     // nested DTO with the info for the super class
