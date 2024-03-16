@@ -26,7 +26,7 @@ public class UserController {
 
     // Posts
     @PostMapping()
-        public ResponseEntity<UserOutputDTO> registerUser(
+    public ResponseEntity<UserOutputDTO> registerUser(
                 @Valid
                 @RequestBody UserInputDTO userInputDTO,
                 BindingResult bindingResult

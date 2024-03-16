@@ -12,6 +12,7 @@ import java.util.*;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
 
     //Injects dependencies
