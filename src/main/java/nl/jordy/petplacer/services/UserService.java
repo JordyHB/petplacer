@@ -3,6 +3,7 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.helpers.ModelMapperHelper;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,21 +22,14 @@ public class UserService {
     // transforms the DTO to a User
     private User setDTOtoUser(UserInputDTO userInputDTO) {
         User user = new User();
-        user.setUsername(userInputDTO.getUsername());
-        user.setFirstName(userInputDTO.getFirstName());
-        user.setLastName(userInputDTO.getLastName());
-        user.setEmail(userInputDTO.getEmail());
+        ModelMapperHelper.getModelMapper().map(userInputDTO, user);
         return user;
     }
 
     // Transforms the User to a DTO
     private UserOutputDTO setUserToDTO(User user) {
         UserOutputDTO userOutputDTO = new UserOutputDTO();
-        userOutputDTO.setId(user.getId());
-        userOutputDTO.setUsername(user.getUsername());
-        userOutputDTO.setFirstName(user.getFirstName());
-        userOutputDTO.setLastName(user.getLastName());
-        userOutputDTO.setEmail(user.getEmail());
+        ModelMapperHelper.getModelMapper().map(user, userOutputDTO);
         return userOutputDTO;
     }
 

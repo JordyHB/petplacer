@@ -32,7 +32,7 @@ public class ShelterPet extends Pet {
     @ManyToOne
     private Shelter shelter;
 
-    @OneToMany
+    @OneToMany(mappedBy = "requestedPet")
     private List<AdoptionRequest> adoptionRequests;
 
     //filled when an adoption request is fulfilled

@@ -22,7 +22,7 @@ public class Donation {
     private User donator;
 
     @ManyToOne
-    private Shelter recievingShelter;
+    private Shelter receivingShelter;
 
     private BigDecimal donationAmount;
     private String donationMessage;
