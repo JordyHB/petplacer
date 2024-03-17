@@ -71,6 +71,6 @@ public class ShelterPetController {
     // Deletes
     @DeleteMapping("/{shelterPetID}")
     public ResponseEntity<String> deleteShelterPetByID(@PathVariable Long shelterPetID) {
-        return ResponseEntity.ok(shelterPetService.deleteUeShelterPetByID(shelterPetID));
+        return ResponseEntity.ok(shelterPetService.deleteShelterPetByID(shelterPetID));
     }
 }

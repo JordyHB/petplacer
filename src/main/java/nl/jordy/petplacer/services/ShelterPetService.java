@@ -60,13 +60,11 @@ public class ShelterPetService {
 
         ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
 
-        MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class,shelterPet);
-
-        shelterPetRepository.save(shelterPet);
+        shelterPetRepository.save(MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class,shelterPet));
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 
-    public String deleteUeShelterPetByID(Long shelterPetID) {
+    public String deleteShelterPetByID(Long shelterPetID) {
         // uses private method to fetch and validate the user exists
         shelterPetRepository.delete(fetchShelterPetByID(shelterPetID));
         return "Shelter Pet: " + shelterPetID + " has been successfully deleted.";

@@ -92,7 +92,7 @@ public class MapPetDTOtoSubclassTest {
 
     @DisplayName("Maps UserOwnedPetInputDTO to existing UserOwnedPet correctly")
     @Test
-    public void testExingUserOwnedPet() {
+    public void testExistingUserOwnedPet() {
         UserOwnedPet existingPet = new UserOwnedPet();
         existingPet.setName("Old Name");
 
