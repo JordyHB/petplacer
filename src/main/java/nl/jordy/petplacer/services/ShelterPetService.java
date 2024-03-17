@@ -32,7 +32,7 @@ public class ShelterPetService {
     public ShelterPetOutputDTO registerNewShelterPet(ShelterPetInputDTO shelterPetInputDTO) {
 
         // Maps the DTO and adds a timestamp of arrival;
-        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class);
+        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class, null);
 
         shelterPet.setDateOfArrival(new Date());
         shelterPet.setStatus(ShelterPetStatus.AVAILABLE);
@@ -46,15 +46,30 @@ public class ShelterPetService {
 
         List<ShelterPet> shelterPets = shelterPetRepository.findAll();
 
-        List<ShelterPetOutputDTO> outputDTOS = shelterPets.stream()
+        return shelterPets.stream()
                 .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))
                 .toList();
-
-        return outputDTOS;
     }
 
     public ShelterPetOutputDTO findShelterPetById(Long shelterPetID) {
         return ModelMapperHelper.getModelMapper().
                 map(fetchShelterPetByID(shelterPetID), ShelterPetOutputDTO.class);
     }
+
+    public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetInputDTO shelterPetInputDTO) {
+
+        ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
+
+        MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class,shelterPet);
+
+        shelterPetRepository.save(shelterPet);
+        return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
+    }
+
+    public String deleteUeShelterPetByID(Long shelterPetID) {
+        // uses private method to fetch and validate the user exists
+        shelterPetRepository.delete(fetchShelterPetByID(shelterPetID));
+        return "Shelter Pet: " + shelterPetID + " has been successfully deleted.";
+    }
+
 }

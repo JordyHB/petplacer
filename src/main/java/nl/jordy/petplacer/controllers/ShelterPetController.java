@@ -22,6 +22,7 @@ public class ShelterPetController {
         this.shelterPetService = shelterPetService;
     }
 
+    // Posts
     @PostMapping()
     public ResponseEntity<ShelterPetOutputDTO> registerShelterPet(
             @Valid
@@ -39,6 +40,7 @@ public class ShelterPetController {
                 .body(shelterPetOutputDTO);
     }
 
+    // Gets
     @GetMapping()
     public ResponseEntity<List<ShelterPetOutputDTO>> getALlShelterPets() {
         return ResponseEntity.ok(shelterPetService.findAllShelterPets());
@@ -47,5 +49,28 @@ public class ShelterPetController {
     @GetMapping("/{shelterPetID}")
     public ResponseEntity<ShelterPetOutputDTO> getShelterPetByID(@PathVariable Long shelterPetID) {
         return ResponseEntity.ok(shelterPetService.findShelterPetById(shelterPetID));
+    }
+
+    // Puts
+    @PutMapping("/{shelterPetID}")
+    public ResponseEntity<ShelterPetOutputDTO>updateShelterPetByID(
+            @PathVariable Long shelterPetID,
+            @Valid
+            @RequestBody ShelterPetInputDTO shelterPetInputDTO,
+            BindingResult bindingResult
+    ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        ShelterPetOutputDTO shelterPetOutputDTO = shelterPetService
+                .updateShelterPetByID(shelterPetID, shelterPetInputDTO);
+
+        return ResponseEntity.ok(shelterPetOutputDTO);
+    }
+
+    // Deletes
+    @DeleteMapping("/{shelterPetID}")
+    public ResponseEntity<String> deleteShelterPetByID(@PathVariable Long shelterPetID) {
+        return ResponseEntity.ok(shelterPetService.deleteUeShelterPetByID(shelterPetID));
     }
 }

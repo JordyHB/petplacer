@@ -7,9 +7,9 @@ import nl.jordy.petplacer.models.Pet;
 
 public class MapPetDTOtoSubclass {
 
-    public static <T extends Pet> T mapPetDTOtoSubclass(Object inputDTO, Class<T> subclass) {
+    public static <T extends Pet> T mapPetDTOtoSubclass(Object inputDTO, Class<T> subclass, T existingPet) {
 
-        T mappedSubclass =ModelMapperHelper.getModelMapper().map(inputDTO, subclass);
+        T mappedSubclass = existingPet != null ? existingPet : ModelMapperHelper.getModelMapper().map(inputDTO, subclass);
         PetInputDTO petInputDTO = null;
 
         // typecast the inputDTO to a ShelterPetInputDTO

@@ -44,7 +44,7 @@ public class MapPetDTOtoSubclassTest {
     @DisplayName("Maps ShelterPetInputDTO to ShelterPet correctly")
     @Test
     public void testShelterPets() {
-        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class);
+        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class, null);
 
         assertEquals("Test Pet", pet.getName());
         assertEquals(5, pet.getAge());
@@ -63,7 +63,7 @@ public class MapPetDTOtoSubclassTest {
     @DisplayName("Maps UserOwnedPetInputDTO to UserOwnedPet correctly")
     @Test
     public void testUserOwnedPets() {
-        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(userOwnedPetInputDTO, UserOwnedPet.class);
+        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(userOwnedPetInputDTO, UserOwnedPet.class, null);
 
         assertEquals("Test Pet", pet.getName());
         assertEquals(5, pet.getAge());
@@ -79,9 +79,32 @@ public class MapPetDTOtoSubclassTest {
         assertTrue(pet.isGoodWithCats());
     }
 
+    @DisplayName("Maps ShelterPetInputDTO to existing ShelterPet correctly")
+    @Test
+    public void testExistingShelterPet() {
+        ShelterPet existingPet = new ShelterPet();
+        existingPet.setName("Old Name");
+
+        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class, existingPet);
+
+        assertEquals("Test Pet", pet.getName());
+    }
+
+    @DisplayName("Maps UserOwnedPetInputDTO to existing UserOwnedPet correctly")
+    @Test
+    public void testExingUserOwnedPet() {
+        UserOwnedPet existingPet = new UserOwnedPet();
+        existingPet.setName("Old Name");
+
+        Pet pet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(userOwnedPetInputDTO, UserOwnedPet.class, existingPet);
+
+        assertEquals("Test Pet", pet.getName());
+    }
+
     @DisplayName("Throws IllegalArgumentException when inputDTO does not contain a pet")
     @Test
     public void testThrowsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> MapPetDTOtoSubclass.mapPetDTOtoSubclass(new Object(), ShelterPet.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> MapPetDTOtoSubclass.mapPetDTOtoSubclass(new Object(), ShelterPet.class, null));
     }
 }
