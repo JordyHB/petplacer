@@ -3,8 +3,8 @@ package nl.jordy.petplacer.controllers;
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
-import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.helpers.BuildUri;
+import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -28,9 +28,8 @@ public class ShelterPetController {
             @RequestBody ShelterPetInputDTO shelterPetInputDTO,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult);
-        }
+
+        CheckBindingResult.checkBindingResult(bindingResult);
 
         ShelterPetOutputDTO shelterPetOutputDTO =
                 shelterPetService.registerNewShelterPet(shelterPetInputDTO);
