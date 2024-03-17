@@ -2,15 +2,15 @@ package nl.jordy.petplacer.controllers;
 
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.exceptions.BadRequestException;
-import nl.jordy.petplacer.models.ShelterPet;
+import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("shelterpets")
@@ -23,7 +23,7 @@ public class ShelterPetController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> registerShelterPet(
+    public ResponseEntity<ShelterPetOutputDTO> registerShelterPet(
             @Valid
             @RequestBody ShelterPetInputDTO shelterPetInputDTO,
             BindingResult bindingResult
@@ -32,8 +32,21 @@ public class ShelterPetController {
             throw new BadRequestException(bindingResult);
         }
 
-        ShelterPet shelterPet = shelterPetService.registerNewShelterPet(shelterPetInputDTO);
+        ShelterPetOutputDTO shelterPetOutputDTO =
+                shelterPetService.registerNewShelterPet(shelterPetInputDTO);
 
-        return ResponseEntity.ok(shelterPet.getId().toString());
+
+        return ResponseEntity.created(BuildUri.buildUri(shelterPetOutputDTO))
+                .body(shelterPetOutputDTO);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ShelterPetOutputDTO>> getALlShelterPets() {
+        return ResponseEntity.ok(shelterPetService.findAllShelterPets());
+    }
+
+    @GetMapping("/{shelterPetID}")
+    public ResponseEntity<ShelterPetOutputDTO> getShelterPetByID(@PathVariable Long shelterPetID) {
+        return ResponseEntity.ok(shelterPetService.findShelterPetById(shelterPetID));
     }
 }
