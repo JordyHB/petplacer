@@ -13,7 +13,7 @@ public class UserOutputDTO implements HasFetchableId {
     private String firstName;
     private String lastName;
     private String email;
-    private List<Long> managedShelters;
+    private List<ShelterOutputDTO> managedShelters;
     private List<Long> pets;
     private List<Long> donations;
     private List<Long> adoptionRequests;

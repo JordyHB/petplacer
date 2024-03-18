@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,11 +47,12 @@ public class Shelter {
     @OneToMany(mappedBy = "requestedPetShelter")
     private List<AdoptionRequest> adoptionRequests;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "shelter_managers",
             joinColumns = @JoinColumn(name = "shelter_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> managers;
+    private List<User> managers = new ArrayList<>() {
+    };
 }

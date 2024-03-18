@@ -22,22 +22,6 @@ public class ShelterController {
         this.shelterService = shelterService;
     }
 
-    // Posts
-    @PostMapping()
-    public ResponseEntity<ShelterOutputDTO> registerShelter(
-            @Valid
-            @RequestBody ShelterInputDTO shelterInputDTO,
-            BindingResult bindingResult
-    ) {
-
-        CheckBindingResult.checkBindingResult(bindingResult);
-
-        ShelterOutputDTO shelterOutputDTO =
-                shelterService.registerNewShelter(shelterInputDTO);
-
-        return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
-    }
-
     // Gets
     @GetMapping()
     public ResponseEntity<List<ShelterOutputDTO>> getAllShelters() {

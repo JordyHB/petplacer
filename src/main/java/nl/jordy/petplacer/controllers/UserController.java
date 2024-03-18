@@ -2,11 +2,14 @@ package nl.jordy.petplacer.controllers;
 
 
 import jakarta.validation.Valid;
+import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
-import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.models.User;
+import nl.jordy.petplacer.services.ShelterService;
 import nl.jordy.petplacer.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,9 +22,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ShelterService shelterService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ShelterService shelterService) {
+
         this.userService = userService;
+        this.shelterService = shelterService;
     }
 
 
@@ -40,6 +46,23 @@ public class UserController {
 
 
         return ResponseEntity.created(BuildUri.buildUri(userOutputDTO)).body(userOutputDTO);
+    }
+
+    @PostMapping("/{userID}/shelters")
+    public ResponseEntity<ShelterOutputDTO> registerShelter(
+            @PathVariable Long userID,
+            @Valid
+            @RequestBody ShelterInputDTO shelterInputDTO,
+            BindingResult bindingResult
+            ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        User user = userService.fetchUserByID(userID);
+
+        ShelterOutputDTO shelterOutputDTO = shelterService.registerNewShelter(shelterInputDTO, user);
+
+        return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
     }
 
     // Gets

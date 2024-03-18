@@ -20,7 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    private User fetchUserByID(Long userID) {
+    public User fetchUserByID(Long userID) {
         // Fetches the user by id and throws an exception if it doesn't exist
         return userRepository.findById(userID).orElseThrow(
                 () -> new RecordNotFoundException("No user found with id: " + userID)
