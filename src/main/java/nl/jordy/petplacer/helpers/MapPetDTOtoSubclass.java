@@ -57,10 +57,10 @@ public class MapPetDTOtoSubclass {
         finalPet.setGender(petInputDTO.getGender());
         finalPet.setSize(petInputDTO.getSize());
         finalPet.setDescription(petInputDTO.getDescription());
-        finalPet.setSpayedNeutered(petInputDTO.isSpayedNeutered());
-        finalPet.setGoodWithKids(petInputDTO.isGoodWithKids());
-        finalPet.setGoodWithDogs(petInputDTO.isGoodWithDogs());
-        finalPet.setGoodWithCats(petInputDTO.isGoodWithCats());
+        finalPet.setSpayedNeutered(petInputDTO.getSpayedNeutered());
+        finalPet.setGoodWithKids(petInputDTO.getGoodWithKids());
+        finalPet.setGoodWithDogs(petInputDTO.getGoodWithDogs());
+        finalPet.setGoodWithCats(petInputDTO.getGoodWithCats());
 
         return finalPet;
     }
