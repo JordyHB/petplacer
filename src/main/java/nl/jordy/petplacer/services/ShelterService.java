@@ -1,0 +1,78 @@
+package nl.jordy.petplacer.services;
+
+import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
+import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.models.Shelter;
+import nl.jordy.petplacer.repositories.ShelterRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class ShelterService {
+
+    private final ShelterRepository shelterRepository;
+
+    public ShelterService(ShelterRepository shelterRepository) {
+        this.shelterRepository = shelterRepository;
+    }
+
+    public Shelter fetchShelterByID(Long shelterID) {
+        // Fetches the user by ID and throws an exception if it doesn't exist
+        return shelterRepository.findById(shelterID).orElseThrow(
+                () -> new RecordNotFoundException("No Shelter found with id: " + shelterID)
+        );
+    }
+
+    public ShelterOutputDTO registerNewShelter(ShelterInputDTO shelterInputDTO) {
+
+        // Maps the DTO and adds a timestamp of arrival;
+        Shelter shelter = ModelMapperHelper.getModelMapper().map(shelterInputDTO, Shelter.class);
+
+        // Adds a timestamp of registration and last update
+        shelter.setDateOfRegistration(new Date());
+        shelter.setDateOfLastUpdate(new Date());
+        shelterRepository.save(shelter);
+
+        return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
+    }
+
+    public List<ShelterOutputDTO> findAllShelters() {
+
+        List<Shelter> shelters = shelterRepository.findAll();
+
+        return shelters.stream()
+                .map(shelter -> ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class))
+                .toList();
+    }
+
+    public ShelterOutputDTO findShelterById(Long shelterID) {
+
+        return ModelMapperHelper.getModelMapper().
+                map(fetchShelterByID(shelterID), ShelterOutputDTO.class);
+    }
+
+    public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterInputDTO shelterInputDTO) {
+
+        Shelter shelter = fetchShelterByID(shelterID);
+
+        // Maps the DTO and adds a timestamp of last update;
+        ModelMapperHelper.getModelMapper().map(shelterInputDTO, shelter);
+        shelter.setDateOfLastUpdate(new Date());
+
+        shelterRepository.save(shelter);
+
+        return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
+    }
+
+    public String deleteShelterByID(Long shelterID) {
+        // uses private method to fetch and validate the user exists
+        shelterRepository.delete(fetchShelterByID(shelterID));
+        return "Shelter: " + shelterID + " has been successfully deleted.";
+    }
+}
+
