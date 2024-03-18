@@ -12,25 +12,12 @@ import java.util.*;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
 
     //Injects dependencies
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    // transforms the DTO to a User
-    private User setDTOtoUser(UserInputDTO userInputDTO) {
-        User user = new User();
-        ModelMapperHelper.getModelMapper().map(userInputDTO, user);
-        return user;
-    }
-
-    // Transforms the User to a DTO
-    private UserOutputDTO setUserToDTO(User user) {
-        UserOutputDTO userOutputDTO = new UserOutputDTO();
-        ModelMapperHelper.getModelMapper().map(user, userOutputDTO);
-        return userOutputDTO;
     }
 
     private User fetchUserByID(Long userID) {
@@ -41,39 +28,36 @@ public class UserService {
     }
 
     public UserOutputDTO registerUser(UserInputDTO userDTO) {
-        User user = setDTOtoUser(userDTO);
+        User user = ModelMapperHelper.getModelMapper().map(userDTO, User.class);
 
         //Saves the user to the database
         userRepository.save(user);
 
         //Transforms the user to a DTO and returns it
-        return setUserToDTO(user);
+        return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
     public List<UserOutputDTO> findAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserOutputDTO> outputDTOS = new ArrayList<>();
 
-        for (User user: users) {
-            outputDTOS.add(setUserToDTO(user));
-        }
-        return outputDTOS;
+        return users.stream()
+                .map(user -> ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class))
+                .toList();
     }
 
     public UserOutputDTO findUserById(Long userID) {
         // uses private method to fetch and validate the user exists
-        return setUserToDTO(fetchUserByID(userID));
+        return ModelMapperHelper.getModelMapper().map(fetchUserByID(userID), UserOutputDTO.class);
     }
 
     public UserOutputDTO updateUserByID(Long userID, UserInputDTO userInputDTO) {
         // uses private method to fetch and validate the user exists
         User user = fetchUserByID(userID);
-        user.setUsername(userInputDTO.getUsername());
-        user.setFirstName(userInputDTO.getFirstName());
-        user.setLastName(userInputDTO.getLastName());
-        user.setEmail(userInputDTO.getEmail());
+
+        ModelMapperHelper.getModelMapper().map(userInputDTO, user);
+
         userRepository.save(user);
-        return setUserToDTO(user);
+        return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
     public String deleteUserByID(Long userID) {

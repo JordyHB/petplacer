@@ -1,11 +1,11 @@
 package nl.jordy.petplacer.dtos.input;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.Getter;
 import nl.jordy.petplacer.enums.GenderEnum;
 
+@Data
 public class PetInputDTO {
     @NotBlank(message = "Name is required")
     @Size(max = 20, message = "Name should be less than 20 characters")
@@ -27,6 +27,7 @@ public class PetInputDTO {
     private int age;
 
     @NotNull(message = "gender is required")
+//    @Pattern(regexp = "MALE|FEMALE|UKNOWN|OTHER", message="Gender must be MALE, FEMALE, UNKNOWN or OTHER")
     private GenderEnum gender;
 
     @NotBlank(message = "Size is required")
@@ -37,14 +38,14 @@ public class PetInputDTO {
     private String description;
 
     @NotNull(message = "Spayed/Neutered is required")
-    private boolean spayedNeutered;
+    private Boolean SpayedNeutered;
 
     @NotNull(message = "Good with fields are mandatory")
-    private boolean goodWithKids;
+    private Boolean GoodWithKids;
 
     @NotNull(message = "Good with fields are mandatory")
-    private boolean goodWithDogs;
+    private Boolean GoodWithDogs;
 
     @NotNull(message = "Good with fields are mandatory")
-    private boolean goodWithCats;
+    private Boolean GoodWithCats;
 }

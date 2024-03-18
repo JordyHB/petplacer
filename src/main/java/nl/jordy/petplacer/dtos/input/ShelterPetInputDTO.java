@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.dtos.input;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ public class ShelterPetInputDTO {
 
     // nested DTO with the info for the super class
     @Valid
+    @JsonProperty("pet")
     private PetInputDTO pet;
 
     @NotNull(message = "Months in shelter is required")
@@ -23,6 +25,7 @@ public class ShelterPetInputDTO {
     @Size(max = 500, message = "Special needs message is too long")
     private String specialNeeds;
 
+    @NotNull(message = "Previous situation is required")
     @Size(max = 500, message = "Previous situation message is too long")
     private String previousSituation;
 }

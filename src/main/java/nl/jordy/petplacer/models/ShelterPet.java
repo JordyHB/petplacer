@@ -1,9 +1,8 @@
 package nl.jordy.petplacer.models;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 
 import java.util.Date;

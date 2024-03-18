@@ -15,7 +15,4 @@ public class ModelMapperHelper {
     public static ModelMapper getModelMapper() {
         return modelMapper;
     }
-
-
-
 }

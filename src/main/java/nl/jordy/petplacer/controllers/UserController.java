@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.helpers.BuildUri;
+import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,15 +27,13 @@ public class UserController {
 
     // Posts
     @PostMapping()
-        public ResponseEntity<UserOutputDTO> registerUser(
+    public ResponseEntity<UserOutputDTO> registerUser(
                 @Valid
                 @RequestBody UserInputDTO userInputDTO,
                 BindingResult bindingResult
     ) {
         //catches errors and sends them back to the user
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult);
-        }
+        CheckBindingResult.checkBindingResult(bindingResult);
 
         //hands it off for saving and returns the created user
         UserOutputDTO userOutputDTO = userService.registerUser(userInputDTO);
@@ -62,9 +61,8 @@ public class UserController {
             @RequestBody UserInputDTO userInputDTO,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult);
-        }
+
+        CheckBindingResult.checkBindingResult(bindingResult);
 
         // Hands the input off for processing in the service layer.
         UserOutputDTO userOutputDTO = userService.updateUserByID(userID, userInputDTO);
