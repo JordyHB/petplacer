@@ -1,11 +1,16 @@
 package nl.jordy.petplacer.dtos.output;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
 
 import java.util.List;
 
 @Data
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class UserOutputDTO implements HasFetchableId {
 
     private Long id;

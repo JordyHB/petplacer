@@ -47,7 +47,7 @@ public class Shelter {
     @OneToMany(mappedBy = "requestedPetShelter")
     private List<AdoptionRequest> adoptionRequests;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "shelter_managers",
             joinColumns = @JoinColumn(name = "shelter_id"),
