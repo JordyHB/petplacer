@@ -2,10 +2,12 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.ModelMapperHelper;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,10 +16,13 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //Injects dependencies
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     public User fetchUserByID(Long userID) {
@@ -27,8 +32,22 @@ public class UserService {
         );
     }
 
+    public void validateUserUnique(UserInputDTO userDTO) {
+
+        // Checks if the username is unique and email are unique
+        if (userRepository.existsByUsernameIgnoreCase(userDTO.getUsername())) {
+            throw new AlreadyExistsException("Username: " + userDTO.getUsername() + " already exists");
+        } else if (userRepository.existsByEmailIgnoreCase(userDTO.getEmail())) {
+            throw new AlreadyExistsException("Email: " + userDTO.getEmail() + " already exists");
+        }
+    }
+
     public UserOutputDTO registerUser(UserInputDTO userDTO) {
+
+        validateUserUnique(userDTO);
+
         User user = ModelMapperHelper.getModelMapper().map(userDTO, User.class);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         //Saves the user to the database
         userRepository.save(user);

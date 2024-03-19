@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.controllers;
 
+import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -18,5 +19,10 @@ public class ExceptionController {
     @ExceptionHandler(value = RecordNotFoundException.class)
     public ResponseEntity<Object> exception(RecordNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = AlreadyExistsException.class)
+    public ResponseEntity<Object> exception(AlreadyExistsException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 }

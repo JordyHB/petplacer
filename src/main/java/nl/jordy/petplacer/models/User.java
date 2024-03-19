@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,17 +30,20 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String phoneNumber;
     @Column(nullable = false)
     private boolean enabled = true;
-
+    @Column(nullable = false)
+    private Date createdAt = new Date();
+    @Column(nullable = false)
+    private Date updatedAt = new Date();
 
     @OneToMany(
             targetEntity = Authority.class,
-            mappedBy = "username",
+            mappedBy = "id",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
@@ -56,4 +60,12 @@ public class User {
 
     @OneToMany(mappedBy = "adoptionApplicant")
     private List<AdoptionRequest> adoptionRequests;
+
+    public void addAuthority(Authority authority) {
+        authorities.add(authority);
+    }
+
+    public void removeAuthority(Authority authority) {
+        authorities.remove(authority);
+    }
 }

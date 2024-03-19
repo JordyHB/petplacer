@@ -68,6 +68,7 @@ public class UserController {
     // Gets
     @GetMapping()
     public ResponseEntity<List<UserOutputDTO>> getAllUsers() {
+        System.out.println("Getting all users");
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
