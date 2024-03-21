@@ -6,11 +6,13 @@ import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.services.ShelterService;
 import nl.jordy.petplacer.services.UserService;
+import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +81,11 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable String username) {
+    public ResponseEntity<?> getUserByID(@PathVariable String username) {
+
+        // Returns a 401 if the user is not the requested user or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+
         return ResponseEntity.ok(userService.findUserById(username));
     }
 

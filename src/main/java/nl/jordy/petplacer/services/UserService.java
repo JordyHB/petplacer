@@ -55,9 +55,6 @@ public class UserService {
         //Saves the user to the database
         userRepository.save(user);
 
-//        User userWithId = userRepository.findByUsername(userDTO.getUsername());
-//        userWithId.setAuthorities(Set.of(new Authority(userWithId.getId(), "ROLE_USER")));
-
         //Transforms the user to a DTO and returns it
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }

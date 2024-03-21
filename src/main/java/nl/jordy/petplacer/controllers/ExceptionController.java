@@ -1,12 +1,8 @@
 package nl.jordy.petplacer.controllers;
 
-import nl.jordy.petplacer.exceptions.AlreadyExistsException;
-import nl.jordy.petplacer.exceptions.BadLoginException;
-import nl.jordy.petplacer.exceptions.BadRequestException;
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,6 +26,11 @@ public class ExceptionController {
 
     @ExceptionHandler(value = BadLoginException.class)
     public ResponseEntity<Object> exception(BadLoginException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = CustomAccessDeniedException.class)
+    public ResponseEntity<Object> exception(CustomAccessDeniedException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
