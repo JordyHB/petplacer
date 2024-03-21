@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.controllers;
 
+import nl.jordy.petplacer.exceptions.BadLoginException;
 import nl.jordy.petplacer.security.LoginRequest;
 import nl.jordy.petplacer.security.LoginResponse;
 import nl.jordy.petplacer.services.JwtService;
@@ -10,10 +11,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 public class AuthController {
 
@@ -33,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/auth")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws BadLoginException {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -41,8 +44,8 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
-        } catch (BadCredentialsException exception) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        } catch (BadLoginException exception) {
+            throw new BadLoginException();
         };
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);

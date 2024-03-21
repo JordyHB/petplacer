@@ -1,6 +1,6 @@
 package nl.jordy.petplacer.services;
 
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.exceptions.BadLoginException;
 import nl.jordy.petplacer.models.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,8 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws RecordNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RecordNotFoundException("Username: " + username + " not found"));
+    public UserDetails loadUserByUsername(String username) throws BadLoginException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new BadLoginException("User not found or password is incorrect"));
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Authority authority : user.getAuthorities()) {
             grantedAuthorities.add((new SimpleGrantedAuthority(authority.getAuthority())));
