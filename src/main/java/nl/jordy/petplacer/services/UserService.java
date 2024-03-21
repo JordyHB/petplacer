@@ -5,6 +5,7 @@ import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,10 +26,10 @@ public class UserService {
 
     }
 
-    public User fetchUserByID(Long userID) {
+    public User fetchUserByID(String username) {
         // Fetches the user by id and throws an exception if it doesn't exist
-        return userRepository.findById(userID).orElseThrow(
-                () -> new RecordNotFoundException("No user found with id: " + userID)
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new RecordNotFoundException("No user found with id: " + username)
         );
     }
 
@@ -49,8 +50,13 @@ public class UserService {
         User user = ModelMapperHelper.getModelMapper().map(userDTO, User.class);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
+        user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
+
         //Saves the user to the database
         userRepository.save(user);
+
+//        User userWithId = userRepository.findByUsername(userDTO.getUsername());
+//        userWithId.setAuthorities(Set.of(new Authority(userWithId.getId(), "ROLE_USER")));
 
         //Transforms the user to a DTO and returns it
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
@@ -64,14 +70,14 @@ public class UserService {
                 .toList();
     }
 
-    public UserOutputDTO findUserById(Long userID) {
+    public UserOutputDTO findUserById(String username) {
         // uses private method to fetch and validate the user exists
-        return ModelMapperHelper.getModelMapper().map(fetchUserByID(userID), UserOutputDTO.class);
+        return ModelMapperHelper.getModelMapper().map(fetchUserByID(username), UserOutputDTO.class);
     }
 
-    public UserOutputDTO updateUserByID(Long userID, UserInputDTO userInputDTO) {
+    public UserOutputDTO updateUserByID(String username, UserInputDTO userInputDTO) {
         // uses private method to fetch and validate the user exists
-        User user = fetchUserByID(userID);
+        User user = fetchUserByID(username);
 
         ModelMapperHelper.getModelMapper().map(userInputDTO, user);
 
@@ -79,10 +85,10 @@ public class UserService {
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
-    public String deleteUserByID(Long userID) {
+    public String deleteUserByID(String username) {
         // uses private method to fetch and validate the user exists
-        userRepository.delete(fetchUserByID(userID));
-        return "User: " + userID + " has been successfully deleted.";
+        userRepository.delete(fetchUserByID(username));
+        return "User: " + username + " has been successfully deleted.";
     }
 
 }

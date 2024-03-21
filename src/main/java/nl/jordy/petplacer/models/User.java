@@ -3,25 +3,18 @@ package nl.jordy.petplacer.models;
 //imports
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+@Getter
+@Setter
 @Entity
-@Data
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // blocks the setter for ID
-    @Setter(AccessLevel.NONE)
-    private Long id;
-
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
@@ -43,9 +36,8 @@ public class User {
 
     @OneToMany(
             targetEntity = Authority.class,
-            mappedBy = "id",
+            mappedBy = "username", // Use the association to the User entity
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
@@ -62,7 +54,7 @@ public class User {
     private List<AdoptionRequest> adoptionRequests;
 
     public void addAuthority(Authority authority) {
-        authorities.add(authority);
+        this.authorities.add(authority);
     }
 
     public void removeAuthority(Authority authority) {

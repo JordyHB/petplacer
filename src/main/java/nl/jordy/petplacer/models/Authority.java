@@ -1,23 +1,30 @@
 package nl.jordy.petplacer.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "authorities")
-@Data
 public class Authority implements Serializable {
 
     @Id
     @Column(nullable = false)
-    private Long id;
+    private String username;
+
     @Id
     @Column(nullable = false)
     private String authority;
 
+    public Authority() {
+    }
+
+    public Authority(String username, String authority) {
+        this.username = username;
+        this.authority = authority;
+    }
 }

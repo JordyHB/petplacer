@@ -14,7 +14,9 @@ import nl.jordy.petplacer.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -44,13 +46,17 @@ public class UserController {
         //hands it off for saving and returns the created user
         UserOutputDTO userOutputDTO = userService.registerUser(userInputDTO);
 
+        URI uri = URI.create(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/" + userOutputDTO.getUsername()).toUriString());
 
-        return ResponseEntity.created(BuildUri.buildUri(userOutputDTO)).body(userOutputDTO);
+        return ResponseEntity.created(uri).body(userOutputDTO);
     }
 
-    @PostMapping("/{userID}/shelters")
+    @PostMapping("/{username}/shelters")
     public ResponseEntity<ShelterOutputDTO> registerShelter(
-            @PathVariable Long userID,
+            @PathVariable String username,
             @Valid
             @RequestBody ShelterInputDTO shelterInputDTO,
             BindingResult bindingResult
@@ -58,7 +64,7 @@ public class UserController {
 
         CheckBindingResult.checkBindingResult(bindingResult);
 
-        User user = userService.fetchUserByID(userID);
+        User user = userService.fetchUserByID(username);
 
         ShelterOutputDTO shelterOutputDTO = shelterService.registerNewShelter(shelterInputDTO, user);
 
@@ -72,15 +78,15 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/{userID}")
-    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable Long userID) {
-        return ResponseEntity.ok(userService.findUserById(userID));
+    @GetMapping("/{username}")
+    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable String username) {
+        return ResponseEntity.ok(userService.findUserById(username));
     }
 
     // Puts
-    @PutMapping("/{userID}")
+    @PutMapping("/{username}")
     public ResponseEntity<UserOutputDTO>updateUserByID(
-            @PathVariable Long userID,
+            @PathVariable String username,
             @Valid
             @RequestBody UserInputDTO userInputDTO,
             BindingResult bindingResult
@@ -89,14 +95,14 @@ public class UserController {
         CheckBindingResult.checkBindingResult(bindingResult);
 
         // Hands the input off for processing in the service layer.
-        UserOutputDTO userOutputDTO = userService.updateUserByID(userID, userInputDTO);
+        UserOutputDTO userOutputDTO = userService.updateUserByID(username, userInputDTO);
 
         return ResponseEntity.ok(userOutputDTO);
     }
 
     // Deletes
-    @DeleteMapping("/{userID}")
-    public ResponseEntity<String> deleteUserByID(@PathVariable Long userID) {
-        return ResponseEntity.ok(userService.deleteUserByID(userID));
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUserByID(@PathVariable String username) {
+        return ResponseEntity.ok(userService.deleteUserByID(username));
     }
 }
