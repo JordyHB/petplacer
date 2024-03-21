@@ -44,8 +44,8 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
-        } catch (BadLoginException exception) {
-            throw new BadLoginException();
+        } catch (BadCredentialsException exception) {
+            throw new BadLoginException("incorrect username or password");
         };
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);

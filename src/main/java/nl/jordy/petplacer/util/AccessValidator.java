@@ -11,10 +11,10 @@ public class AccessValidator {
     }
 
     public static void isUserOrAdmin(Authentication userAuth, String requestedUsername) {
-        // return true if the user is the requested user or an admin
+        // if the user is not the requested user
         if (!userAuth.getName().equals(requestedUsername) &&
-                // Check if the user is an admin
-                userAuth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                // if the user is not an admin
+                !userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
 
             throw new CustomAccessDeniedException();
         }
