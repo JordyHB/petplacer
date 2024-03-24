@@ -3,6 +3,7 @@ package nl.jordy.petplacer.models;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "shelters")
 public class Shelter {
 
@@ -33,10 +35,10 @@ public class Shelter {
     private String openingHours;
 
     @Column(name = "date_of_registration")
-    private Date dateOfRegistration;
+    private Date dateOfRegistration = new Date();
 
     @Column(name = "date_of_last_update")
-    private Date dateOfLastUpdate;
+    private Date dateOfLastUpdate = new Date();
 
     @OneToMany(mappedBy = "shelter")
     private List<ShelterPet> shelterPets;

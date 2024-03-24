@@ -6,13 +6,11 @@ import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
-import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.services.ShelterService;
 import nl.jordy.petplacer.services.UserService;
-import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +36,9 @@ public class UserController {
     // Posts
     @PostMapping()
     public ResponseEntity<UserOutputDTO> registerUser(
-                @Valid
-                @RequestBody UserInputDTO userInputDTO,
-                BindingResult bindingResult
+            @Valid
+            @RequestBody UserInputDTO userInputDTO,
+            BindingResult bindingResult
     ) {
         //catches errors and sends them back to the user
         CheckBindingResult.checkBindingResult(bindingResult);
@@ -62,7 +60,7 @@ public class UserController {
             @Valid
             @RequestBody ShelterInputDTO shelterInputDTO,
             BindingResult bindingResult
-            ) {
+    ) {
 
         CheckBindingResult.checkBindingResult(bindingResult);
 
@@ -73,25 +71,23 @@ public class UserController {
         return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
     }
 
+//    @PostMapping("/{username}/admin")
+//    @ResponseEntity<UserOutputDTO>
+
     // Gets
     @GetMapping()
     public ResponseEntity<List<UserOutputDTO>> getAllUsers() {
-        System.out.println("Getting all users");
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUserByID(@PathVariable String username) {
-
-        // Returns a 401 if the user is not the requested user or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
-
         return ResponseEntity.ok(userService.findUserById(username));
     }
 
     // Puts
     @PutMapping("/{username}")
-    public ResponseEntity<UserOutputDTO>updateUserByID(
+    public ResponseEntity<UserOutputDTO> updateUserByID(
             @PathVariable String username,
             @Valid
             @RequestBody UserInputDTO userInputDTO,

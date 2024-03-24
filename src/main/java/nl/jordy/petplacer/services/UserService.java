@@ -8,6 +8,7 @@ import nl.jordy.petplacer.helpers.ModelMapperHelper;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
+import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,10 @@ public class UserService {
     }
 
     public User fetchUserByID(String username) {
+
+        // Returns a 401 if the user is not the requested user or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+
         // Fetches the user by id and throws an exception if it doesn't exist
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new RecordNotFoundException("No user found with id: " + username)
