@@ -3,6 +3,7 @@ package nl.jordy.petplacer.helpers;
 import nl.jordy.petplacer.dtos.input.PetInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.input.UserOwnedPetInputDTO;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Pet;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.models.UserOwnedPet;

@@ -4,7 +4,7 @@ import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.AlreadyHasRole;
-import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;

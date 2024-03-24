@@ -1,5 +1,6 @@
-package nl.jordy.petplacer.helpers;
+package nl.jordy.petplacer.helpers.modalmapper;
 
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 
@@ -15,14 +16,15 @@ public class ModelMapperHelper {
     // Returns the ModelMapper instance
     public static ModelMapper getModelMapper() {
 
+        // skips null fields when mapping patch DTOs
         modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull());
 
-        registerConverters();
-        return modelMapper;
-    }
+        // skips mapping password, preventing it from casting it to lower.
+        modelMapper.addMappings(new UserInputDTOPropertyMap());
 
-    private static void registerConverters() {
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
+
+        return modelMapper;
     }
 }

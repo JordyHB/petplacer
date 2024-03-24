@@ -5,7 +5,7 @@ import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.MapPetDTOtoSubclass;
-import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import org.springframework.stereotype.Service;

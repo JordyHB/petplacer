@@ -5,7 +5,7 @@ import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.AlreadyHasRole;
-import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
@@ -54,6 +54,7 @@ public class UserService {
         validateUserUnique(userDTO);
 
         User user = ModelMapperHelper.getModelMapper().map(userDTO, User.class);
+        // encodes the password and sets it separately to keep it case-sensitive
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
