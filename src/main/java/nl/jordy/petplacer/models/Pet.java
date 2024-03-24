@@ -8,7 +8,6 @@ import nl.jordy.petplacer.enums.GenderEnum;
 
 @Data
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pet {
 
     private String name;

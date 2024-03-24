@@ -11,6 +11,10 @@ public class UserInputDTO {
     @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
     private String username;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 4, max = 20, message = "Password must be between 4 and 20 characters")
+    private String password;
+
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 20, message = "First name must be between 2 and 20 characters")
     private String firstName;
@@ -21,4 +25,8 @@ public class UserInputDTO {
 
     @Email(message = "Email is not valid")
     private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
+    private String phoneNumber;
 }

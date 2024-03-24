@@ -3,7 +3,9 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.ShelterRepository;
@@ -33,12 +35,13 @@ public class ShelterService {
         // Maps the DTO and adds a timestamp of arrival;
         Shelter shelter = ModelMapperHelper.getModelMapper().map(shelterInputDTO, Shelter.class);
 
-        // Adds a timestamp of registration and last update
-        shelter.setDateOfRegistration(new Date());
-        shelter.setDateOfLastUpdate(new Date());
         // Adds the initial manager
         shelter.getManagers().add(user);
         shelterRepository.save(shelter);
+
+        if (!AlreadyHasRole.hasRole("ROLE_SHELTER_MANAGER")) {
+            user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
+        }
 
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
     }
