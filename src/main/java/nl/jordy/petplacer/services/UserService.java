@@ -79,7 +79,7 @@ public class UserService {
     }
 
     public UserOutputDTO updateUserByID(String username, UserInputDTO userInputDTO) {
-        // uses private method to fetch and validate the user exists
+
         User user = fetchUserByID(username);
 
         ModelMapperHelper.getModelMapper().map(userInputDTO, user);
@@ -89,14 +89,12 @@ public class UserService {
     }
 
     public String deleteUserByID(String username) {
-        // uses private method to fetch and validate the user exists
         userRepository.delete(fetchUserByID(username));
         return "User: " + username + " has been successfully deleted.";
     }
 
     public UserOutputDTO promoteToAdmin(String username) {
 
-        // uses private method to fetch and validate the user exists
         User user = fetchUserByID(username);
 
         if (AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
