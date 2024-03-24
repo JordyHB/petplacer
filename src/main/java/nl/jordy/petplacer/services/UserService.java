@@ -4,6 +4,7 @@ import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.ModelMapperHelper;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
@@ -93,6 +94,40 @@ public class UserService {
         return "User: " + username + " has been successfully deleted.";
     }
 
+    public UserOutputDTO promoteToAdmin(String username) {
+
+        // uses private method to fetch and validate the user exists
+        User user = fetchUserByID(username);
+
+        if (AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
+            throw new AlreadyExistsException("User: " + username + " is already an admin");
+        }
+
+        user.addAuthority(new Authority(user.getUsername(), "ROLE_ADMIN"));
+        userRepository.save(user);
+
+        return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
+    }
+
+    public UserOutputDTO demoteAdmin(String username) {
+        // uses private method to fetch and validate the user exists
+        User user = fetchUserByID(username);
+
+        if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
+            throw new AlreadyExistsException("User: " + username + " is not an admin");
+        }
+
+        for (Authority auth : user.getAuthorities()) {
+            if (auth.getAuthority().equals("ROLE_ADMIN")) {
+                user.removeAuthority(auth);
+                break;
+            }
+        }
+
+        userRepository.save(user);
+
+        return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
+    }
 }
 
 

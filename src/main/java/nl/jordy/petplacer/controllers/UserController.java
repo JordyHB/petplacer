@@ -71,8 +71,6 @@ public class UserController {
         return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
     }
 
-//    @PostMapping("/{username}/admin")
-//    @ResponseEntity<UserOutputDTO>
 
     // Gets
     @GetMapping()
@@ -81,9 +79,10 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getUserByID(@PathVariable String username) {
+    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable String username) {
         return ResponseEntity.ok(userService.findUserById(username));
     }
+
 
     // Puts
     @PutMapping("/{username}")
@@ -102,9 +101,20 @@ public class UserController {
         return ResponseEntity.ok(userOutputDTO);
     }
 
+    @PutMapping("/{username}/admin")
+    public ResponseEntity<UserOutputDTO> promoteToAdmin(@PathVariable String username) {
+        return ResponseEntity.ok(userService.promoteToAdmin(username));
+    }
+
+
     // Deletes
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUserByID(@PathVariable String username) {
         return ResponseEntity.ok(userService.deleteUserByID(username));
+    }
+
+    @DeleteMapping("/{username}/admin")
+    public ResponseEntity<UserOutputDTO> demoteAdmin(@PathVariable String username) {
+        return ResponseEntity.ok(userService.demoteAdmin(username));
     }
 }

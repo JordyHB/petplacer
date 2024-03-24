@@ -38,6 +38,7 @@ public class User {
             targetEntity = Authority.class,
             mappedBy = "username", // Use the association to the User entity
             cascade = CascadeType.ALL,
+            orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
@@ -55,9 +56,13 @@ public class User {
 
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
+        this.setUpdatedAt(new Date());
     }
 
     public void removeAuthority(Authority authority) {
+
         authorities.remove(authority);
+        authority.setUsername(null);
+        this.setUpdatedAt(new Date());
     }
 }

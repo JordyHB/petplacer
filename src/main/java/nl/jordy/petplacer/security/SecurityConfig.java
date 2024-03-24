@@ -53,8 +53,8 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/auth").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/users/*").hasAnyAuthority("ROLE_USER")
-                                .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
