@@ -1,8 +1,8 @@
 package nl.jordy.petplacer.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +23,7 @@ public class Shelter {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String shelterName;
     private String phoneNumber;
     private String email;

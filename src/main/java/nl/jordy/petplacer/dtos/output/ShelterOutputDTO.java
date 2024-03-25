@@ -1,6 +1,8 @@
 package nl.jordy.petplacer.dtos.output;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import nl.jordy.petplacer.interfaces.HasFetchableId;

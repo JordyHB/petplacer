@@ -2,7 +2,6 @@ package nl.jordy.petplacer.models;
 
 //imports
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,6 +40,7 @@ public class User {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
+
 
     @ManyToMany(mappedBy = "managers")
     private List<Shelter> managedShelters;

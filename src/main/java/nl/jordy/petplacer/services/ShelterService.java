@@ -1,8 +1,10 @@
 package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
+import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
+import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
@@ -34,7 +36,27 @@ public class ShelterService {
         );
     }
 
+    public void validateShelterNameUnique(Object shelterDTO) {
+
+        if (!(shelterDTO instanceof ShelterInputDTO) && !(shelterDTO instanceof ShelterPatchDTO)) {
+            throw new IllegalArgumentException("ShelterDTO is not an instance of ShelterInputDTO");
+        }
+
+        String shelterName;
+        if (shelterDTO instanceof ShelterInputDTO) {
+            shelterName = ((ShelterInputDTO) shelterDTO).getShelterName();
+        } else {
+            shelterName = ((ShelterPatchDTO) shelterDTO).getShelterName();
+        }
+
+        if (shelterRepository.existsByShelterNameIgnoreCase(shelterName)) {
+            throw new AlreadyExistsException("Shelter Name: " + shelterName + " already exists");
+        }
+    }
+
     public ShelterOutputDTO registerNewShelter(ShelterInputDTO shelterInputDTO, User user) {
+
+        validateShelterNameUnique(shelterInputDTO);
 
         // Maps the DTO and adds a timestamp of arrival;
         Shelter shelter = ModelMapperHelper.getModelMapper().map(shelterInputDTO, Shelter.class);
@@ -68,6 +90,8 @@ public class ShelterService {
 
     public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterPatchDTO shelterPatchDTO) {
 
+        validateShelterNameUnique(shelterPatchDTO);
+
         Shelter shelter = fetchShelterByID(shelterID);
 
         // Maps the DTO and adds a timestamp of last update;
@@ -90,6 +114,11 @@ public class ShelterService {
         Shelter shelter = fetchShelterByID(shelterID);
         User user = userService.fetchUserByUsername(username);
         shelter.getManagers().add(user);
+
+        if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_SHELTER_MANAGER")) {
+            user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
+            userService.saveUser(user);
+        }
 
         shelterRepository.save(shelter);
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
