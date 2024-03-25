@@ -135,5 +135,35 @@ public class ShelterService {
         shelterRepository.save(shelter);
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
     }
+
+    public ShelterOutputDTO removeManagerFromShelter(Long shelterID, String username) {
+
+        accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
+
+        Shelter shelter = fetchShelterByID(shelterID);
+        User user = userService.fetchUserByUsername(username);
+
+        if (!shelter.getManagers().contains(user)) {
+            throw new RecordNotFoundException("User: " + username + " is not a manager of Shelter: " + shelterID);
+        } else if (shelter.getManagers().size() == 1) {
+            throw new IllegalArgumentException("Shelter: " + shelterID + " must have at least one manager");
+        }
+
+        shelter.getManagers().remove(user);
+
+        // Removes the role if the user is no longer a manager
+        if (user.getManagedShelters().size() == 1) {
+            user.removeAuthority(user.getAuthorities().stream()
+                    // filters the authorities to find the manager role
+                    .filter(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER"))
+                    .findFirst()
+                    .orElseThrow(() -> new RecordNotFoundException("User: " + username + " is not a manager"))
+            );
+            userService.saveUser(user);
+        }
+
+        shelterRepository.save(shelter);
+        return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
+    }
 }
 

@@ -44,7 +44,7 @@ public class AccessValidator {
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) &&
                 // fetches the shelter and checks if the user is in the managers list
                 !shelterRepository.findById(requestedShelterID)
-                        .orElseThrow(RecordNotFoundException::new)
+                        .orElseThrow(() -> new RecordNotFoundException("No Shelter found with id: " + requestedShelterID))
                         .getManagers()
                         // loops through the managers list and checks if the user is in the list
                         .stream().anyMatch(a -> a.getUsername().equals(userAuth.getName()))) {

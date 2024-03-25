@@ -65,4 +65,12 @@ public class ShelterController {
         return ResponseEntity.ok(shelterService.deleteShelterByID(shelterID));
     }
 
+    @DeleteMapping("/{shelterID}/managers/{username}")
+    public ResponseEntity<ShelterOutputDTO> removeManagerFromShelter(
+            @PathVariable Long shelterID,
+            @PathVariable String username
+    ) {
+        return ResponseEntity.ok(shelterService.removeManagerFromShelter(shelterID, username));
+    }
+
 }
