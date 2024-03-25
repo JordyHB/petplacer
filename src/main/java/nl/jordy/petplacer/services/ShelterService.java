@@ -114,8 +114,21 @@ public class ShelterService {
 
         accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
 
-        // uses private method to fetch and validate the user exists
-        shelterRepository.delete(fetchShelterByID(shelterID));
+        Shelter shelter = fetchShelterByID(shelterID);
+
+        // removes Authority if the user is no longer a manager
+        for (User user : shelter.getManagers()) {
+            if (user.getManagedShelters().size() == 1) {
+                user.removeAuthority(user.getAuthorities().stream()
+                        .filter(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER"))
+                        .findFirst()
+                        .orElseThrow(() -> new RecordNotFoundException("User: " + user.getUsername() + " is not a manager"))
+                );
+                userService.saveUser(user);
+            }
+        }
+
+        shelterRepository.delete(shelter);
         return "Shelter: " + shelterID + " has been successfully deleted.";
     }
 
@@ -126,6 +139,7 @@ public class ShelterService {
         Shelter shelter = fetchShelterByID(shelterID);
         User user = userService.fetchUserByUsername(username);
         shelter.getManagers().add(user);
+        shelter.setDateOfLastUpdate(new Date());
 
         if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
@@ -150,6 +164,7 @@ public class ShelterService {
         }
 
         shelter.getManagers().remove(user);
+        shelter.setDateOfLastUpdate(new Date());
 
         // Removes the role if the user is no longer a manager
         if (user.getManagedShelters().size() == 1) {
