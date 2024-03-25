@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.AlreadyHasRole;
@@ -79,11 +80,12 @@ public class UserService {
         return ModelMapperHelper.getModelMapper().map(fetchUserByID(username), UserOutputDTO.class);
     }
 
-    public UserOutputDTO updateUserByID(String username, UserInputDTO userInputDTO) {
+    public UserOutputDTO updateUserByID(String username, UserPatchDTO userPatchDTO) {
 
         User user = fetchUserByID(username);
 
-        ModelMapperHelper.getModelMapper().map(userInputDTO, user);
+        ModelMapperHelper.getModelMapper().map(userPatchDTO, user);
+        user.setUpdatedAt(new Date());
 
         userRepository.save(user);
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);

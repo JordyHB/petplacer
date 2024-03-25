@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.User;
@@ -85,27 +86,29 @@ public class UserController {
 
 
     // Puts
-    @PutMapping("/{username}")
-    public ResponseEntity<UserOutputDTO> updateUserByID(
-            @PathVariable String username,
-            @Valid
-            @RequestBody UserInputDTO userInputDTO,
-            BindingResult bindingResult
-    ) {
-
-        CheckBindingResult.checkBindingResult(bindingResult);
-
-        // Hands the input off for processing in the service layer.
-        UserOutputDTO userOutputDTO = userService.updateUserByID(username, userInputDTO);
-
-        return ResponseEntity.ok(userOutputDTO);
-    }
 
     @PutMapping("/{username}/admin")
     public ResponseEntity<UserOutputDTO> promoteToAdmin(@PathVariable String username) {
         return ResponseEntity.ok(userService.promoteToAdmin(username));
     }
 
+    // Patch
+
+    @PatchMapping("/{username}")
+    public ResponseEntity<UserOutputDTO> updateUserByID(
+            @PathVariable String username,
+            @Valid
+            @RequestBody UserPatchDTO userPatchDTO,
+            BindingResult bindingResult
+    ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        // Hands the input off for processing in the service layer.
+        UserOutputDTO userOutputDTO = userService.updateUserByID(username, userPatchDTO);
+
+        return ResponseEntity.ok(userOutputDTO);
+    }
 
     // Deletes
     @DeleteMapping("/{username}")
