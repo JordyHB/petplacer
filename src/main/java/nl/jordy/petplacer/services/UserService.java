@@ -101,6 +101,10 @@ public class UserService {
         return "User: " + username + " has been successfully deleted.";
     }
 
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
     public UserOutputDTO promoteToAdmin(String username) {
 
         User user = fetchUserByUsername(username);

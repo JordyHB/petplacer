@@ -45,6 +45,7 @@ public class ShelterService {
 
         if (!AlreadyHasRole.hasRole("ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
+            userService.saveUser(user);
         }
 
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
