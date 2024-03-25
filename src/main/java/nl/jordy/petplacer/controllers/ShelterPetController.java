@@ -23,24 +23,6 @@ public class ShelterPetController {
         this.shelterPetService = shelterPetService;
     }
 
-    // Posts
-    @PostMapping()
-    public ResponseEntity<ShelterPetOutputDTO> registerShelterPet(
-            @Valid
-            @RequestBody ShelterPetInputDTO shelterPetInputDTO,
-            BindingResult bindingResult
-    ) {
-
-        CheckBindingResult.checkBindingResult(bindingResult);
-
-        ShelterPetOutputDTO shelterPetOutputDTO =
-                shelterPetService.registerNewShelterPet(shelterPetInputDTO);
-
-
-        return ResponseEntity.created(BuildUri.buildUri(shelterPetOutputDTO))
-                .body(shelterPetOutputDTO);
-    }
-
     // Gets
     @GetMapping()
     public ResponseEntity<List<ShelterPetOutputDTO>> getALlShelterPets() {

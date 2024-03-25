@@ -25,7 +25,8 @@ public class ShelterPetOutputDTO implements HasFetchableId {
     private boolean isGoodWithKids;
     private boolean isGoodWithDogs;
     private boolean isGoodWithCats;
-    private Date dateOfArrival;
+    private Date dateOfRegistration;
+    private Date dateOfLastUpdate;
     private int monthsInShelter;
     private String medicalHistory;
     private String specialNeeds;
