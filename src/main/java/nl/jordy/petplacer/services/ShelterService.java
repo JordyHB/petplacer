@@ -19,8 +19,10 @@ import java.util.List;
 public class ShelterService {
 
     private final ShelterRepository shelterRepository;
+    private final UserService userService;
 
-    public ShelterService(ShelterRepository shelterRepository) {
+    public ShelterService(ShelterRepository shelterRepository, UserService userService) {
+        this.userService = userService;
         this.shelterRepository = shelterRepository;
     }
 
@@ -80,6 +82,16 @@ public class ShelterService {
         // uses private method to fetch and validate the user exists
         shelterRepository.delete(fetchShelterByID(shelterID));
         return "Shelter: " + shelterID + " has been successfully deleted.";
+    }
+
+    public ShelterOutputDTO addManagerToShelter(Long shelterID, String username) {
+
+        Shelter shelter = fetchShelterByID(shelterID);
+        User user = userService.fetchUserByID(username);
+        shelter.getManagers().add(user);
+
+        shelterRepository.save(shelter);
+        return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
     }
 }
 

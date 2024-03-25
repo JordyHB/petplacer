@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/**").hasAuthority("ROLE_ADMIN")
 
-                                .requestMatchers("/shelters").permitAll()
+                                .requestMatchers("/shelters/**").permitAll()
 
                                 .requestMatchers("/shelterpets").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
