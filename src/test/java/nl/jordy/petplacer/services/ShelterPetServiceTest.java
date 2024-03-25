@@ -47,9 +47,9 @@ class ShelterPetServiceTest {
         // fills the shelterPetInputDTO with the petInputDTO and some extra fields
         shelterPetInputDTO.setPet(petInputDTO);
         shelterPetInputDTO.setMonthsInShelter(monthsInShelter);
-        shelterPetInputDTO.setMedicalHistory("Healthy");
+        shelterPetInputDTO.setMedicalHistory("healthy");
         shelterPetInputDTO.setSpecialNeeds(specialNeeds);
-        shelterPetInputDTO.setPreviousSituation("Owner couldn't take care of him anymore"
+        shelterPetInputDTO.setPreviousSituation("owner couldn't take care of him anymore"
         );
         return shelterPetInputDTO;
     }
@@ -57,13 +57,13 @@ class ShelterPetServiceTest {
     private PetInputDTO getPetInputDTO(String name, int age) {
         PetInputDTO petInputDTO = new PetInputDTO();
         petInputDTO.setName(name);
-        petInputDTO.setSpecies("Dog");
-        petInputDTO.setBreed("Labrador");
-        petInputDTO.setColor("Brown");
+        petInputDTO.setSpecies("dog");
+        petInputDTO.setBreed("labrador");
+        petInputDTO.setColor("brown");
         petInputDTO.setAge(age);
         petInputDTO.setGender(GenderEnum.FEMALE);
-        petInputDTO.setSize("Large");
-        petInputDTO.setDescription("Friendly dog");
+        petInputDTO.setSize("large");
+        petInputDTO.setDescription("friendly dog");
         petInputDTO.setSpayedNeutered(true);
         petInputDTO.setGoodWithKids(true);
         petInputDTO.setGoodWithDogs(true);
@@ -108,15 +108,15 @@ class ShelterPetServiceTest {
         // Creates the shelter input DTO
         ShelterPetInputDTO shelterPetInputDTO = getShelterPetInputDTO(
                 5,
-                "Tasty treats",
-                "Bernie",
+                "tasty treats",
+                "bernie",
                 7);
         // Maps it to an actual Entity for mocking
         ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(
                 shelterPetInputDTO,
                 ShelterPet.class,
                 null
-                );
+        );
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
 
@@ -125,12 +125,12 @@ class ShelterPetServiceTest {
         ShelterPetOutputDTO storedPet = shelterPetService.registerNewShelterPet(shelterPetInputDTO);
 
         // Assert
-        assertEquals("Bernie", storedPet.getName());
-        assertEquals("Dog", storedPet.getSpecies());
-        assertEquals("Healthy", storedPet.getMedicalHistory());
+        assertEquals("bernie", storedPet.getName());
+        assertEquals("dog", storedPet.getSpecies());
+        assertEquals("healthy", storedPet.getMedicalHistory());
         assertEquals(5, storedPet.getMonthsInShelter());
-        assertEquals("Tasty treats", storedPet.getSpecialNeeds());
-        assertEquals("Owner couldn't take care of him anymore", storedPet.getPreviousSituation());
+        assertEquals("tasty treats", storedPet.getSpecialNeeds());
+        assertEquals("owner couldn't take care of him anymore", storedPet.getPreviousSituation());
         assertThat(storedPet.getDateOfArrival()).isNotNull();
     }
 
@@ -150,8 +150,8 @@ class ShelterPetServiceTest {
 
         // Assert
         assertEquals(2, shelterPets.size());
-        assertEquals("Freddy", shelterPets.get(0).getName());
-        assertEquals("Buddy", shelterPets.get(1).getName());
+        assertEquals("freddy", shelterPets.get(0).getName());
+        assertEquals("buddy", shelterPets.get(1).getName());
 
     }
 
@@ -162,10 +162,10 @@ class ShelterPetServiceTest {
         ShelterPet shelterPet = MapPetDTOtoSubclass
                 .mapPetDTOtoSubclass(
                         getShelterPetInputDTO(
-                            3,
-                            "Lots of love",
-                            "El Ratto",
-                            5),
+                                3,
+                                "Lots of love",
+                                "El Ratto",
+                                5),
                         ShelterPet.class,
                         null
                 );
@@ -178,9 +178,9 @@ class ShelterPetServiceTest {
 
         // Assert
         assertEquals(shelterPetID, foundShelterPet.getId());
-        assertEquals("El Ratto", foundShelterPet.getName());
-        assertEquals("Dog", foundShelterPet.getSpecies());
-        assertEquals("Healthy", foundShelterPet.getMedicalHistory());
+        assertEquals("el ratto", foundShelterPet.getName());
+        assertEquals("dog", foundShelterPet.getSpecies());
+        assertEquals("healthy", foundShelterPet.getMedicalHistory());
     }
 
     @DisplayName("Update ShelterPet by ID")
@@ -217,12 +217,12 @@ class ShelterPetServiceTest {
         ShelterPetOutputDTO updatedPet = shelterPetService.updateShelterPetByID(shelterPetID, newShelterPetInputDTO);
 
         // Assert
-        assertEquals("Zebadiah", updatedPet.getName());
+        assertEquals("zebadiah", updatedPet.getName());
         assertEquals(5, updatedPet.getMonthsInShelter());
-        assertEquals("Healthy", updatedPet.getMedicalHistory());
+        assertEquals("healthy", updatedPet.getMedicalHistory());
         assertEquals(7, updatedPet.getAge());
-        assertEquals("Tasty Chicken", updatedPet.getSpecialNeeds());
-        assertEquals("Owner couldn't take care of him anymore", updatedPet.getPreviousSituation());
+        assertEquals("tasty chicken", updatedPet.getSpecialNeeds());
+        assertEquals("owner couldn't take care of him anymore", updatedPet.getPreviousSituation());
     }
 
     @DisplayName("Delete ShelterPet by ID")
