@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
@@ -24,7 +25,8 @@ public class ShelterService {
     }
 
     public Shelter fetchShelterByID(Long shelterID) {
-        // Fetches the user by ID and throws an exception if it doesn't exist
+
+        // Fetches the shelter by ID and throws an exception if it doesn't exist
         return shelterRepository.findById(shelterID).orElseThrow(
                 () -> new RecordNotFoundException("No Shelter found with id: " + shelterID)
         );
@@ -61,12 +63,12 @@ public class ShelterService {
                 map(fetchShelterByID(shelterID), ShelterOutputDTO.class);
     }
 
-    public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterInputDTO shelterInputDTO) {
+    public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterPatchDTO shelterPatchDTO) {
 
         Shelter shelter = fetchShelterByID(shelterID);
 
         // Maps the DTO and adds a timestamp of last update;
-        ModelMapperHelper.getModelMapper().map(shelterInputDTO, shelter);
+        ModelMapperHelper.getModelMapper().map(shelterPatchDTO, shelter);
         shelter.setDateOfLastUpdate(new Date());
 
         shelterRepository.save(shelter);
