@@ -65,7 +65,7 @@ public class UserController {
 
         CheckBindingResult.checkBindingResult(bindingResult);
 
-        User user = userService.fetchUserByID(username);
+        User user = userService.fetchUserByUsername(username);
 
         ShelterOutputDTO shelterOutputDTO = shelterService.registerNewShelter(shelterInputDTO, user);
 
@@ -81,7 +81,7 @@ public class UserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable String username) {
-        return ResponseEntity.ok(userService.findUserById(username));
+        return ResponseEntity.ok(userService.findUserByUsername(username));
     }
 
 
@@ -105,7 +105,7 @@ public class UserController {
         CheckBindingResult.checkBindingResult(bindingResult);
 
         // Hands the input off for processing in the service layer.
-        UserOutputDTO userOutputDTO = userService.updateUserByID(username, userPatchDTO);
+        UserOutputDTO userOutputDTO = userService.updateUserByUsername(username, userPatchDTO);
 
         return ResponseEntity.ok(userOutputDTO);
     }

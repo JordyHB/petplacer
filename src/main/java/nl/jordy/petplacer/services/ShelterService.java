@@ -87,7 +87,7 @@ public class ShelterService {
     public ShelterOutputDTO addManagerToShelter(Long shelterID, String username) {
 
         Shelter shelter = fetchShelterByID(shelterID);
-        User user = userService.fetchUserByID(username);
+        User user = userService.fetchUserByUsername(username);
         shelter.getManagers().add(user);
 
         shelterRepository.save(shelter);
