@@ -31,7 +31,7 @@ public class ShelterPetOutputDTO implements HasFetchableId {
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
-    private Long shelterId;
+    private ShelterOutputDTO shelter;
     private List<Long> adoptionRequests;
     private Long approvedNewHome;
     private Date rehomeDate;

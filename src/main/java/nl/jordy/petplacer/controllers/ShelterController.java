@@ -56,6 +56,11 @@ public class ShelterController {
         return ResponseEntity.ok(shelterService.findShelterById(shelterID));
     }
 
+    @GetMapping("/{shelterID}/shelterpets")
+    public ResponseEntity<List<ShelterPetOutputDTO>> getShelterPetsByShelterID(@PathVariable Long shelterID) {
+        return ResponseEntity.ok(shelterService.getshelterPets(shelterID));
+    }
+
     // Puts
     @PutMapping("/{shelterID}/managers/{username}")
     public ResponseEntity<ShelterOutputDTO> addManagerToShelter(

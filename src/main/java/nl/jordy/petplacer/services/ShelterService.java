@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
@@ -179,6 +180,13 @@ public class ShelterService {
 
         shelterRepository.save(shelter);
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
+    }
+
+    public List<ShelterPetOutputDTO> getshelterPets(Long shelterID) {
+        Shelter shelter = fetchShelterByID(shelterID);
+        return shelter.getShelterPets().stream()
+                .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))
+                .toList();
     }
 }
 
