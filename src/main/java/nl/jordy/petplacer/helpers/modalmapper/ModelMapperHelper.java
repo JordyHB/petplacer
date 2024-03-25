@@ -1,9 +1,8 @@
 package nl.jordy.petplacer.helpers.modalmapper;
 
-import nl.jordy.petplacer.dtos.input.PetInputDTO;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetInputDTOTOShelterPetPropertyMap;
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetInputDTOToShelterPetPropertyMap;
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetPatchDTOToShelterPetPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
-import nl.jordy.petplacer.models.Pet;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 
@@ -21,8 +20,9 @@ public class ModelMapperHelper {
         // skips mapping password, preventing it from casting it to lower.
         modelMapper.addMappings(new UserInputDTOPropertyMap());
         //adds mappings for the pet subclasses with nested DTOs
-        modelMapper.addMappings(new ShelterPetInputDTOTOShelterPetPropertyMap());
-
+        modelMapper.addMappings(new ShelterPetInputDTOToShelterPetPropertyMap());
+        modelMapper.addMappings(new ShelterPetPatchDTOToShelterPetPropertyMap());
+        // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
     }
 

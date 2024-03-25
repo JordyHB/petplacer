@@ -60,6 +60,9 @@ public class SecurityConfig {
 
                                 .requestMatchers("/shelters").permitAll()
 
+                                .requestMatchers("/shelterpets").permitAll()
+                                .requestMatchers("/shelterpets/*").permitAll()
+
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

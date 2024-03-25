@@ -28,8 +28,8 @@ public class ShelterPet extends Pet {
     private String specialNeeds;
     private String previousSituation;
 
-    @ManyToOne
-    private Shelter shelter;
+//    @ManyToOne
+//    private Shelter shelter;
 
     @OneToMany(mappedBy = "requestedPet")
     private List<AdoptionRequest> adoptionRequests;

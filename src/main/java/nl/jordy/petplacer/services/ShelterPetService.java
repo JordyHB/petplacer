@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.MapPetDTOtoSubclass;
@@ -56,11 +57,13 @@ public class ShelterPetService {
                 map(fetchShelterPetByID(shelterPetID), ShelterPetOutputDTO.class);
     }
 
-    public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetInputDTO shelterPetInputDTO) {
+    public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetPatchDTO shelterPetPatchDTO) {
 
         ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
 
-        shelterPetRepository.save(MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class,shelterPet));
+        ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, shelterPet);
+
+        shelterPetRepository.save(ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, ShelterPet.class));
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 

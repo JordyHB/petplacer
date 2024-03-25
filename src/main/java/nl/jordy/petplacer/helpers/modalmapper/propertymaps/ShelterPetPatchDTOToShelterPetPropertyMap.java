@@ -1,11 +1,10 @@
 package nl.jordy.petplacer.helpers.modalmapper.propertymaps;
 
-import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.models.ShelterPet;
 import org.modelmapper.PropertyMap;
 
-public class ShelterPetInputDTOTOShelterPetPropertyMap extends PropertyMap<ShelterPetInputDTO, ShelterPet> {
-
+public class ShelterPetPatchDTOToShelterPetPropertyMap extends PropertyMap<ShelterPetPatchDTO, ShelterPet> {
     @Override
     protected void configure() {
         map().setName(source.getPet().getName());
@@ -22,4 +21,3 @@ public class ShelterPetInputDTOTOShelterPetPropertyMap extends PropertyMap<Shelt
         map().setGoodWithCats(source.getPet().getGoodWithCats());
     }
 }
-
