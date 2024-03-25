@@ -7,7 +7,6 @@ import nl.jordy.petplacer.dtos.patch.PetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
-import nl.jordy.petplacer.helpers.MapPetDTOtoSubclass;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
@@ -150,10 +149,9 @@ class ShelterPetServiceTest {
                 "bernie",
                 7);
         // Maps it to an actual Entity for mocking
-        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
                 shelterPetInputDTO,
-                ShelterPet.class,
-                null
+                ShelterPet.class
         );
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
@@ -266,14 +264,13 @@ class ShelterPetServiceTest {
         // Arrange
         Long shelterPetID = 1L;
 
-        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
                 getShelterPetInputDTO(
                         5,
                         "Tasty treats",
                         "Bernie",
                         7),
-                ShelterPet.class,
-                null
+                ShelterPet.class
         );
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
