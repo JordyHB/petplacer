@@ -54,7 +54,15 @@ public class SecurityConfig {
                                 .requestMatchers("/auth").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                                .requestMatchers("/users/*").hasAuthority("ROLE_USER")
+                                .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
+                                .requestMatchers("/users/**").hasAuthority("ROLE_ADMIN")
+
+                                .requestMatchers("/shelters").permitAll()
+
+                                .requestMatchers("/shelterpets").permitAll()
+                                .requestMatchers("/shelterpets/*").permitAll()
+
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -3,6 +3,7 @@ package nl.jordy.petplacer.controllers;
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.services.ShelterService;
@@ -34,18 +35,18 @@ public class ShelterController {
     }
 
 
-    // Puts
-    @PutMapping("/{shelterID}")
+    // Patch
+    @PatchMapping("/{shelterID}")
     public ResponseEntity<ShelterOutputDTO> updateShelterByID(
             @PathVariable Long shelterID,
             @Valid
-            @RequestBody ShelterInputDTO shelterInputDTO,
+            @RequestBody ShelterPatchDTO shelterPatchDTO,
             BindingResult bindingResult
     ) {
 
         CheckBindingResult.checkBindingResult(bindingResult);
 
-        return ResponseEntity.ok(shelterService.updateShelterByID(shelterID, shelterInputDTO));
+        return ResponseEntity.ok(shelterService.updateShelterByID(shelterID, shelterPatchDTO));
     }
 
 

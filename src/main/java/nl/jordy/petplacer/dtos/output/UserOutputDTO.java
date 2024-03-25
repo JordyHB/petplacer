@@ -1,7 +1,5 @@
 package nl.jordy.petplacer.dtos.output;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import nl.jordy.petplacer.models.Authority;
 
@@ -10,9 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class UserOutputDTO {
 
     private String username;
@@ -27,5 +22,4 @@ public class UserOutputDTO {
     private List<Long> pets;
     private List<Long> donations;
     private List<Long> adoptionRequests;
-
 }

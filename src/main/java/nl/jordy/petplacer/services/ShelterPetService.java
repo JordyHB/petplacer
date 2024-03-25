@@ -2,10 +2,10 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
-import nl.jordy.petplacer.helpers.MapPetDTOtoSubclass;
-import nl.jordy.petplacer.helpers.ModelMapperHelper;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class ShelterPetService {
     public ShelterPetOutputDTO registerNewShelterPet(ShelterPetInputDTO shelterPetInputDTO) {
 
         // Maps the DTO and adds a timestamp of arrival;
-        ShelterPet shelterPet = MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class, null);
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(shelterPetInputDTO, ShelterPet.class);
 
         shelterPet.setDateOfArrival(new Date());
         shelterPet.setStatus(ShelterPetStatus.AVAILABLE);
@@ -56,11 +56,13 @@ public class ShelterPetService {
                 map(fetchShelterPetByID(shelterPetID), ShelterPetOutputDTO.class);
     }
 
-    public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetInputDTO shelterPetInputDTO) {
+    public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetPatchDTO shelterPetPatchDTO) {
 
         ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
 
-        shelterPetRepository.save(MapPetDTOtoSubclass.mapPetDTOtoSubclass(shelterPetInputDTO, ShelterPet.class,shelterPet));
+        ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, shelterPet);
+
+        shelterPetRepository.save(ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, ShelterPet.class));
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 

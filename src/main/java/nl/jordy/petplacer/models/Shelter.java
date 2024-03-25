@@ -40,8 +40,8 @@ public class Shelter {
     @Column(name = "date_of_last_update")
     private Date dateOfLastUpdate = new Date();
 
-    @OneToMany(mappedBy = "shelter")
-    private List<ShelterPet> shelterPets;
+//    @OneToMany(mappedBy = "shelter")
+//    private List<ShelterPet> shelterPets;
 
     @OneToMany(mappedBy = "receivingShelter")
     private List<Donation> donations;
