@@ -29,11 +29,7 @@ public class UserService {
 
     }
 
-    public User fetchUserByID(String username) {
-
-        // Returns a 401 if the user is not the requested user or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
-
+    public User fetchUserByUsername(String username) {
         // Fetches the user by id and throws an exception if it doesn't exist
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new RecordNotFoundException("No user found with id: " + username)
@@ -75,14 +71,19 @@ public class UserService {
                 .toList();
     }
 
-    public UserOutputDTO findUserById(String username) {
+    public UserOutputDTO findUserByUsername(String username) {
+        // Returns a 401 if the user is not the requested user or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
         // uses private method to fetch and validate the user exists
-        return ModelMapperHelper.getModelMapper().map(fetchUserByID(username), UserOutputDTO.class);
+        return ModelMapperHelper.getModelMapper().map(fetchUserByUsername(username), UserOutputDTO.class);
     }
 
-    public UserOutputDTO updateUserByID(String username, UserPatchDTO userPatchDTO) {
+    public UserOutputDTO updateUserByUsername(String username, UserPatchDTO userPatchDTO) {
 
-        User user = fetchUserByID(username);
+        // Returns a 401 if the user is not the requested user or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+
+        User user = fetchUserByUsername(username);
 
         ModelMapperHelper.getModelMapper().map(userPatchDTO, user);
         user.setUpdatedAt(new Date());
@@ -92,13 +93,21 @@ public class UserService {
     }
 
     public String deleteUserByID(String username) {
-        userRepository.delete(fetchUserByID(username));
+
+        // Returns a 401 if the user is not the requested user or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+
+        userRepository.delete(fetchUserByUsername(username));
         return "User: " + username + " has been successfully deleted.";
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
     public UserOutputDTO promoteToAdmin(String username) {
 
-        User user = fetchUserByID(username);
+        User user = fetchUserByUsername(username);
 
         if (AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
             throw new AlreadyExistsException("User: " + username + " is already an admin");
@@ -112,7 +121,7 @@ public class UserService {
 
     public UserOutputDTO demoteAdmin(String username) {
         // uses private method to fetch and validate the user exists
-        User user = fetchUserByID(username);
+        User user = fetchUserByUsername(username);
 
         if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
             throw new AlreadyExistsException("User: " + username + " is not an admin");

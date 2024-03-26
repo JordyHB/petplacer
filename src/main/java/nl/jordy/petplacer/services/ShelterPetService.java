@@ -17,9 +17,11 @@ import java.util.List;
 public class ShelterPetService {
 
     private final ShelterPetRepository shelterPetRepository;
+    private final ShelterService shelterService;
 
-    public ShelterPetService(ShelterPetRepository shelterPetRepository) {
+    public ShelterPetService(ShelterPetRepository shelterPetRepository, ShelterService shelterService) {
         this.shelterPetRepository = shelterPetRepository;
+        this.shelterService = shelterService;
     }
 
     public ShelterPet fetchShelterPetByID(Long shelterPetID) {
@@ -29,13 +31,12 @@ public class ShelterPetService {
         );
     }
 
-    public ShelterPetOutputDTO registerNewShelterPet(ShelterPetInputDTO shelterPetInputDTO) {
+    public ShelterPetOutputDTO registerNewShelterPet(Long shelterID, ShelterPetInputDTO shelterPetInputDTO) {
 
         // Maps the DTO and adds a timestamp of arrival;
         ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(shelterPetInputDTO, ShelterPet.class);
 
-        shelterPet.setDateOfArrival(new Date());
-        shelterPet.setStatus(ShelterPetStatus.AVAILABLE);
+        shelterPet.setShelter(shelterService.fetchShelterByID(shelterID));
 
         shelterPetRepository.save(shelterPet);
 
@@ -62,7 +63,7 @@ public class ShelterPetService {
 
         ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, shelterPet);
 
-        shelterPetRepository.save(ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, ShelterPet.class));
+        shelterPetRepository.save(shelterPet);
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 

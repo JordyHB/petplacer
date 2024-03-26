@@ -20,16 +20,17 @@ public class ShelterPet extends Pet {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private ShelterPetStatus status;
+    private ShelterPetStatus status = ShelterPetStatus.AVAILABLE;
 
-    private Date dateOfArrival;
+    private Date dateOfRegistration = new Date();
+    private Date dateOfLastUpdate = new Date();
     private int monthsInShelter;
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
 
-//    @ManyToOne
-//    private Shelter shelter;
+    @ManyToOne
+    private Shelter shelter;
 
     @OneToMany(mappedBy = "requestedPet")
     private List<AdoptionRequest> adoptionRequests;

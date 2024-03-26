@@ -28,5 +28,6 @@ public class ShelterOutputDTO implements HasFetchableId {
     private Date dateOfRegistration;
     private Date dateOfLastUpdate;
     private List<UserOutputDTO>managers;
+    private List<ShelterPetOutputDTO> shelterPets;
 
 }

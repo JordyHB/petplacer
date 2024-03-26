@@ -1,8 +1,8 @@
 package nl.jordy.petplacer.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +23,7 @@ public class Shelter {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String shelterName;
     private String phoneNumber;
     private String email;
@@ -40,8 +41,8 @@ public class Shelter {
     @Column(name = "date_of_last_update")
     private Date dateOfLastUpdate = new Date();
 
-//    @OneToMany(mappedBy = "shelter")
-//    private List<ShelterPet> shelterPets;
+    @OneToMany(mappedBy = "shelter")
+    private List<ShelterPet> shelterPets;
 
     @OneToMany(mappedBy = "receivingShelter")
     private List<Donation> donations;
