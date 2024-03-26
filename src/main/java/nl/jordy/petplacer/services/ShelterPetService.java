@@ -63,7 +63,7 @@ public class ShelterPetService {
 
         ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, shelterPet);
 
-        shelterPetRepository.save(ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, ShelterPet.class));
+        shelterPetRepository.save(shelterPet);
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 

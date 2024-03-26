@@ -42,7 +42,7 @@ public class User {
     private Set<Authority> authorities = new HashSet<>();
 
 
-    @ManyToMany(mappedBy = "managers")
+    @ManyToMany(mappedBy = "managers", fetch = FetchType.LAZY)
     private List<Shelter> managedShelters;
 
     @OneToMany(mappedBy = "currentOwner")

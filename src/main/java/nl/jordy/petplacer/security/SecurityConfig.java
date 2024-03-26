@@ -58,12 +58,15 @@ public class SecurityConfig {
                                 .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/**").hasAuthority("ROLE_ADMIN")
 
-                                .requestMatchers("/shelters/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/shelters/**").permitAll()
+                                .requestMatchers("/shelters/*").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
+                                .requestMatchers("/shelters/*/shelterpets").hasAuthority("ROLE_USER")
+                                .requestMatchers("/shelters/*/managers/*").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
-                                .requestMatchers("/shelterpets").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
 
-                                .anyRequest().authenticated()
+                                .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
