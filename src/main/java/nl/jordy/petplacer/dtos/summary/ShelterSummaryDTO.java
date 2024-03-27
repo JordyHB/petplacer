@@ -1,18 +1,17 @@
-package nl.jordy.petplacer.dtos.output;
+package nl.jordy.petplacer.dtos.summary;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.Data;
-import nl.jordy.petplacer.interfaces.HasFetchableId;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import lombok.Getter;
+import lombok.Setter;
+import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
+import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-public class ShelterOutputDTO implements HasFetchableId {
+@Getter
+@Setter
+public class ShelterSummaryDTO {
 
     private Long id;
     private String shelterName;
@@ -26,8 +25,9 @@ public class ShelterOutputDTO implements HasFetchableId {
     private String facilities;
     private String openingHours;
     private Date dateOfRegistration;
-    private Date dateOfLastUpdate;
-    private List<UserOutputDTO>managers;
+
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<UserSummaryDTO> managers;
     private List<DonationOutputDTO> donations;
     private List<ShelterPetOutputDTO> shelterPets;
 

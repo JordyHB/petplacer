@@ -3,6 +3,9 @@ package nl.jordy.petplacer.dtos.output;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
@@ -10,10 +13,11 @@ import nl.jordy.petplacer.interfaces.HasFetchableId;
 import java.util.Date;
 import java.util.List;
 
-@Data
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
+@Getter
+@Setter
 public class ShelterPetOutputDTO implements HasFetchableId {
 
     private Long id;

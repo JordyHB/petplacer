@@ -5,13 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import nl.jordy.petplacer.models.Authority;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "username")
@@ -26,7 +29,7 @@ public class UserOutputDTO {
     private Date updatedAt;
     private Set<Authority> authorities;
     private List<ShelterOutputDTO> managedShelters;
-    private List<Long> pets;
-    private List<Long> donations;
-    private List<Long> adoptionRequests;
+//    private List<Long> pets;
+    private List<DonationOutputDTO> donations;
+//    private List<Long> adoptionRequests;
 }

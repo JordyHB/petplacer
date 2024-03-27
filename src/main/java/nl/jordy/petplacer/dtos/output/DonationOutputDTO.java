@@ -1,12 +1,26 @@
 package nl.jordy.petplacer.dtos.output;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
+import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class DonationOutputDTO implements HasFetchableId {
 
     private Long id;
+    private UserSummaryDTO donator;
+    private ShelterSummaryDTO receivingShelter;
+    private BigDecimal donationAmount;
+    private String donationMessage;
+    private String dateOfDonation;
 }
