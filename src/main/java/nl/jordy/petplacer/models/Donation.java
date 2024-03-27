@@ -3,13 +3,15 @@ package nl.jordy.petplacer.models;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "donations")
 public class Donation {
 
@@ -26,5 +28,6 @@ public class Donation {
 
     private BigDecimal donationAmount;
     private String donationMessage;
+    private Date dateOfDonation = new Date();
 
 }

@@ -1,13 +1,16 @@
 package nl.jordy.petplacer.controllers;
 
 import jakarta.validation.Valid;
+import nl.jordy.petplacer.dtos.input.DonationInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
+import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.services.DonationService;
 import nl.jordy.petplacer.services.ShelterPetService;
 import nl.jordy.petplacer.services.ShelterService;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +25,16 @@ public class ShelterController {
 
     private final ShelterService shelterService;
     private final ShelterPetService shelterPetService;
+    private final DonationService donationService;
 
-    public ShelterController(ShelterService shelterService, ShelterPetService shelterPetService) {
+    public ShelterController(
+            ShelterService shelterService,
+            ShelterPetService shelterPetService,
+            DonationService donationService
+    ) {
         this.shelterService = shelterService;
         this.shelterPetService = shelterPetService;
+        this.donationService = donationService;
     }
 
     // Posts
@@ -43,6 +52,22 @@ public class ShelterController {
 
         return ResponseEntity.created(BuildUri.buildUri(shelterPetOutputDTO))
                 .body(shelterPetOutputDTO);
+    }
+
+    @PostMapping("{shelterID}/donations")
+    public ResponseEntity<DonationOutputDTO> addDonation(
+            @PathVariable Long shelterID,
+            @Valid
+            @RequestBody DonationInputDTO donationInputDTO,
+            BindingResult bindingResult
+            ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        DonationOutputDTO donationOutputDTO = donationService.makeDonation(shelterID, donationInputDTO);
+
+        return ResponseEntity.created(BuildUri.buildUri(donationOutputDTO)).body(donationOutputDTO);
+
     }
 
     // Gets
