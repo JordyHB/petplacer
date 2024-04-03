@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.ShelterPetSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
 
@@ -33,6 +34,6 @@ public class ShelterOutputDTO implements HasFetchableId {
     private Date dateOfLastUpdate;
     private List<UserSummaryDTO>managers;
     private List<DonationOutputDTO> donations;
-    private List<ShelterPetOutputDTO> shelterPets;
+    private List<ShelterPetSummaryDTO> shelterPets;
 
 }

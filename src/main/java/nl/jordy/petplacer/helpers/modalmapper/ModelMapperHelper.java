@@ -1,6 +1,6 @@
 package nl.jordy.petplacer.helpers.modalmapper;
 
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterOutputToDonationOutputPropertyMap;
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationToDonationOutputPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetInputDTOToShelterPetPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetPatchDTOToShelterPetPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
@@ -27,7 +27,7 @@ public class ModelMapperHelper {
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
         // adds a property map to map ShelterOutputDTO to DonationOutputDTO
-        ModelMapperHelper.modelMapper.addMappings(new ShelterOutputToDonationOutputPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new DonationToDonationOutputPropertyMap());
     }
 
     private ModelMapperHelper() {

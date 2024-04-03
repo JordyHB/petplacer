@@ -21,8 +21,9 @@ public class UserSummaryDTO {
         private String lastName;
         private String email;
         private String phoneNumber;
+        @JsonIdentityReference(alwaysAsId = true)
         private List<ShelterSummaryDTO> managedShelters;
-//        @JsonIdentityReference(alwaysAsId = true)
+        @JsonIdentityReference(alwaysAsId = true)
         private List<DonationOutputDTO> donations;
         private List<Long> pets;
         private List<Long> adoptionRequests;

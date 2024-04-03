@@ -31,7 +31,6 @@ public class UserOutputDTO {
     private Set<Authority> authorities;
     private List<ShelterSummaryDTO> managedShelters;
     private List<Long> pets;
-    @JsonIdentityReference(alwaysAsId = true)
     private List<DonationOutputDTO> donations;
     private List<Long> adoptionRequests;
 }

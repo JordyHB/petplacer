@@ -31,9 +31,9 @@ public class ShelterSummaryDTO {
     private String openingHours;
     private Date dateOfRegistration;
 
-//    @JsonIdentityReference(alwaysAsId = true)
-//    private List<UserSummaryDTO> managers;
-//    private List<DonationOutputDTO> donations;
-//    private List<ShelterPetOutputDTO> shelterPets;
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<UserSummaryDTO> managers;
+    private List<DonationOutputDTO> donations;
+    private List<ShelterPetSummaryDTO> shelterPets;
 
 }

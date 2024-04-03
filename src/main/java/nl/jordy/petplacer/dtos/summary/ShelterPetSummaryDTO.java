@@ -1,25 +1,18 @@
-package nl.jordy.petplacer.dtos.output;
+package nl.jordy.petplacer.dtos.summary;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
-import nl.jordy.petplacer.interfaces.HasFetchableId;
 
 import java.util.Date;
 import java.util.List;
 
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @Getter
 @Setter
-public class ShelterPetOutputDTO implements HasFetchableId {
 
+public class ShelterPetSummaryDTO {
     private Long id;
     private String name;
     private int age;
@@ -35,16 +28,14 @@ public class ShelterPetOutputDTO implements HasFetchableId {
     private boolean isGoodWithDogs;
     private boolean isGoodWithCats;
     private Date dateOfRegistration;
-    private Date dateOfLastUpdate;
     private int monthsInShelter;
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
-    private ShelterSummaryDTO shelter;
 
+    @JsonIdentityReference(alwaysAsId = true)
+    private ShelterSummaryDTO shelter;
 
     // this gets filled later on
     private List<Long> adoptionRequests;
-    private Long approvedNewHome;
-    private Date rehomeDate;
 }

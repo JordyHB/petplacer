@@ -6,7 +6,7 @@ import nl.jordy.petplacer.helpers.modalmapper.ShelterToSummaryConverter;
 import nl.jordy.petplacer.models.Donation;
 import org.modelmapper.PropertyMap;
 
-public class ShelterOutputToDonationOutputPropertyMap extends PropertyMap<Donation, DonationOutputDTO> {
+public class DonationToDonationOutputPropertyMap extends PropertyMap<Donation, DonationOutputDTO> {
 
     @Override
     protected void configure() {
