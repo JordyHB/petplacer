@@ -1,6 +1,7 @@
 package nl.jordy.petplacer.dtos.summary;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class UserSummaryDTO {
         private String email;
         private String phoneNumber;
         private List<ShelterSummaryDTO> managedShelters;
+//        @JsonIdentityReference(alwaysAsId = true)
         private List<DonationOutputDTO> donations;
         private List<Long> pets;
         private List<Long> adoptionRequests;

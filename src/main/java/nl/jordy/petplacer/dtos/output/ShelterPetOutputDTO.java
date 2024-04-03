@@ -1,8 +1,8 @@
 package nl.jordy.petplacer.dtos.output;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
@@ -40,7 +40,10 @@ public class ShelterPetOutputDTO implements HasFetchableId {
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
-    private ShelterOutputDTO shelter;
+
+    @JsonIdentityReference(alwaysAsId = true)
+    private ShelterSummaryDTO shelter;
+
     private List<Long> adoptionRequests;
     private Long approvedNewHome;
     private Date rehomeDate;

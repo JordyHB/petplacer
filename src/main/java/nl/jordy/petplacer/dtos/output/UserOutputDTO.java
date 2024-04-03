@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.models.Authority;
 
 import java.util.Date;
@@ -28,8 +29,9 @@ public class UserOutputDTO {
     private Date createdAt;
     private Date updatedAt;
     private Set<Authority> authorities;
-    private List<ShelterOutputDTO> managedShelters;
-//    private List<Long> pets;
+    private List<ShelterSummaryDTO> managedShelters;
+    private List<Long> pets;
+    @JsonIdentityReference(alwaysAsId = true)
     private List<DonationOutputDTO> donations;
-//    private List<Long> adoptionRequests;
+    private List<Long> adoptionRequests;
 }

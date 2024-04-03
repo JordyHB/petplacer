@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.helpers.modalmapper;
 
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterOutputToDonationOutputPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetInputDTOToShelterPetPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.ShelterPetPatchDTOToShelterPetPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
@@ -19,11 +20,14 @@ public class ModelMapperHelper {
 
         // skips mapping password, preventing it from casting it to lower.
         modelMapper.addMappings(new UserInputDTOPropertyMap());
+
         //adds mappings for the pet subclasses with nested DTOs
         modelMapper.addMappings(new ShelterPetInputDTOToShelterPetPropertyMap());
         modelMapper.addMappings(new ShelterPetPatchDTOToShelterPetPropertyMap());
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
+        // adds a property map to map ShelterOutputDTO to DonationOutputDTO
+        ModelMapperHelper.modelMapper.addMappings(new ShelterOutputToDonationOutputPropertyMap());
     }
 
     private ModelMapperHelper() {

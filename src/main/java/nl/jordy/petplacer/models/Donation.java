@@ -1,6 +1,7 @@
 package nl.jordy.petplacer.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,10 +21,10 @@ public class Donation {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User donator;
 
-    @ManyToOne
+    @ManyToOne()
     private Shelter receivingShelter;
 
     private BigDecimal donationAmount;

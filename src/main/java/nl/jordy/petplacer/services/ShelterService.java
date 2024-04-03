@@ -90,8 +90,9 @@ public class ShelterService {
 
     public ShelterOutputDTO findShelterById(Long shelterID) {
 
-        return ModelMapperHelper.getModelMapper().
-                map(fetchShelterByID(shelterID), ShelterOutputDTO.class);
+        Shelter shelter = fetchShelterByID(shelterID);
+
+        return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
     }
 
     public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterPatchDTO shelterPatchDTO) {

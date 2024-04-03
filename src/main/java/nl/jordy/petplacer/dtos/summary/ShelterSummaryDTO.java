@@ -1,6 +1,8 @@
 package nl.jordy.petplacer.dtos.summary;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
@@ -11,6 +13,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ShelterSummaryDTO {
 
     private Long id;
@@ -26,9 +31,9 @@ public class ShelterSummaryDTO {
     private String openingHours;
     private Date dateOfRegistration;
 
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<UserSummaryDTO> managers;
-    private List<DonationOutputDTO> donations;
-    private List<ShelterPetOutputDTO> shelterPets;
+//    @JsonIdentityReference(alwaysAsId = true)
+//    private List<UserSummaryDTO> managers;
+//    private List<DonationOutputDTO> donations;
+//    private List<ShelterPetOutputDTO> shelterPets;
 
 }
