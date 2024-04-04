@@ -67,6 +67,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
 
+                                .requestMatchers("/donations").permitAll()
+                                .requestMatchers("/donations/*").permitAll()
+
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
