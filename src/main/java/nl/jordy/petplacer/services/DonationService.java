@@ -3,15 +3,14 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.DonationInputDTO;
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
 import nl.jordy.petplacer.dtos.patch.DonationPatchDTO;
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationPatchToDonationPropertyMap;
 import nl.jordy.petplacer.models.Donation;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.DonationRepository;
 import nl.jordy.petplacer.util.AccessValidator;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -77,6 +76,19 @@ public class DonationService {
 
         donationRepository.save(requestedDonation);
         return ModelMapperHelper.getModelMapper().map(requestedDonation, DonationOutputDTO.class);
+    }
+
+    public String deleteDonationById(Long donationID) throws CustomAccessDeniedException {
+
+        if(AccessValidator.isAdmin(AccessValidator.getAuth())) {
+            Donation donation = fetchDonationByID(donationID);
+
+            donationRepository.delete(donation);
+
+            return "Donation with id: " + donationID + " has been successfully deleted.";
+        } else {
+            throw new CustomAccessDeniedException("Only admins can delete donations");
+        }
     }
 
 }

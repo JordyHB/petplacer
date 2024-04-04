@@ -52,6 +52,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth").permitAll()
+                                .requestMatchers("/error").permitAll()
+
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/users/*").hasAuthority("ROLE_USER")
@@ -67,8 +69,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
 
-                                .requestMatchers("/donations").permitAll()
-                                .requestMatchers("/donations/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/donations").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()
+                                .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
                                 .anyRequest().denyAll()
                 )
