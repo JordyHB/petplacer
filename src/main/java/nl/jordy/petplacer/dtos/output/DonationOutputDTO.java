@@ -9,6 +9,7 @@ import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -22,5 +23,6 @@ public class DonationOutputDTO implements HasFetchableId {
     private ShelterSummaryDTO receivingShelter = new ShelterSummaryDTO();
     private BigDecimal donationAmount;
     private String donationMessage;
-    private String dateOfDonation;
+    private Date dateOfDonation;
+    private Date dateOfLastUpdate;
 }

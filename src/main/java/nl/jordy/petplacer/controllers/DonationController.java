@@ -1,12 +1,10 @@
 package nl.jordy.petplacer.controllers;
 
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
+import nl.jordy.petplacer.dtos.patch.DonationPatchDTO;
 import nl.jordy.petplacer.services.DonationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,12 @@ public class DonationController {
     @GetMapping("/{donationID}")
     public ResponseEntity<DonationOutputDTO> getDonationByID(@PathVariable Long donationID) {
         return ResponseEntity.ok(donationService.findDonationById(donationID));
+    }
+
+    // Patches
+
+    @PatchMapping("/{donationID}")
+    public ResponseEntity<DonationOutputDTO> updateDonation(@PathVariable Long donationID, @RequestBody DonationPatchDTO donationPatchDTO) {
+        return ResponseEntity.ok(donationService.updateDonationById(donationID, donationPatchDTO));
     }
 }

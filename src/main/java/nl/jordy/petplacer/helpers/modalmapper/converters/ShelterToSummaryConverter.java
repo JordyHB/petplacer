@@ -12,7 +12,6 @@ import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ShelterToSummaryConverter implements Converter<Shelter, ShelterSummaryDTO> {
 

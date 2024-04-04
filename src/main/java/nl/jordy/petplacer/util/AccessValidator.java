@@ -22,11 +22,15 @@ public class AccessValidator {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    public static boolean isAdmin(Authentication userAuth) {
+        return userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
     public static void isUserOrAdmin(Authentication userAuth, String requestedUsername) {
         // if the user is not the requested user
         if (!userAuth.getName().equals(requestedUsername) &&
                 // if the user is not an admin
-                !userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                !isAdmin(userAuth)) {
 
             throw new CustomAccessDeniedException();
         }
@@ -35,13 +39,13 @@ public class AccessValidator {
     public void isSheltersManagerOrAdmin(Authentication userAuth, Long requestedShelterID) {
         // will throw a 403 if the user is not the shelter manager or an admin
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&
-                !userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+                !isAdmin(userAuth)) {
 
             throw new CustomAccessDeniedException();
         }
 
 //         will throw a 403 if the user is not in the managers list of the shelter or an admin
-        if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) &&
+        if (!isAdmin(userAuth) &&
                 // fetches the shelter and checks if the user is in the managers list
                 !shelterRepository.findById(requestedShelterID)
                         .orElseThrow(() -> new RecordNotFoundException("No Shelter found with id: " + requestedShelterID))

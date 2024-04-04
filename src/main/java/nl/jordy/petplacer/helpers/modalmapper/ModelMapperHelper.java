@@ -1,6 +1,7 @@
 package nl.jordy.petplacer.helpers.modalmapper;
 
 import nl.jordy.petplacer.helpers.modalmapper.converters.StringToLowerConverter;
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationPatchToDonationPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationToDonationOutputPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationToDonationSummaryPropertyMap;
 import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
@@ -26,6 +27,8 @@ public class ModelMapperHelper {
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationOutputPropertyMap());
         // adds a property map to map donation to donation summary
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationSummaryPropertyMap());
+        // adds a property map to map donationPatchDTO to donation
+        ModelMapperHelper.modelMapper.addMappings(new DonationPatchToDonationPropertyMap());
     }
 
     private ModelMapperHelper() {

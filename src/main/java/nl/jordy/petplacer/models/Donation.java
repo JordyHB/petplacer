@@ -30,5 +30,6 @@ public class Donation {
     private BigDecimal donationAmount;
     private String donationMessage;
     private Date dateOfDonation = new Date();
+    private Date dateOfLastUpdate = new Date();
 
 }
