@@ -4,13 +4,16 @@ package nl.jordy.petplacer.controllers;
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
+import nl.jordy.petplacer.dtos.input.UserOwnedPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.dtos.output.UserOwnedPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.services.ShelterService;
+import nl.jordy.petplacer.services.UserOwnedPetService;
 import nl.jordy.petplacer.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,11 +29,16 @@ public class UserController {
 
     private final UserService userService;
     private final ShelterService shelterService;
+    private final UserOwnedPetService userOwnedPetService;
 
-    public UserController(UserService userService, ShelterService shelterService) {
+    public UserController(
+            UserService userService,
+            ShelterService shelterService,
+            UserOwnedPetService userOwnedPetService) {
 
         this.userService = userService;
         this.shelterService = shelterService;
+        this.userOwnedPetService = userOwnedPetService;
     }
 
 
@@ -70,6 +78,21 @@ public class UserController {
         ShelterOutputDTO shelterOutputDTO = shelterService.registerNewShelter(shelterInputDTO, user);
 
         return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
+    }
+
+    @PostMapping("/{username}/owned-pets")
+    public ResponseEntity<UserOwnedPetOutputDTO> registerUserOwnedPet(
+            @PathVariable String username,
+            @Valid
+            @RequestBody UserOwnedPetInputDTO userOwnedPetInputDTO,
+            BindingResult bindingResult
+    ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        UserOwnedPetOutputDTO userOwnedPetOutputDTO = userOwnedPetService.registerUserOwnedPet(userOwnedPetInputDTO, username);
+
+        return ResponseEntity.created(BuildUri.buildUri(userOwnedPetOutputDTO)).body(userOwnedPetOutputDTO);
     }
 
 

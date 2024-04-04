@@ -20,7 +20,6 @@ public class UserOwnedPet extends Pet {
     @ManyToOne
     private User currentOwner;
 
-    private boolean firsOwner;
     private boolean isAdopted;
     private int yearsOwned;
 
