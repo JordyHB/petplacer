@@ -1,12 +1,13 @@
 package nl.jordy.petplacer.models;
 
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import nl.jordy.petplacer.enums.GenderEnum;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class Pet {
 

@@ -1,15 +1,18 @@
 package nl.jordy.petplacer.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "donations")
 public class Donation {
 
@@ -18,13 +21,15 @@ public class Donation {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User donator;
 
-    @ManyToOne
+    @ManyToOne()
     private Shelter receivingShelter;
 
     private BigDecimal donationAmount;
     private String donationMessage;
+    private Date dateOfDonation = new Date();
+    private Date dateOfLastUpdate = new Date();
 
 }

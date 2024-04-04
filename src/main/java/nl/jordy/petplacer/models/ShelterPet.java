@@ -29,7 +29,7 @@ public class ShelterPet extends Pet {
     private String specialNeeds;
     private String previousSituation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Shelter shelter;
 
     @OneToMany(mappedBy = "requestedPet")

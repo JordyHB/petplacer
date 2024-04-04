@@ -1,4 +1,4 @@
-package nl.jordy.petplacer.helpers.modalmapper;
+package nl.jordy.petplacer.helpers.modalmapper.converters;
 
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;

@@ -44,13 +44,13 @@ public class Shelter {
     @OneToMany(mappedBy = "shelter")
     private List<ShelterPet> shelterPets;
 
-    @OneToMany(mappedBy = "receivingShelter")
+    @OneToMany(mappedBy = "receivingShelter", fetch = FetchType.EAGER)
     private List<Donation> donations;
 
     @OneToMany(mappedBy = "requestedPetShelter")
     private List<AdoptionRequest> adoptionRequests;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "shelter_managers",
             joinColumns = @JoinColumn(name = "shelter_id"),
