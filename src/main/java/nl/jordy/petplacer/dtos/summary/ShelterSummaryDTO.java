@@ -33,7 +33,7 @@ public class ShelterSummaryDTO {
 
     @JsonIdentityReference(alwaysAsId = true)
     private List<UserSummaryDTO> managers;
-    private List<DonationOutputDTO> donations;
+    private List<DonationSummaryDTO> donations;
     private List<ShelterPetSummaryDTO> shelterPets;
 
 }

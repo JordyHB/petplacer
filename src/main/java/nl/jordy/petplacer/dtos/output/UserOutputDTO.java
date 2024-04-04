@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.DonationSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.models.Authority;
 
@@ -31,6 +32,6 @@ public class UserOutputDTO {
     private Set<Authority> authorities;
     private List<ShelterSummaryDTO> managedShelters;
     private List<Long> pets;
-    private List<DonationOutputDTO> donations;
+    private List<DonationSummaryDTO> donations;
     private List<Long> adoptionRequests;
 }

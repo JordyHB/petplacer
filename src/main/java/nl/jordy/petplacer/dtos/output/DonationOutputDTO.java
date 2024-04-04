@@ -19,7 +19,7 @@ public class DonationOutputDTO implements HasFetchableId {
 
     private Long id;
     private UserSummaryDTO donator;
-    private ShelterSummaryDTO receivingShelter;
+    private ShelterSummaryDTO receivingShelter = new ShelterSummaryDTO();
     private BigDecimal donationAmount;
     private String donationMessage;
     private String dateOfDonation;

@@ -2,7 +2,7 @@ package nl.jordy.petplacer.helpers.modalmapper.propertymaps;
 
 
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
-import nl.jordy.petplacer.helpers.modalmapper.ShelterToSummaryConverter;
+import nl.jordy.petplacer.helpers.modalmapper.converters.ShelterToSummaryConverter;
 import nl.jordy.petplacer.models.Donation;
 import org.modelmapper.PropertyMap;
 
