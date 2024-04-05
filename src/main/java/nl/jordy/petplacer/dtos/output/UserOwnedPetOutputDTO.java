@@ -8,6 +8,8 @@ import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
 
+import java.util.Date;
+
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -29,6 +31,8 @@ public class UserOwnedPetOutputDTO implements HasFetchableId {
     private boolean isGoodWithCats;
     private boolean isAdopted;
     private int yearsOwned;
+    private Date dateOfRegistration;
+    private Date dateOfLastUpdate;
 
     private UserSummaryDTO currentOwner;
 }

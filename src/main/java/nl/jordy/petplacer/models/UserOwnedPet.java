@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -17,10 +19,11 @@ public class UserOwnedPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
-    private User currentOwner;
-
     private boolean isAdopted;
     private int yearsOwned;
+    private Date dateOfRegistration = new Date();
+    private Date dateOfLastUpdate = new Date();
 
+    @ManyToOne
+    private User currentOwner;
 }
