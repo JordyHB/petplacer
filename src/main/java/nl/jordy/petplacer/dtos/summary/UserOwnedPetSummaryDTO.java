@@ -1,19 +1,18 @@
-package nl.jordy.petplacer.dtos.output;
+package nl.jordy.petplacer.dtos.summary;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
-import nl.jordy.petplacer.interfaces.HasFetchableId;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 @Getter
 @Setter
-public class UserOwnedPetOutputDTO implements HasFetchableId {
+public class UserOwnedPetSummaryDTO {
     private Long id;
     private String name;
     private int age;
@@ -30,5 +29,6 @@ public class UserOwnedPetOutputDTO implements HasFetchableId {
     private boolean isAdopted;
     private int yearsOwned;
 
+    @JsonIdentityReference(alwaysAsId = true)
     private UserSummaryDTO currentOwner;
 }

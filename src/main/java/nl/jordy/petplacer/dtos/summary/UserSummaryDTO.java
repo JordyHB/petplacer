@@ -26,6 +26,7 @@ public class UserSummaryDTO {
         private List<ShelterSummaryDTO> managedShelters;
         @JsonIdentityReference(alwaysAsId = true)
         private List<DonationSummaryDTO> donations;
-//        private List<UserOwnedPet> pets;
+        @JsonIdentityReference(alwaysAsId = true)
+        private List<UserOwnedPetSummaryDTO> pets;
         private List<Long> adoptionRequests;
 }
