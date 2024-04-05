@@ -44,4 +44,10 @@ public class UserOwnedPetController {
         CheckBindingResult.checkBindingResult(bindingResult);
         return ResponseEntity.ok(userOwnedPetService.updateUserOwnedPetById(petID, userOwnedPetPatchDTO));
     }
+
+    // Deletes
+    @DeleteMapping("/{petID}")
+    public ResponseEntity<String> deleteUserOwnedPetByID(@PathVariable Long petID) {
+        return ResponseEntity.ok(userOwnedPetService.deleteUserOwnedPetById(petID));
+    }
 }

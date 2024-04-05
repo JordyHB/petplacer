@@ -78,6 +78,17 @@ public class UserOwnedPetService {
 
 
     }
+
+    public String deleteUserOwnedPetById(Long petID) {
+
+        UserOwnedPet userOwnedPet = fetchUserOwnedPetById(petID);
+
+        // checks if the request is made by the user that owns the pet or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), userOwnedPet.getCurrentOwner().getUsername());
+
+        userOwnedPetRepository.deleteById(petID);
+        return "User owned pet with id: " + petID + " has been deleted";
+    }
 }
 
 
