@@ -10,6 +10,8 @@ import nl.jordy.petplacer.repositories.UserOwnedPetRepository;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserOwnedPetService {
 
@@ -35,13 +37,30 @@ public class UserOwnedPetService {
         UserOwnedPet userOwnedPet = ModelMapperHelper.getModelMapper().map(userOwnedPetDTO, UserOwnedPet.class);
 
         // fetches the user that is the current owner of the pet
-        User user = userService.fetchUserByUsername(username);
-
-        userOwnedPet.setCurrentOwner(user);
-
+        userOwnedPet.setCurrentOwner(userService.fetchUserByUsername(username));
 
         userOwnedPetRepository.save(userOwnedPet);
 
         return ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class);
     }
+
+    public List<UserOwnedPetOutputDTO> findAllUserOwnedPets() {
+        List<UserOwnedPet> userOwnedPets = userOwnedPetRepository.findAll();
+        return userOwnedPets.stream()
+                .map(userOwnedPet -> ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class))
+                .toList();
+    }
+
+    public UserOwnedPetOutputDTO findUserOwnedPetById(Long id) {
+
+        UserOwnedPet requestedUserOwnedPet = fetchUserOwnedPetById(id);
+
+        // checks if the request is made by the user that owns the pet or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), requestedUserOwnedPet.getCurrentOwner().getUsername());
+
+        UserOwnedPet userOwnedPet = fetchUserOwnedPetById(id);
+        return ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class);
+    }
 }
+
+

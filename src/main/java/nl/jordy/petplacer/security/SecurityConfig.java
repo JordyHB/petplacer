@@ -74,6 +74,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()
                                 .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
+                                .requestMatchers("/owned-pets").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/owned-pets/*").hasAuthority("ROLE_USER")
+
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
