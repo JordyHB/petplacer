@@ -27,12 +27,12 @@ public class AdoptionRequest {
     @ManyToOne
     private User adoptionApplicant;
 
-    private Date submissionDate;
+    private Date submissionDate = new Date();
     private Date decisionDate;
     private String requestMessage;
 
     @Enumerated(EnumType.STRING)
-    private AdoptionRequestStatus status;
+    private AdoptionRequestStatus status = AdoptionRequestStatus.PENDING;
 
     // this will be filled after the status is approved for easy record keeping
 //    @OneToOne(mappedBy = "approvedNewHome")

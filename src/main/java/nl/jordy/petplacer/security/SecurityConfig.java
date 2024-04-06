@@ -69,6 +69,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
+                                .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
 
                                 .requestMatchers(HttpMethod.GET, "/donations").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()

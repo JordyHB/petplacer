@@ -1,7 +1,7 @@
 package nl.jordy.petplacer.dtos.input;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +10,6 @@ import lombok.Setter;
 public class AdoptionRequestInputDTO {
 
     @NotBlank(message = "Request message is required")
-    @Max(value = 500, message = "Request message is too long")
+    @Size(max = 500, message = "Request message is too long")
     private String requestMessage;
 }

@@ -1,11 +1,12 @@
 package nl.jordy.petplacer.controllers;
 
 import jakarta.validation.Valid;
-import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
+import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
+import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
-import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.services.AdoptionRequestService;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,10 +19,27 @@ import java.util.List;
 public class ShelterPetController {
 
     private final ShelterPetService shelterPetService;
+    private final AdoptionRequestService adoptionRequestService;
 
-    public ShelterPetController(ShelterPetService shelterPetService) {
+    public ShelterPetController(ShelterPetService shelterPetService, AdoptionRequestService adoptionRequestService) {
         this.shelterPetService = shelterPetService;
+        this.adoptionRequestService = adoptionRequestService;
     }
+
+    // Posts
+    @PostMapping("/{shelterPetID}/adoptionrequests")
+    public ResponseEntity<AdoptionRequestOutputDTO> registerAdoptionRequest(
+            @PathVariable Long shelterPetID,
+            @Valid
+            @RequestBody AdoptionRequestInputDTO adoptionRequestInputDTO,
+            BindingResult bindingResult
+    ) {
+
+        CheckBindingResult.checkBindingResult(bindingResult);
+
+        return ResponseEntity.ok(adoptionRequestService.registerAdoptionRequest(adoptionRequestInputDTO, shelterPetID));
+    }
+
 
     // Gets
     @GetMapping()
