@@ -5,7 +5,9 @@ import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
+import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,10 @@ public class ShelterPetController {
 
         CheckBindingResult.checkBindingResult(bindingResult);
 
-        return ResponseEntity.ok(adoptionRequestService.registerAdoptionRequest(adoptionRequestInputDTO, shelterPetID));
+        AdoptionRequestOutputDTO adoptionRequestOutputDTO = adoptionRequestService
+                .registerAdoptionRequest(adoptionRequestInputDTO, shelterPetID);
+
+        return ResponseEntity.created(BuildUri.buildUri(adoptionRequestOutputDTO)).body(adoptionRequestOutputDTO);
     }
 
 

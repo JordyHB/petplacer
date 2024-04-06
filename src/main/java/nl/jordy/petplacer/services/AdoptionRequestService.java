@@ -9,6 +9,8 @@ import nl.jordy.petplacer.repositories.AdoptionRequestRepository;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdoptionRequestService {
 
@@ -46,6 +48,22 @@ public class AdoptionRequestService {
         adoptionRequestRepository.save(adoptionRequest);
 
         return ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class);
+    }
+
+    public List<AdoptionRequestOutputDTO> findAllAdoptionRequests() {
+
+        List<AdoptionRequest> adoptionRequests = adoptionRequestRepository.findAll();
+
+        return adoptionRequests.stream()
+                .map(adoptionRequest -> ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class))
+                .toList();
+    }
+
+    public AdoptionRequestOutputDTO findAdoptionRequestById(Long id) {
+
+        AdoptionRequest requestedAdoptionRequest = fetchAdoptionRequestById(id);
+
+        return ModelMapperHelper.getModelMapper().map(requestedAdoptionRequest, AdoptionRequestOutputDTO.class);
     }
 
 }

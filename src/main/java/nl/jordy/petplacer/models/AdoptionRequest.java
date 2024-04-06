@@ -2,7 +2,6 @@ package nl.jordy.petplacer.models;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.enums.AdoptionRequestStatus;
