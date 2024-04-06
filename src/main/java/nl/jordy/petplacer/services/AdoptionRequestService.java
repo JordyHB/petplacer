@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
+import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.AdoptionRequest;
@@ -64,6 +65,20 @@ public class AdoptionRequestService {
         AdoptionRequest requestedAdoptionRequest = fetchAdoptionRequestById(id);
 
         return ModelMapperHelper.getModelMapper().map(requestedAdoptionRequest, AdoptionRequestOutputDTO.class);
+    }
+
+    public AdoptionRequestOutputDTO updateAdoptionRequestById(Long adoptionRequestID, AdoptionRequestPatchDTO adoptionRequestPatchDTO) {
+
+        AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
+
+        // checks if the request is made by the user that owns the pet or an admin
+        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), adoptionRequest.getAdoptionApplicant().getUsername());
+
+        ModelMapperHelper.getModelMapper().map(adoptionRequestPatchDTO, adoptionRequest);
+
+        adoptionRequestRepository.save(adoptionRequest);
+
+        return ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class);
     }
 
 }

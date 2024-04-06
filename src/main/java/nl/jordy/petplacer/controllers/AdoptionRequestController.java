@@ -1,12 +1,13 @@
 package nl.jordy.petplacer.controllers;
 
+import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
+import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
+import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,4 +31,19 @@ public class AdoptionRequestController {
     public ResponseEntity<AdoptionRequestOutputDTO> getAdoptionRequestByID(@PathVariable Long adoptionRequestID) {
         return ResponseEntity.ok(adoptionRequestService.findAdoptionRequestById(adoptionRequestID));
     }
+
+    // Patches
+
+    @PatchMapping("/{adoptionRequestID}")
+    public ResponseEntity<AdoptionRequestOutputDTO> patchAdoptionRequest(
+            @PathVariable Long adoptionRequestID,
+            @Valid
+            @RequestBody AdoptionRequestPatchDTO adoptionRequestPatchDTO,
+            BindingResult bindingResult
+    ) {
+        CheckBindingResult.checkBindingResult(bindingResult);
+        return ResponseEntity.ok(adoptionRequestService.updateAdoptionRequestById(adoptionRequestID, adoptionRequestPatchDTO));
+    }
+
+    // Deletes
 }

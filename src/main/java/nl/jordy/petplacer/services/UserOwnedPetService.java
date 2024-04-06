@@ -75,8 +75,6 @@ public class UserOwnedPetService {
 
         userOwnedPetRepository.save(userOwnedPet);
         return ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class);
-
-
     }
 
     public String deleteUserOwnedPetById(Long petID) {
