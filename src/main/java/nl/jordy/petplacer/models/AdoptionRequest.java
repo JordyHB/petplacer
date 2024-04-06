@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.enums.AdoptionRequestStatus;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 import java.util.Date;
 
@@ -30,6 +31,7 @@ public class AdoptionRequest {
     private Date decisionDate;
     private String requestMessage;
 
+    @ValidEnumValue(enumClass = AdoptionRequestStatus.class)
     @Enumerated(EnumType.STRING)
     private AdoptionRequestStatus status = AdoptionRequestStatus.PENDING;
 }

@@ -1,10 +1,13 @@
 package nl.jordy.petplacer.models;
 
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 @Getter
 @Setter
@@ -16,7 +19,11 @@ public abstract class Pet {
     private String breed;
     private String color;
     private int age;
+
+    @Enumerated(EnumType.STRING)
+    @ValidEnumValue(enumClass = GenderEnum.class)
     private GenderEnum gender;
+
     private String size;
     // TDDO: add weight
     private String description;

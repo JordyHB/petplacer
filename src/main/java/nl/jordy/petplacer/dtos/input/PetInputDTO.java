@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.Getter;
 import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 @Data
 public class PetInputDTO {
@@ -27,7 +28,7 @@ public class PetInputDTO {
     private int age;
 
     @NotNull(message = "gender is required")
-//    @Pattern(regexp = "MALE|FEMALE|UKNOWN|OTHER", message="Gender must be MALE, FEMALE, UNKNOWN or OTHER")
+    @ValidEnumValue(enumClass = GenderEnum.class)
     private GenderEnum gender;
 
     @NotBlank(message = "Size is required")

@@ -70,6 +70,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
                                 .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
+                                .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/donations").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()

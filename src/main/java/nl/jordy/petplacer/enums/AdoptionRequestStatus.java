@@ -10,9 +10,6 @@ public enum AdoptionRequestStatus {
     REJECTED,
     INVALID;
 
-    @JsonProperty
-
-
     @JsonCreator
     public static AdoptionRequestStatus valueOfOrDefault(String value) {
         try {
@@ -21,5 +18,4 @@ public enum AdoptionRequestStatus {
             return INVALID;
         }
     }
-
 }

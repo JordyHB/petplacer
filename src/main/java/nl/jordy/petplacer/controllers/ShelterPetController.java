@@ -5,6 +5,7 @@ import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.AdoptionRequest;
@@ -72,6 +73,17 @@ public class ShelterPetController {
                 .updateShelterPetByID(shelterPetID, shelterPetPatchDTO);
 
         return ResponseEntity.ok(shelterPetOutputDTO);
+    }
+
+    @PatchMapping("/{shelterPetID}/status")
+    public ResponseEntity<ShelterPetOutputDTO> updateShelterPetStatusByID(
+            @PathVariable Long shelterPetID,
+            @Valid
+            @RequestBody ShelterPetStatusPatchDTO shelterPetStatusPatchDTO,
+            BindingResult bindingResult
+    ) {
+        CheckBindingResult.checkBindingResult(bindingResult);
+        return ResponseEntity.ok(shelterPetService.updateShelterPetStatus(shelterPetID, shelterPetStatusPatchDTO));
     }
 
     // Deletes
