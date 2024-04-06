@@ -1,6 +1,5 @@
 package nl.jordy.petplacer.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,13 +40,20 @@ public class Shelter {
     @Column(name = "date_of_last_update")
     private Date dateOfLastUpdate = new Date();
 
-    @OneToMany(mappedBy = "shelter")
+    @OneToMany(mappedBy = "shelter",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<ShelterPet> shelterPets;
 
-    @OneToMany(mappedBy = "receivingShelter", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "receivingShelter",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
     private List<Donation> donations;
 
-    @OneToMany(mappedBy = "requestedPetShelter")
+    @OneToMany(mappedBy = "requestedPetShelter",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<AdoptionRequest> adoptionRequests;
 
     @ManyToMany(fetch = FetchType.EAGER)

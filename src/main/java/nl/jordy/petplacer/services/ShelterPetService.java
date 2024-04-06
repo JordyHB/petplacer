@@ -3,14 +3,12 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
-import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
