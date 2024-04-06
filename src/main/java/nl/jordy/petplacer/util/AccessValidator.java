@@ -2,6 +2,7 @@ package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.repositories.ShelterRepository;
 import nl.jordy.petplacer.services.ShelterService;
 import org.springframework.context.annotation.Bean;
@@ -36,7 +37,7 @@ public class AccessValidator {
         }
     }
 
-    public void isSheltersManagerOrAdmin(Authentication userAuth, Long requestedShelterID) {
+    public static void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
         // will throw a 403 if the user is not the shelter manager or an admin
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&
                 !isAdmin(userAuth)) {
@@ -47,9 +48,7 @@ public class AccessValidator {
 //         will throw a 403 if the user is not in the managers list of the shelter or an admin
         if (!isAdmin(userAuth) &&
                 // fetches the shelter and checks if the user is in the managers list
-                !shelterRepository.findById(requestedShelterID)
-                        .orElseThrow(() -> new RecordNotFoundException("No Shelter found with id: " + requestedShelterID))
-                        .getManagers()
+                !requestedShelter.getManagers()
                         // loops through the managers list and checks if the user is in the list
                         .stream().anyMatch(a -> a.getUsername().equals(userAuth.getName()))) {
 

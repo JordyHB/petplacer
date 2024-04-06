@@ -3,12 +3,15 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
+import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -69,6 +72,21 @@ public class ShelterPetService {
         // uses private method to fetch and validate the user exists
         shelterPetRepository.delete(fetchShelterPetByID(shelterPetID));
         return "Shelter Pet: " + shelterPetID + " has been successfully deleted.";
+    }
+
+    public ShelterPetOutputDTO updateShelterPetStatus(
+            Long shelterPetID,
+            ShelterPetStatusPatchDTO shelterPetStatusPatchDTO) {
+
+        ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterPet.getShelter());
+
+        shelterPet.setStatus(shelterPetStatusPatchDTO.getStatus());
+        shelterPet.setDateOfLastUpdate(new Date());
+
+        shelterPetRepository.save(shelterPet);
+        return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
 
 }

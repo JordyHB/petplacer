@@ -2,8 +2,8 @@ package nl.jordy.petplacer.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +19,7 @@ public class ShelterPet extends Pet {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @ValidEnumValue(enumClass = ShelterPetStatus.class)
     @Enumerated(EnumType.STRING)
     private ShelterPetStatus status = ShelterPetStatus.AVAILABLE;
 
@@ -34,11 +35,4 @@ public class ShelterPet extends Pet {
 
     @OneToMany(mappedBy = "requestedPet")
     private List<AdoptionRequest> adoptionRequests;
-
-    //filled when an adoption request is fulfilled
-
-    @OneToOne
-    private AdoptionRequest approvedNewHome;
-
-    private Date rehomeDate;
 }

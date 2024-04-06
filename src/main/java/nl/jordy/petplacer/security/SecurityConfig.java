@@ -69,6 +69,8 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
                                 .requestMatchers("/shelterpets/*").permitAll()
+                                .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
+                                .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/donations").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()
@@ -76,6 +78,11 @@ public class SecurityConfig {
 
                                 .requestMatchers("/owned-pets").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/owned-pets/*").hasAuthority("ROLE_USER")
+
+                                .requestMatchers("/adoptionrequests").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/adoptionrequests/*").hasAuthority("ROLE_USER")
+                                .requestMatchers((HttpMethod.DELETE), "/adoptionrequests/*").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/adoptionrequests/*/status").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
 
                                 .anyRequest().denyAll()
                 )

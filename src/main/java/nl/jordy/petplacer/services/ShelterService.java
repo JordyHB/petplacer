@@ -23,15 +23,12 @@ public class ShelterService {
 
     private final ShelterRepository shelterRepository;
     private final UserService userService;
-    private final AccessValidator accessValidator;
 
     public ShelterService(ShelterRepository shelterRepository,
-                          UserService userService,
-                          AccessValidator accessValidator
+                          UserService userService
     ) {
         this.userService = userService;
         this.shelterRepository = shelterRepository;
-        this.accessValidator = accessValidator;
     }
 
     public Shelter fetchShelterByID(Long shelterID) {
@@ -99,9 +96,10 @@ public class ShelterService {
 
         // validates user is allowed to update the shelter and that shelter name is unique
         validateShelterNameUnique(shelterPatchDTO);
-        accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
 
         Shelter shelter = fetchShelterByID(shelterID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
 
         // Maps the DTO and adds a timestamp of last update;
         ModelMapperHelper.getModelMapper().map(shelterPatchDTO, shelter);
@@ -114,9 +112,9 @@ public class ShelterService {
 
     public String deleteShelterByID(Long shelterID) {
 
-        accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
-
         Shelter shelter = fetchShelterByID(shelterID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
 
         // removes Authority if the user is no longer a manager
         for (User user : shelter.getManagers()) {
@@ -136,9 +134,10 @@ public class ShelterService {
 
     public ShelterOutputDTO addManagerToShelter(Long shelterID, String username) {
 
-        accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
-
         Shelter shelter = fetchShelterByID(shelterID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+
         User user = userService.fetchUserByUsername(username);
         shelter.getManagers().add(user);
         shelter.setDateOfLastUpdate(new Date());
@@ -154,9 +153,11 @@ public class ShelterService {
 
     public ShelterOutputDTO removeManagerFromShelter(Long shelterID, String username) {
 
-        accessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterID);
 
         Shelter shelter = fetchShelterByID(shelterID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+
         User user = userService.fetchUserByUsername(username);
 
         if (!shelter.getManagers().contains(user)) {
