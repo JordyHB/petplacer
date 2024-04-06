@@ -3,6 +3,7 @@ package nl.jordy.petplacer.controllers;
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
+import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,19 @@ public class AdoptionRequestController {
     ) {
         CheckBindingResult.checkBindingResult(bindingResult);
         return ResponseEntity.ok(adoptionRequestService.updateAdoptionRequestById(adoptionRequestID, adoptionRequestPatchDTO));
+    }
+
+    @PatchMapping("/{adoptionRequestID}/status")
+    public ResponseEntity<AdoptionRequestOutputDTO> makeAdoptionRequestDecision(
+            @PathVariable Long adoptionRequestID,
+            @Valid
+            @RequestBody AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO,
+            BindingResult bindingResult
+    ) {
+        CheckBindingResult.checkBindingResult(bindingResult);
+        return ResponseEntity.ok(
+                adoptionRequestService.makeAdoptionRequestDecision(adoptionRequestID, adoptionRequestStatusPatchDTO)
+        );
     }
 
     // Deletes

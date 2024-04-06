@@ -80,6 +80,8 @@ public class SecurityConfig {
 
                                 .requestMatchers("/adoptionrequests").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/adoptionrequests/*").hasAuthority("ROLE_USER")
+                                .requestMatchers((HttpMethod.DELETE), "/adoptionrequests/*").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/adoptionrequests/*/status").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
 
                                 .anyRequest().denyAll()
                 )

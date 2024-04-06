@@ -3,6 +3,7 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
+import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.AdoptionRequest;
@@ -10,6 +11,7 @@ import nl.jordy.petplacer.repositories.AdoptionRequestRepository;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -83,16 +85,29 @@ public class AdoptionRequestService {
 
     public String deleteAdoptionRequestById(Long adoptionRequestID) {
 
-            AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
+        AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
 
-            // checks if the request is made by the user that owns the pet or an admin
-            AccessValidator.isUserOrAdmin(
-                    AccessValidator.getAuth(),
-                    adoptionRequest.getAdoptionApplicant().getUsername()
-            );
+        adoptionRequestRepository.delete(adoptionRequest);
 
-            adoptionRequestRepository.delete(adoptionRequest);
+        return "Adoption request with id: " + adoptionRequestID + " has been deleted";
+    }
 
-            return "Adoption request with id: " + adoptionRequestID + " has been deleted";
+    public AdoptionRequestOutputDTO makeAdoptionRequestDecision(
+            Long adoptionRequestID,
+            AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO) {
+
+        AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
+
+        AccessValidator.isSheltersManagerOrAdmin(
+                AccessValidator.getAuth(),
+                adoptionRequest.getRequestedPet().getShelter()
+        );
+
+        adoptionRequest.setStatus(adoptionRequestStatusPatchDTO.getStatus());
+        adoptionRequest.setDecisionDate(new Date());
+
+        adoptionRequestRepository.save(adoptionRequest);
+
+        return ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class);
     }
 }
