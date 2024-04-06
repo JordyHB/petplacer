@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
+import nl.jordy.petplacer.models.UserOwnedPet;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class UserSummaryDTO {
         private List<ShelterSummaryDTO> managedShelters;
         @JsonIdentityReference(alwaysAsId = true)
         private List<DonationSummaryDTO> donations;
-        private List<Long> pets;
+        @JsonIdentityReference(alwaysAsId = true)
+        private List<UserOwnedPetSummaryDTO> pets;
         private List<Long> adoptionRequests;
 }

@@ -1,6 +1,7 @@
 package nl.jordy.petplacer.models;
 
 //imports
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,13 +46,19 @@ public class User {
     @ManyToMany(mappedBy = "managers", fetch = FetchType.LAZY)
     private List<Shelter> managedShelters;
 
-    @OneToMany(mappedBy = "currentOwner")
+    @OneToMany(mappedBy = "currentOwner",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private List<UserOwnedPet> pets;
 
-    @OneToMany(mappedBy = "donator")
+    @OneToMany(mappedBy = "donator",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private List<Donation> donations;
 
-    @OneToMany(mappedBy = "adoptionApplicant")
+    @OneToMany(mappedBy = "adoptionApplicant",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private List<AdoptionRequest> adoptionRequests;
 
     public void addAuthority(Authority authority) {

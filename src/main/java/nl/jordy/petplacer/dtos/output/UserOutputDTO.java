@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.dtos.summary.DonationSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
+import nl.jordy.petplacer.dtos.summary.UserOwnedPetSummaryDTO;
 import nl.jordy.petplacer.models.Authority;
+import nl.jordy.petplacer.models.UserOwnedPet;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,7 @@ public class UserOutputDTO {
     private Date updatedAt;
     private Set<Authority> authorities;
     private List<ShelterSummaryDTO> managedShelters;
-    private List<Long> pets;
+    private List<UserOwnedPetSummaryDTO> pets;
     private List<DonationSummaryDTO> donations;
     private List<Long> adoptionRequests;
 }

@@ -2,20 +2,13 @@ package nl.jordy.petplacer.dtos.input;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class UserOwnedPetInputDTO {
+@Getter
+@Setter
+public class UserOwnedPetInputDTO extends PetInputDTO{
 
-    // nested DTO with the info for the super class
-    private PetInputDTO pet;
-
-    @NotNull(message = "Owner ID is required")
-    @Min(value = 1, message = "Owner ID must be greater than 0")
-    private Long ownerId;
-
-    @NotNull(message = "info if you are the first owner is required")
-    private boolean firstOwner;
 
     @NotNull(message = "info if the pet is adopted is required")
     private boolean isAdopted;
