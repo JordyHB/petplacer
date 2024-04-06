@@ -33,7 +33,6 @@ public class AdoptionRequestController {
     }
 
     // Patches
-
     @PatchMapping("/{adoptionRequestID}")
     public ResponseEntity<AdoptionRequestOutputDTO> patchAdoptionRequest(
             @PathVariable Long adoptionRequestID,
@@ -46,4 +45,9 @@ public class AdoptionRequestController {
     }
 
     // Deletes
+    @DeleteMapping("/{adoptionRequestID}")
+    public ResponseEntity<String> deleteAdoptionRequestByID(@PathVariable Long adoptionRequestID) {
+        return ResponseEntity.ok(adoptionRequestService.deleteAdoptionRequestById(adoptionRequestID));
+    }
+
 }

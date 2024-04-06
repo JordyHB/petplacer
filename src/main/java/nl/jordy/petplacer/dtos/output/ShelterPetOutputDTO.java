@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
+import nl.jordy.petplacer.dtos.summary.AdoptionRequestSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
@@ -44,7 +45,7 @@ public class ShelterPetOutputDTO implements HasFetchableId {
 
 
     // this gets filled later on
-    private List<Long> adoptionRequests;
+    private List<AdoptionRequestOutputDTO> adoptionRequests;
     private Long approvedNewHome;
     private Date rehomeDate;
 }

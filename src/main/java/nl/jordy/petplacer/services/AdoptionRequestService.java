@@ -81,4 +81,18 @@ public class AdoptionRequestService {
         return ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class);
     }
 
+    public String deleteAdoptionRequestById(Long adoptionRequestID) {
+
+            AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
+
+            // checks if the request is made by the user that owns the pet or an admin
+            AccessValidator.isUserOrAdmin(
+                    AccessValidator.getAuth(),
+                    adoptionRequest.getAdoptionApplicant().getUsername()
+            );
+
+            adoptionRequestRepository.delete(adoptionRequest);
+
+            return "Adoption request with id: " + adoptionRequestID + " has been deleted";
+    }
 }
