@@ -52,6 +52,7 @@ public class AdoptionRequestController {
             @RequestBody AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO,
             BindingResult bindingResult
     ) {
+
         CheckBindingResult.checkBindingResult(bindingResult);
         return ResponseEntity.ok(
                 adoptionRequestService.makeAdoptionRequestDecision(adoptionRequestID, adoptionRequestStatusPatchDTO)
