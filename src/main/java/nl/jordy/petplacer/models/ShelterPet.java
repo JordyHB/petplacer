@@ -2,7 +2,6 @@ package nl.jordy.petplacer.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 
 import java.util.Date;
@@ -37,8 +36,8 @@ public class ShelterPet extends Pet {
 
     //filled when an adoption request is fulfilled
 
-    @OneToOne
-    private AdoptionRequest approvedNewHome;
+//    @OneToOne
+//    private AdoptionRequest approvedNewHome;
 
     private Date rehomeDate;
 }

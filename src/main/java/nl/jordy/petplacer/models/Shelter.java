@@ -51,11 +51,6 @@ public class Shelter {
             orphanRemoval = true)
     private List<Donation> donations;
 
-    @OneToMany(mappedBy = "requestedPetShelter",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<AdoptionRequest> adoptionRequests;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "shelter_managers",

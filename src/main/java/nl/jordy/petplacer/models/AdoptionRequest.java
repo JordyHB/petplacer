@@ -3,13 +3,15 @@ package nl.jordy.petplacer.models;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.enums.AdoptionRequestStatus;
 
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "adoption_requests")
 public class AdoptionRequest {
 
@@ -25,16 +27,14 @@ public class AdoptionRequest {
     @ManyToOne
     private User adoptionApplicant;
 
-    @ManyToOne
-    private Shelter requestedPetShelter;
-
-    private Date submission_date;
+    private Date submissionDate;
+    private Date decisionDate;
     private String requestMessage;
 
     @Enumerated(EnumType.STRING)
     private AdoptionRequestStatus status;
 
     // this will be filled after the status is approved for easy record keeping
-    @OneToOne(mappedBy = "approvedNewHome")
-    private ShelterPet rehomedPet;
+//    @OneToOne(mappedBy = "approvedNewHome")
+//    private ShelterPet rehomedPet;
 }
