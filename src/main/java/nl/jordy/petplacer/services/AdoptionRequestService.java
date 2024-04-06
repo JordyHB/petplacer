@@ -4,6 +4,7 @@ import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
+import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.AdoptionRequest;
@@ -103,8 +104,23 @@ public class AdoptionRequestService {
                 adoptionRequest.getRequestedPet().getShelter()
         );
 
+        // updates the status of the pet based on the decision
+        if (adoptionRequestStatusPatchDTO.getStatus().name().equals("APPROVED")) {
+            adoptionRequest.getRequestedPet().setStatus(ShelterPetStatus.RESERVED);
+        } else if (adoptionRequestStatusPatchDTO.getStatus().name().equals("REJECTED")) {
+            adoptionRequest.getRequestedPet().setStatus(ShelterPetStatus.AVAILABLE);
+        } else {
+            adoptionRequest.getRequestedPet().setStatus(ShelterPetStatus.AVAILABLE);
+        }
+
+        if (!adoptionRequestStatusPatchDTO.getStatus().name().equals("PENDING")) {
+            adoptionRequest.setDecisionDate(new Date());
+        } else {
+            // if the status is pending, the decision date is set to null
+            adoptionRequest.setDecisionDate(null);
+        }
+
         adoptionRequest.setStatus(adoptionRequestStatusPatchDTO.getStatus());
-        adoptionRequest.setDecisionDate(new Date());
 
         adoptionRequestRepository.save(adoptionRequest);
 

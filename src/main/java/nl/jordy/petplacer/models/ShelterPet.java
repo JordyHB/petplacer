@@ -36,8 +36,8 @@ public class ShelterPet extends Pet {
 
     //filled when an adoption request is fulfilled
 
-//    @OneToOne
-//    private AdoptionRequest approvedNewHome;
+    @OneToOne
+    private AdoptionRequest approvedNewHome;
 
     private Date rehomeDate;
 }

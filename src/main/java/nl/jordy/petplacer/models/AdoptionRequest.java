@@ -32,8 +32,4 @@ public class AdoptionRequest {
 
     @Enumerated(EnumType.STRING)
     private AdoptionRequestStatus status = AdoptionRequestStatus.PENDING;
-
-    // this will be filled after the status is approved for easy record keeping
-//    @OneToOne(mappedBy = "approvedNewHome")
-//    private ShelterPet rehomedPet;
 }
