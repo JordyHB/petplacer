@@ -84,6 +84,9 @@ public class SecurityConfig {
                                 .requestMatchers((HttpMethod.DELETE), "/adoptionrequests/*").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/adoptionrequests/*/status").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
 
+                                .requestMatchers("/images").hasAuthority("ROLE_USER")
+                                .requestMatchers("/images/*").hasAuthority("ROLE_USER")
+
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
