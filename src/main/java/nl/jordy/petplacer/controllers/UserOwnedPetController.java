@@ -37,6 +37,18 @@ public class UserOwnedPetController {
         return ResponseEntity.ok(userOwnedPetService.findUserOwnedPetById(petID));
     }
 
+    // Puts
+    @PutMapping("/{petID}/image")
+    public ResponseEntity<String> updateImage(
+            @PathVariable Long petID,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        return ResponseEntity.ok(imageService.updateImage(
+                imageFile,
+                userOwnedPetService.fetchUserOwnedPetById(petID).getImage()
+        ));
+    }
+
     // Patches
     @PatchMapping("/{petID}")
     public ResponseEntity<UserOwnedPetOutputDTO> updateUserOwnedPet(

@@ -2,6 +2,7 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.exceptions.BadRequestException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Image;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.models.UserOwnedPet;
@@ -102,5 +103,31 @@ public class ImageService {
         imageRepository.save(image);
 
         return "Image Successfully added to UserOwnedPet: " + userOwnedPet.getName();
+    }
+
+    public String updateImage(MultipartFile imageFile, Image image) throws BadRequestException {
+
+        if (image == null) {
+            throw new RecordNotFoundException("No image found to update");
+        }
+
+        Image newImage = handleImageFile(imageFile);
+        // Copy the new image to the existing image
+        ModelMapperHelper.getModelMapper().map(newImage, image);
+
+        imageRepository.save(image);
+
+        return "Image updated successfully: " + imageFile.getOriginalFilename();
+    }
+
+    public String deleteImage(Long id) {
+
+        Image image = imageRepository.findById(id).orElseThrow(
+                () -> new RecordNotFoundException("No image found with id: " + id)
+        );
+
+        imageRepository.deleteById(id);
+
+        return "Image with id: " + id + " has been deleted";
     }
 }

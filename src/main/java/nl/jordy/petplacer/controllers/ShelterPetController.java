@@ -66,6 +66,16 @@ public class ShelterPetController {
     }
 
     // Puts
+    @PutMapping("/{shelterPetID}/image")
+    public ResponseEntity<String> updateImage(
+            @PathVariable Long shelterPetID,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        return ResponseEntity.ok(imageService.updateImage(
+                imageFile,
+                shelterPetService.fetchShelterPetByID(shelterPetID).getImage()
+        ));
+    }
 
 
     // Patch

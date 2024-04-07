@@ -20,10 +20,10 @@ public class Image {
     @Lob
     private byte[] imageData;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     ShelterPet shelterPet;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     UserOwnedPet userOwnedPet;
 
 
