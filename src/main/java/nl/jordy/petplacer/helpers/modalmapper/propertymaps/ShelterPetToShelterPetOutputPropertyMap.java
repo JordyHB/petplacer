@@ -5,7 +5,7 @@ import nl.jordy.petplacer.helpers.modalmapper.converters.ImageToImageLinkConvert
 import nl.jordy.petplacer.models.ShelterPet;
 import org.modelmapper.PropertyMap;
 
-public class ShelterPetToShelterPetOutput extends PropertyMap<ShelterPet, ShelterPetOutputDTO> {
+public class ShelterPetToShelterPetOutputPropertyMap extends PropertyMap<ShelterPet, ShelterPetOutputDTO> {
 
     @Override
     protected void configure() {

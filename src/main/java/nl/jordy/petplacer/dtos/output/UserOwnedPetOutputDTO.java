@@ -34,5 +34,6 @@ public class UserOwnedPetOutputDTO implements HasFetchableId {
     private Date dateOfRegistration;
     private Date dateOfLastUpdate;
 
+    private String imageLink;
     private UserSummaryDTO currentOwner;
 }

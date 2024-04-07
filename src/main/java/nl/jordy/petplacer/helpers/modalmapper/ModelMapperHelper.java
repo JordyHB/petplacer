@@ -20,14 +20,12 @@ public class ModelMapperHelper {
         modelMapper.addMappings(new UserInputDTOPropertyMap());
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
-        // adds a property map to map ShelterOutputDTO to DonationOutputDTO
+        // adds a property maps
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationOutputPropertyMap());
-        // adds a property map to map donation to donation summary
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationSummaryPropertyMap());
-        // adds a property map to map donationPatchDTO to donation
         ModelMapperHelper.modelMapper.addMappings(new DonationPatchToDonationPropertyMap());
-        // adds a property map to map shelterPet to shelterPetOutputDTO
-        ModelMapperHelper.modelMapper.addMappings(new ShelterPetToShelterPetOutput());
+        ModelMapperHelper.modelMapper.addMappings(new ShelterPetToShelterPetOutputPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new UserOwnedPetToUserOwnedPetOutputPropertyMap());
     }
 
     private ModelMapperHelper() {

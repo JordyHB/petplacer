@@ -66,13 +66,7 @@ public class ShelterPetController {
     }
 
     // Puts
-    @PutMapping("/{shelterPetID}/image")
-    public ResponseEntity<String> uploadImage(
-            @PathVariable Long shelterPetID,
-            @RequestParam("image") MultipartFile imageFile
-    ) {
-        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID,imageFile));
-    }
+
 
     // Patch
     @PatchMapping("/{shelterPetID}")
@@ -89,6 +83,14 @@ public class ShelterPetController {
                 .updateShelterPetByID(shelterPetID, shelterPetPatchDTO);
 
         return ResponseEntity.ok(shelterPetOutputDTO);
+    }
+
+    @PatchMapping("/{shelterPetID}/image")
+    public ResponseEntity<String> uploadImage(
+            @PathVariable Long shelterPetID,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID,imageFile));
     }
 
     @PatchMapping("/{shelterPetID}/status")

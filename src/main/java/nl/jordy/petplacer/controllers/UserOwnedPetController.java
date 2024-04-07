@@ -4,21 +4,25 @@ import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.output.UserOwnedPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserOwnedPetPatchDTO;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.services.ImageService;
 import nl.jordy.petplacer.services.UserOwnedPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/owned-pets")
+@RequestMapping("/ownedpets")
 public class UserOwnedPetController {
 
     private final UserOwnedPetService userOwnedPetService;
+    private final ImageService imageService;
 
-    public UserOwnedPetController(UserOwnedPetService userOwnedPetService) {
+    public UserOwnedPetController(UserOwnedPetService userOwnedPetService, ImageService imageService) {
         this.userOwnedPetService = userOwnedPetService;
+        this.imageService = imageService;
     }
 
 
@@ -43,6 +47,14 @@ public class UserOwnedPetController {
     ) {
         CheckBindingResult.checkBindingResult(bindingResult);
         return ResponseEntity.ok(userOwnedPetService.updateUserOwnedPetById(petID, userOwnedPetPatchDTO));
+    }
+
+    @PatchMapping("/{userPetID}/image")
+    public ResponseEntity<String> uploadImage(
+            @PathVariable Long userPetID,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        return ResponseEntity.ok(imageService.uploadImageToUserPet(userPetID,imageFile));
     }
 
     // Deletes
