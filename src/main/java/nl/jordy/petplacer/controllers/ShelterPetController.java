@@ -10,10 +10,12 @@ import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.services.AdoptionRequestService;
+import nl.jordy.petplacer.services.ImageService;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,10 +25,15 @@ public class ShelterPetController {
 
     private final ShelterPetService shelterPetService;
     private final AdoptionRequestService adoptionRequestService;
+    private final ImageService imageService;
 
-    public ShelterPetController(ShelterPetService shelterPetService, AdoptionRequestService adoptionRequestService) {
+    public ShelterPetController(ShelterPetService shelterPetService,
+                                AdoptionRequestService adoptionRequestService,
+                                ImageService imageService
+    ) {
         this.shelterPetService = shelterPetService;
         this.adoptionRequestService = adoptionRequestService;
+        this.imageService = imageService;
     }
 
     // Posts
@@ -56,6 +63,15 @@ public class ShelterPetController {
     @GetMapping("/{shelterPetID}")
     public ResponseEntity<ShelterPetOutputDTO> getShelterPetByID(@PathVariable Long shelterPetID) {
         return ResponseEntity.ok(shelterPetService.findShelterPetById(shelterPetID));
+    }
+
+    // Puts
+    @PutMapping("/{shelterPetID}/image")
+    public ResponseEntity<String> uploadImage(
+            @PathVariable Long shelterPetID,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID,imageFile));
     }
 
     // Patch

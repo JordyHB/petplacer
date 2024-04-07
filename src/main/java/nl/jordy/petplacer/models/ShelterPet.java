@@ -30,6 +30,9 @@ public class ShelterPet extends Pet {
     private String specialNeeds;
     private String previousSituation;
 
+    @OneToOne(mappedBy = "shelterPet")
+    private Image image;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Shelter shelter;
 

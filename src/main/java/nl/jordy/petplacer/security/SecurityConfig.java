@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 .requestMatchers("/shelterpets/*").permitAll()
                                 .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
                                 .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
+                                .requestMatchers("/shelterpets/*/image").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/donations").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()

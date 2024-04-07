@@ -10,6 +10,7 @@ import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
+import nl.jordy.petplacer.models.Image;
 
 import java.util.Date;
 import java.util.List;
@@ -45,5 +46,6 @@ public class ShelterPetOutputDTO implements HasFetchableId {
 
     // this gets filled later on
     private List<AdoptionRequestOutputDTO> adoptionRequests;
+    private String imageLink;
 
 }
