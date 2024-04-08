@@ -134,3 +134,9 @@ INSERT INTO adoption_requests (adoption_applicant_username, requested_pet_id, st
 VALUES ('msbear', 1, 'REJECTED', now(), now(), 'I think im a good fit for this pet'),
        ('msbear', 1, 'PENDING', now(), null, 'I would like to try again for this pet'),
        ('jord', 2, 'APPROVED', now(), now(), 'I would like to adopt this pet');
+
+INSERT INTO donations (donation_amount, date_of_donation, date_of_last_update, donation_message, donator_username, receiving_shelter_id)
+VALUES (100, now(), now(), 'I would like to help the animals in need', 'msbear', 1),
+       (50, now(), now(), 'I would like to donate to my own shelter', 'jord', 1),
+       (200, now(), now(), 'I would also like to help the animals in need', 'admin', 1),
+       (300, now(), now(), 'I would like to help', 'msbear', 1);
