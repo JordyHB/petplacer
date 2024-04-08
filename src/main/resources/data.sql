@@ -63,7 +63,7 @@ VALUES ('jord', 1);
 
 INSERT INTO shelter_pets (name, species, breed, color, age, gender, size, description, spayed_neutered, good_with_kids,
                           good_with_dogs, good_with_cats, medical_history, special_needs, previous_situation, status,
-                          date_of_registration, date_of_last_update, months_in_shelter, shelter_id)
+                          date_of_registration, date_of_last_update, months_in_shelter, shelter_id, adoption_fee)
 VALUES ('Luna',
         'Dog',
         'Labrador Retriever',
@@ -83,7 +83,8 @@ VALUES ('Luna',
         now(),
         now(),
         5,
-        1),
+        1,
+        300),
 
        ('Charlie',
         'Cat',
@@ -104,7 +105,8 @@ VALUES ('Luna',
         now(),
         now(),
         2,
-        1),
+        1,
+        150.3131313),
 
        ('Max',
         'Dog',
@@ -125,4 +127,5 @@ VALUES ('Luna',
         now(),
         now(),
         1,
-        1);
+        1,
+        0);
