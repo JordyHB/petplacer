@@ -80,7 +80,7 @@ public class UserController {
         return ResponseEntity.created(BuildUri.buildUri(shelterOutputDTO)).body(shelterOutputDTO);
     }
 
-    @PostMapping("/{username}/owned-pets")
+    @PostMapping("/{username}/ownedpets")
     public ResponseEntity<UserOwnedPetOutputDTO> registerUserOwnedPet(
             @PathVariable String username,
             @Valid

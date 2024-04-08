@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/users/*").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
-                                .requestMatchers("/users/*/owned-pets").hasAuthority("ROLE_USER")
+                                .requestMatchers("/users/*/ownedpets").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/**").hasAuthority("ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/shelters/**").permitAll()
@@ -71,18 +71,23 @@ public class SecurityConfig {
                                 .requestMatchers("/shelterpets/*").permitAll()
                                 .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
                                 .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
+                                .requestMatchers("/shelterpets/*/image").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/donations").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()
                                 .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
-                                .requestMatchers("/owned-pets").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/owned-pets/*").hasAuthority("ROLE_USER")
+                                .requestMatchers("/ownedpets").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/ownedpets/*").hasAuthority("ROLE_USER")
+                                .requestMatchers("/ownedpets/*/image").hasAuthority("ROLE_USER")
 
                                 .requestMatchers("/adoptionrequests").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/adoptionrequests/*").hasAuthority("ROLE_USER")
                                 .requestMatchers((HttpMethod.DELETE), "/adoptionrequests/*").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/adoptionrequests/*/status").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
+
+                                .requestMatchers("/images").hasAuthority("ROLE_USER")
+                                .requestMatchers("/images/*").hasAuthority("ROLE_USER")
 
                                 .anyRequest().denyAll()
                 )

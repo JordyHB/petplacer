@@ -1,10 +1,7 @@
 package nl.jordy.petplacer.helpers.modalmapper;
 
 import nl.jordy.petplacer.helpers.modalmapper.converters.StringToLowerConverter;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationPatchToDonationPropertyMap;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationToDonationOutputPropertyMap;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.DonationToDonationSummaryPropertyMap;
-import nl.jordy.petplacer.helpers.modalmapper.propertymaps.UserInputDTOPropertyMap;
+import nl.jordy.petplacer.helpers.modalmapper.propertymaps.*;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 
@@ -23,12 +20,12 @@ public class ModelMapperHelper {
         modelMapper.addMappings(new UserInputDTOPropertyMap());
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
-        // adds a property map to map ShelterOutputDTO to DonationOutputDTO
+        // adds a property maps
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationOutputPropertyMap());
-        // adds a property map to map donation to donation summary
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationSummaryPropertyMap());
-        // adds a property map to map donationPatchDTO to donation
         ModelMapperHelper.modelMapper.addMappings(new DonationPatchToDonationPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new ShelterPetToShelterPetOutputPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new UserOwnedPetToUserOwnedPetOutputPropertyMap());
     }
 
     private ModelMapperHelper() {

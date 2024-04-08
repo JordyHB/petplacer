@@ -24,6 +24,9 @@ public class UserOwnedPet extends Pet {
     private Date dateOfRegistration = new Date();
     private Date dateOfLastUpdate = new Date();
 
+    @OneToOne(mappedBy = "userOwnedPet", cascade = CascadeType.ALL)
+    private Image image;
+
     @ManyToOne
     private User currentOwner;
 }
