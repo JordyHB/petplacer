@@ -17,7 +17,7 @@ public class ModelMapperHelper {
                 .setPropertyCondition(Conditions.isNotNull());
 
         // skips mapping password, preventing it from casting it to lower.
-        modelMapper.addMappings(new UserInputDTOPropertyMap());
+        modelMapper.addMappings(new UserInputDTOToUserPropertyMap());
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
         // adds a property maps

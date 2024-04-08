@@ -1,7 +1,5 @@
 package nl.jordy.petplacer.models;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,5 +29,4 @@ public class Donation {
     private String donationMessage;
     private Date dateOfDonation = new Date();
     private Date dateOfLastUpdate = new Date();
-
 }

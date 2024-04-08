@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
@@ -24,6 +23,7 @@ public class Shelter {
 
     @Column(nullable = false, unique = true)
     private String shelterName;
+
     private String phoneNumber;
     private String email;
     private String address;
@@ -51,7 +51,7 @@ public class Shelter {
             orphanRemoval = true)
     private List<Donation> donations;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "shelter_managers",
             joinColumns = @JoinColumn(name = "shelter_id"),

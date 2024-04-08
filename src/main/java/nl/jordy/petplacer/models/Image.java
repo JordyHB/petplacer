@@ -3,7 +3,6 @@ package nl.jordy.petplacer.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
