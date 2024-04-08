@@ -47,6 +47,19 @@ public class ImageService {
         return image;
     }
 
+    private void validateUpdatePermission(Image image) {
+
+        if (image == null) {
+            throw new RecordNotFoundException("No image found to update");
+        }
+
+        if (image.getShelterPet() != null) {
+            AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), image.getShelterPet().getShelter());
+        } else if (image.getUserOwnedPet() != null) {
+            AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), image.getUserOwnedPet().getCurrentOwner().getUsername());
+        }
+    }
+
     public String uploadImage(MultipartFile imageFile) {
 
         Image image = handleImageFile(imageFile);
@@ -107,9 +120,7 @@ public class ImageService {
 
     public String updateImage(MultipartFile imageFile, Image image) throws BadRequestException {
 
-        if (image == null) {
-            throw new RecordNotFoundException("No image found to update");
-        }
+        validateUpdatePermission(image);
 
         Image newImage = handleImageFile(imageFile);
         // Copy the new image to the existing image
@@ -120,14 +131,13 @@ public class ImageService {
         return "Image updated successfully: " + imageFile.getOriginalFilename();
     }
 
-    public String deleteImage(Long id) {
+    public String deleteImage(Image image) {
 
-        Image image = imageRepository.findById(id).orElseThrow(
-                () -> new RecordNotFoundException("No image found with id: " + id)
-        );
+        validateUpdatePermission(image);
 
+        Long id = image.getId();
         imageRepository.deleteById(id);
 
-        return "Image with id: " + id + " has been deleted";
+        return "Image with id: " + id + " belonging to " + image.getShelterPet().getName() +  " has been deleted";
     }
 }

@@ -74,4 +74,9 @@ public class UserOwnedPetController {
     public ResponseEntity<String> deleteUserOwnedPetByID(@PathVariable Long petID) {
         return ResponseEntity.ok(userOwnedPetService.deleteUserOwnedPetById(petID));
     }
+
+    @DeleteMapping("/{petID}/image")
+    public ResponseEntity<String> deleteImage(@PathVariable Long petID) {
+        return ResponseEntity.ok(imageService.deleteImage(userOwnedPetService.fetchUserOwnedPetById(petID).getImage()));
+    }
 }

@@ -119,4 +119,11 @@ public class ShelterPetController {
     public ResponseEntity<String> deleteShelterPetByID(@PathVariable Long shelterPetID) {
         return ResponseEntity.ok(shelterPetService.deleteShelterPetByID(shelterPetID));
     }
+
+    @DeleteMapping("/{shelterPetID}/image")
+    public ResponseEntity<String> deleteImage(
+            @PathVariable Long shelterPetID
+    ) {
+        return ResponseEntity.ok(imageService.deleteImage(shelterPetService.fetchShelterPetByID(shelterPetID).getImage()));
+    }
 }
