@@ -36,7 +36,7 @@ public class DonationController {
     @GetMapping("/filter")
     public ResponseEntity<List<DonationOutputDTO>> getDonationsByFilter(
             @RequestParam(required = false) Long shelterID,
-            @RequestParam(required = false) Long donatorName,
+            @RequestParam(required = false) String donatorName,
             @RequestParam(required = false) BigDecimal minDonationAmount,
             @RequestParam(required = false) BigDecimal maxDonationAmount
     ) {

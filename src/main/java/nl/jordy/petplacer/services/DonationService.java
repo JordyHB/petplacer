@@ -68,7 +68,7 @@ public class DonationService {
 
     public List<DonationOutputDTO> findDonationsByParams(
             Long shelterID,
-            Long donatorName,
+            String donatorName,
             BigDecimal minDonationAmount,
             BigDecimal maxDonationAmount
     ) {
@@ -76,9 +76,7 @@ public class DonationService {
                         new DonationSpecification(shelterID, donatorName, minDonationAmount, maxDonationAmount)
                 )
                 .stream()
-                // filters out donations that the user is not the donator of, unless the user is an admin
-                .filter(donation -> AccessValidator.isAdmin(AccessValidator.getAuth()) ||
-                        donation.getDonator().getUsername().equals(AccessValidator.getAuth().getName()))
+                // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();
     }

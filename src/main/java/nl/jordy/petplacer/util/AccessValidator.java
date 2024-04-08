@@ -38,6 +38,13 @@ public class AccessValidator {
         }
     }
 
+    public static boolean isSheltersManagerOrAdminFilterOnly(Authentication userAuth, Shelter requestedShelter) {
+        return requestedShelter.getManagers()
+                .stream()
+                .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
+                isAdmin(userAuth);
+    }
+
     public static void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
         // will throw a 403 if the user is not the shelter manager or an admin
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&

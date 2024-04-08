@@ -14,13 +14,13 @@ import java.util.List;
 public class DonationSpecification implements Specification<Donation> {
 
     private final Long shelterID;
-    private final Long donatorName;
+    private final String donatorName;
     private final BigDecimal minDonationAmount;
     private final BigDecimal maxDonationAmount;
 
     public DonationSpecification(
             Long shelterID,
-            Long donatorName,
+            String donatorName,
             BigDecimal minDonationAmount,
             BigDecimal maxDonationAmount
     ) {
@@ -47,16 +47,16 @@ public class DonationSpecification implements Specification<Donation> {
             predicates.add(criteriaBuilder.like(root.get("donator").get("username"), "%" + donatorName + "%"));
         }
 
-        if (minDonationAmount != null && maxDonationAmount != null) {
-            predicates.add(criteriaBuilder.between(root.get("donationAmount"), minDonationAmount, maxDonationAmount));
-        }
-
         if (minDonationAmount != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("donationAmount"), minDonationAmount));
         }
 
         if (maxDonationAmount != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("donationAmount"), maxDonationAmount));
+        }
+
+        if (minDonationAmount != null && maxDonationAmount != null) {
+            predicates.add(criteriaBuilder.between(root.get("donationAmount"), minDonationAmount, maxDonationAmount));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
