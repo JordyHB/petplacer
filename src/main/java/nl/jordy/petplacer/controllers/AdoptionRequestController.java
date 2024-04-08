@@ -4,10 +4,13 @@ import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
+import nl.jordy.petplacer.enums.AdoptionRequestStatus;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +34,24 @@ public class AdoptionRequestController {
     @GetMapping("/{adoptionRequestID}")
     public ResponseEntity<AdoptionRequestOutputDTO> getAdoptionRequestByID(@PathVariable Long adoptionRequestID) {
         return ResponseEntity.ok(adoptionRequestService.findAdoptionRequestById(adoptionRequestID));
+    }
+
+    @Validated
+    @GetMapping("/filter")
+    public ResponseEntity<List<AdoptionRequestOutputDTO>> getAdoptionRequestsByFilter(
+            @ValidEnumValue(enumClass = AdoptionRequestStatus.class, fieldName = "status")
+            @RequestParam(required = false) AdoptionRequestStatus status,
+            @RequestParam(required = false) String applicantName,
+            @RequestParam(required = false) Long petID,
+            @RequestParam(required = false) Long shelterID
+    ) {
+
+        return ResponseEntity.ok(adoptionRequestService.findAdoptionRequestByParams(
+                status,
+                applicantName,
+                petID,
+                shelterID
+        ));
     }
 
     // Patches
