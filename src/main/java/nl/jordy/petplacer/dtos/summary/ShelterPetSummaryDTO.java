@@ -38,6 +38,7 @@ public class ShelterPetSummaryDTO {
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
+    private String imageLink;
 
     @JsonIdentityReference(alwaysAsId = true)
     private ShelterSummaryDTO shelter;

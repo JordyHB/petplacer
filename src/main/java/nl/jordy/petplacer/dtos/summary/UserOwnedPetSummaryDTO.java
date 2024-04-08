@@ -28,6 +28,7 @@ public class UserOwnedPetSummaryDTO {
     private boolean isGoodWithCats;
     private boolean isAdopted;
     private int yearsOwned;
+    private String imageLink;
 
     @JsonIdentityReference(alwaysAsId = true)
     private UserSummaryDTO currentOwner;
