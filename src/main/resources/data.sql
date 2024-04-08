@@ -129,3 +129,8 @@ VALUES ('Luna',
         1,
         1,
         0);
+
+INSERT INTO adoption_requests (adoption_applicant_username, requested_pet_id, status, submission_date, decision_date, request_message)
+VALUES ('msbear', 1, 'REJECTED', now(), now(), 'I think im a good fit for this pet'),
+       ('msbear', 1, 'PENDING', now(), null, 'I would like to try again for this pet'),
+       ('jord', 2, 'APPROVED', now(), now(), 'I would like to adopt this pet');

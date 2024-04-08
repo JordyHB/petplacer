@@ -2,6 +2,7 @@ package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.repositories.ShelterRepository;
 import nl.jordy.petplacer.services.ShelterService;
@@ -54,5 +55,15 @@ public class AccessValidator {
 
             throw new CustomAccessDeniedException();
         }
+    }
+
+    public static boolean canAccessAdoptionInfo(Authentication userAuth, AdoptionRequest adoptionRequest) {
+        // checks if the user is an admin the shelter manager or the applicant
+        return isAdmin(userAuth) ||
+                adoptionRequest.
+                        getRequestedPet().getShelter().getManagers()
+                        .stream()
+                        .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
+                adoptionRequest.getAdoptionApplicant().getUsername().equals(userAuth.getName());
     }
 }

@@ -89,7 +89,13 @@ public class AdoptionRequestService {
         List<AdoptionRequest> adoptionRequests = adoptionRequestRepository.findAll(adoptionRequestSpecification);
 
         return adoptionRequests.stream()
-                .map(adoptionRequest -> ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class))
+                .filter(adoptionRequest ->
+                        AccessValidator.canAccessAdoptionInfo(
+                                AccessValidator.getAuth(), adoptionRequest
+                        ))
+                .map(
+                        adoptionRequest -> ModelMapperHelper.getModelMapper()
+                                .map(adoptionRequest, AdoptionRequestOutputDTO.class))
                 .toList();
     }
 
