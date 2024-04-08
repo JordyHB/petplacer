@@ -5,6 +5,7 @@ import lombok.*;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ShelterPet extends Pet {
     @Enumerated(EnumType.STRING)
     private ShelterPetStatus status = ShelterPetStatus.AVAILABLE;
 
+    private BigDecimal adoptionFee;
     private Date dateOfRegistration = new Date();
     private Date dateOfLastUpdate = new Date();
     private int monthsInShelter;
@@ -36,6 +38,9 @@ public class ShelterPet extends Pet {
     @ManyToOne(fetch = FetchType.EAGER)
     private Shelter shelter;
 
-    @OneToMany(mappedBy = "requestedPet")
+    @OneToMany(
+            mappedBy = "requestedPet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<AdoptionRequest> adoptionRequests;
 }

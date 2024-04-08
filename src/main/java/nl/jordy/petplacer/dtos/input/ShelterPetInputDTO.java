@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.dtos.input;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -10,6 +11,10 @@ import lombok.Setter;
 @Setter
 public class ShelterPetInputDTO extends PetInputDTO {
 
+    @NotNull(message = "Adoption fee is required")
+    @Min(value = 0, message = "Adoption fee must be 0 or greater")
+    @Max(value = 1000, message = "Adoption fee must be 1000 or less")
+    private double adoptionFee;
 
     @NotNull(message = "Months in shelter is required")
     @Min(value = 0, message = "Months in shelter must be 0 or greater")

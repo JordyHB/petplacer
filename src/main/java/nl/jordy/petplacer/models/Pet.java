@@ -25,7 +25,6 @@ public abstract class Pet {
     private GenderEnum gender;
 
     private String size;
-    // TDDO: add weight
     private String description;
     private boolean spayedNeutered;
     private boolean goodWithKids;

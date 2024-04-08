@@ -17,7 +17,7 @@ public class ModelMapperHelper {
                 .setPropertyCondition(Conditions.isNotNull());
 
         // skips mapping password, preventing it from casting it to lower.
-        modelMapper.addMappings(new UserInputDTOPropertyMap());
+        modelMapper.addMappings(new UserInputDTOToUserPropertyMap());
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
         // adds a property maps
@@ -25,7 +25,9 @@ public class ModelMapperHelper {
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationSummaryPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new DonationPatchToDonationPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new ShelterPetToShelterPetOutputPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new ShelterPetToShelterPetSummaryPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new UserOwnedPetToUserOwnedPetOutputPropertyMap());
+        ModelMapperHelper.modelMapper.addMappings(new UserOwnedPetToUserOwnedPetSummaryPropertyMap());
     }
 
     private ModelMapperHelper() {

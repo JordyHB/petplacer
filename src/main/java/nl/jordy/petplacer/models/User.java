@@ -1,7 +1,5 @@
 package nl.jordy.petplacer.models;
 
-//imports
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +34,7 @@ public class User {
 
     @OneToMany(
             targetEntity = Authority.class,
-            mappedBy = "username", // Use the association to the User entity
+            mappedBy = "username",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)

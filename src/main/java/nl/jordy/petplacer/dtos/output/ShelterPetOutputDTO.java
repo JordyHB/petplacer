@@ -1,17 +1,16 @@
 package nl.jordy.petplacer.dtos.output;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import nl.jordy.petplacer.dtos.summary.AdoptionRequestSummaryDTO;
+
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.interfaces.HasFetchableId;
-import nl.jordy.petplacer.models.Image;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,14 +37,12 @@ public class ShelterPetOutputDTO implements HasFetchableId {
     private boolean isGoodWithCats;
     private Date dateOfRegistration;
     private Date dateOfLastUpdate;
+    private BigDecimal adoptionFee;
     private int monthsInShelter;
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
-    private ShelterSummaryDTO shelter;
-
-    // this gets filled later on
-    private List<AdoptionRequestOutputDTO> adoptionRequests;
     private String imageLink;
-
+    private List<AdoptionRequestOutputDTO> adoptionRequests;
+    private ShelterSummaryDTO shelter;
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -32,10 +33,12 @@ public class ShelterPetSummaryDTO {
     private boolean isGoodWithDogs;
     private boolean isGoodWithCats;
     private Date dateOfRegistration;
+    private BigDecimal adoptionFee;
     private int monthsInShelter;
     private String medicalHistory;
     private String specialNeeds;
     private String previousSituation;
+    private String imageLink;
 
     @JsonIdentityReference(alwaysAsId = true)
     private ShelterSummaryDTO shelter;

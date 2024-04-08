@@ -4,7 +4,7 @@ import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.models.User;
 import org.modelmapper.PropertyMap;
 
-public class UserInputDTOPropertyMap extends PropertyMap<UserInputDTO, User> {
+public class UserInputDTOToUserPropertyMap extends PropertyMap<UserInputDTO, User> {
 
 
     @Override
