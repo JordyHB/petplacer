@@ -63,6 +63,11 @@ public class DonationService {
     }
 
     public DonationOutputDTO findDonationById(Long donationID) {
+
+        Donation donation = fetchDonationByID(donationID);
+
+        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), donation.getReceivingShelter());
+
         return ModelMapperHelper.getModelMapper().map(fetchDonationByID(donationID), DonationOutputDTO.class);
     }
 
@@ -77,6 +82,13 @@ public class DonationService {
                 )
                 .stream()
                 // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
+                .filter(
+                        donation -> AccessValidator.isSheltersManagerOrAdminFilterOnly(
+                                AccessValidator.getAuth(),
+                                donation.getReceivingShelter()
+                        )
+                                || donation.getDonator().getUsername().equals(AccessValidator.getAuth().getName())
+                )
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();
     }
