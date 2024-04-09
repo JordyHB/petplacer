@@ -5,7 +5,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StringToAdoptionRequestConverter implements Converter<String, AdoptionRequestStatus> {
+public class StringToAdoptionRequestStatusConverter implements Converter<String, AdoptionRequestStatus> {
         @Override
         public AdoptionRequestStatus convert(String source) {
             try {
