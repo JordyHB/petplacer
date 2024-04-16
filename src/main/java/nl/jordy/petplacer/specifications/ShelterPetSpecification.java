@@ -51,9 +51,9 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             BigDecimal maxAdoptionFee,
             ShelterPetStatus status
     ) {
-        this.name = name.toLowerCase();
-        this.species = species.toLowerCase();
-        this.breed = breed.toLowerCase();
+        this.name = name != null ? name.toLowerCase() : null;
+        this.species = species != null ? species.toLowerCase() : null;
+        this.breed = breed != null ? breed.toLowerCase() : null;
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.genderEnum = genderEnum;
