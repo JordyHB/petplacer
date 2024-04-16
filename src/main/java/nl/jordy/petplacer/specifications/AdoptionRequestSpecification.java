@@ -25,7 +25,7 @@ public class AdoptionRequestSpecification implements Specification<AdoptionReque
             Long shelterID
     ) {
         this.status = status;
-        this.applicantName = applicantName;
+        this.applicantName = applicantName.toLowerCase();
         this.petID = petID;
         this.shelterID = shelterID;
     }

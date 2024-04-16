@@ -19,8 +19,8 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
     private final String name;
     private final String species;
     private final String breed;
-    private final int minAge;
-    private final int maxAge;
+    private final Integer minAge;
+    private final Integer maxAge;
     private final GenderEnum genderEnum;
     private final Boolean spayedNeutered;
     private final Boolean goodWithKids;
@@ -37,8 +37,8 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             String name,
             String species,
             String breed,
-            int minAge,
-            int maxAge,
+            Integer minAge,
+            Integer maxAge,
             GenderEnum genderEnum,
             Boolean spayedNeutered,
             Boolean goodWithKids,
@@ -51,9 +51,9 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             BigDecimal maxAdoptionFee,
             ShelterPetStatus status
     ) {
-        this.name = name;
-        this.species = species;
-        this.breed = breed;
+        this.name = name.toLowerCase();
+        this.species = species.toLowerCase();
+        this.breed = breed.toLowerCase();
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.genderEnum = genderEnum;
@@ -87,13 +87,13 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             predicates.add(criteriaBuilder.like(root.get("breed"), "%" + breed + "%"));
         }
         // age range
-        if (minAge != 0) {
+        if (minAge != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("age"), minAge));
         }
-        if (maxAge != 0) {
+        if (maxAge != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("age"), maxAge));
         }
-        if (minAge != 0 && maxAge != 0) {
+        if (minAge != null && maxAge != null) {
             predicates.add(criteriaBuilder.between(root.get("age"), minAge, maxAge));
         }
 

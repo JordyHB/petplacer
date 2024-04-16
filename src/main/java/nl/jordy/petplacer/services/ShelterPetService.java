@@ -64,20 +64,20 @@ public class ShelterPetService {
     }
 
     public List<ShelterPetOutputDTO> findShelterPetsByParams(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String species,
-            @RequestParam(required = false) String breed,
-            @RequestParam(required = false) Integer minAge,
-            @RequestParam(required = false) Integer maxAge,
-            @RequestParam(required = false) GenderEnum genderEnum,
-            @RequestParam(required = false) Boolean spayedNeutered,
-            @RequestParam(required = false) Boolean goodWithKids,
-            @RequestParam(required = false) Boolean goodWithDogs,
-            @RequestParam(required = false) Boolean goodWithCats,
-            @RequestParam(required = false) Long shelterID,
-            @RequestParam(required = false) BigDecimal minAdoptionFee,
-            @RequestParam(required = false) BigDecimal maxAdoptionFee,
-            @RequestParam(required = false) ShelterPetStatus status
+            String name,
+            String species,
+            String breed,
+            Integer minAge,
+            Integer maxAge,
+            GenderEnum genderEnum,
+            Boolean spayedNeutered,
+            Boolean goodWithKids,
+            Boolean goodWithDogs,
+            Boolean goodWithCats,
+            Long shelterID,
+            BigDecimal minAdoptionFee,
+            BigDecimal maxAdoptionFee,
+            ShelterPetStatus status
     ) {
 
         return shelterPetRepository.findAll(
@@ -98,11 +98,6 @@ public class ShelterPetService {
                                 status
                         ))
                 .stream()
-                // Filters the list to only show the entries that the user has access to
-                .filter(
-                        shelterPet ->
-                                AccessValidator.isSheltersManagerOrAdminFilterOnly(
-                                        AccessValidator.getAuth(), shelterPet.getShelter()))
                 .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))
                 .toList();
     }

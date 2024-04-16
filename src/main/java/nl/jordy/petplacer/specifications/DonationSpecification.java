@@ -25,7 +25,7 @@ public class DonationSpecification implements Specification<Donation> {
             BigDecimal maxDonationAmount
     ) {
         this.shelterID = shelterID;
-        this.donatorName = donatorName;
+        this.donatorName = donatorName.toLowerCase();
         this.minDonationAmount = minDonationAmount;
         this.maxDonationAmount = maxDonationAmount;
     }
