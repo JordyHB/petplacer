@@ -79,7 +79,7 @@ public class ShelterPetController {
             @RequestParam(required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge,
             @ValidEnumValue(enumClass = GenderEnum.class, fieldName = "genderEnum")
-            @RequestParam(required = false)GenderEnum genderEnum,
+            @RequestParam(required = false, name = "gender")GenderEnum genderEnum,
             @RequestParam(required = false) Boolean spayedNeutered,
             @RequestParam(required = false) Boolean goodWithKids,
             @RequestParam(required = false) Boolean goodWithDogs,
@@ -87,6 +87,7 @@ public class ShelterPetController {
             @RequestParam(required = false) Long shelterID,
             @RequestParam(required = false) BigDecimal minAdoptionFee,
             @RequestParam(required = false) BigDecimal maxAdoptionFee,
+            @ValidEnumValue(enumClass = ShelterPetStatus.class, fieldName = "status")
             @RequestParam(required = false) ShelterPetStatus status
     ) {
         return ResponseEntity.ok(shelterPetService.findShelterPetsByParams(
