@@ -24,12 +24,16 @@ public class ShelterService {
 
     private final ShelterRepository shelterRepository;
     private final UserService userService;
+    private final AccessValidator accessValidator;
 
-    public ShelterService(ShelterRepository shelterRepository,
-                          UserService userService
+    public ShelterService(
+            ShelterRepository shelterRepository,
+            UserService userService,
+            AccessValidator accessValidator
     ) {
         this.userService = userService;
         this.shelterRepository = shelterRepository;
+        this.accessValidator = accessValidator;
     }
 
     public Shelter fetchShelterByID(Long shelterID) {
@@ -96,8 +100,8 @@ public class ShelterService {
     public List<ShelterOutputDTO> findSheltersByParams(String shelterName, String city) {
 
         return shelterRepository.findAll(
-                new ShelterSpecification(shelterName, city)
-        ).stream()
+                        new ShelterSpecification(shelterName, city)
+                ).stream()
                 .map(shelter -> ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class))
                 .toList();
     }
@@ -109,7 +113,7 @@ public class ShelterService {
 
         Shelter shelter = fetchShelterByID(shelterID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
 
         // Maps the DTO and adds a timestamp of last update;
         ModelMapperHelper.getModelMapper().map(shelterPatchDTO, shelter);
@@ -124,7 +128,7 @@ public class ShelterService {
 
         Shelter shelter = fetchShelterByID(shelterID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
 
         // removes Authority if the user is no longer a manager
         for (User user : shelter.getManagers()) {
@@ -146,7 +150,7 @@ public class ShelterService {
 
         Shelter shelter = fetchShelterByID(shelterID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
 
         User user = userService.fetchUserByUsername(username);
         shelter.getManagers().add(user);
@@ -166,7 +170,7 @@ public class ShelterService {
 
         Shelter shelter = fetchShelterByID(shelterID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelter);
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
 
         User user = userService.fetchUserByUsername(username);
 

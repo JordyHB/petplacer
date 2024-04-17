@@ -20,15 +20,18 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final ShelterPetService shelterPetService;
     private final UserOwnedPetService userOwnedPetService;
+    private final AccessValidator accessValidator;
 
     public ImageService(
             ImageRepository imageRepository,
             ShelterPetService shelterPetService,
-            UserOwnedPetService userOwnedPetService
+            UserOwnedPetService userOwnedPetService,
+            AccessValidator accessValidator
     ) {
         this.imageRepository = imageRepository;
         this.shelterPetService = shelterPetService;
         this.userOwnedPetService = userOwnedPetService;
+        this.accessValidator = accessValidator;
     }
 
     private Image handleImageFile(MultipartFile imageFile) throws BadRequestException {
@@ -56,9 +59,9 @@ public class ImageService {
         }
 
         if (image.getShelterPet() != null) {
-            AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), image.getShelterPet().getShelter());
+            accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), image.getShelterPet().getShelter());
         } else if (image.getUserOwnedPet() != null) {
-            AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), image.getUserOwnedPet().getCurrentOwner().getUsername());
+            accessValidator.isUserOrAdmin(accessValidator.getAuth(), image.getUserOwnedPet().getCurrentOwner().getUsername());
         }
     }
 
@@ -78,7 +81,7 @@ public class ImageService {
     public String uploadImageToShelterPet(Long shelterPetID, MultipartFile imageFile) {
 
         ShelterPet shelterPet = shelterPetService.fetchShelterPetByID(shelterPetID);
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterPet.getShelter());
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
 
         if (shelterPet.getImage() != null) {
             throw new BadRequestException(
@@ -96,7 +99,7 @@ public class ImageService {
     public String uploadImageToUserPet(Long userPetID, MultipartFile imageFile) {
 
         UserOwnedPet userOwnedPet = userOwnedPetService.fetchUserOwnedPetById(userPetID);
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), userOwnedPet.getCurrentOwner().getUsername());
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), userOwnedPet.getCurrentOwner().getUsername());
 
         if (userOwnedPet.getImage() != null) {
             throw new BadRequestException(

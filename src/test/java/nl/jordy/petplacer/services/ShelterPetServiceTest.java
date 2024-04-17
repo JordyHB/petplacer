@@ -1,21 +1,28 @@
 package nl.jordy.petplacer.services;
 
-import nl.jordy.petplacer.dtos.input.PetInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
-import nl.jordy.petplacer.dtos.patch.PetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
+import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.enums.ShelterPetStatus;
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
+import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
+import nl.jordy.petplacer.specifications.ShelterPetSpecification;
+import nl.jordy.petplacer.util.AccessValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -23,14 +30,21 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ShelterPetServiceTest {
 
     @Mock
     ShelterPetRepository shelterPetRepository;
+
+    @Mock
+    ShelterService shelterService;
+
+    @Mock
+    AccessValidator accessValidator;
 
     @InjectMocks
     ShelterPetService shelterPetService;
@@ -44,15 +58,22 @@ class ShelterPetServiceTest {
     ) {
         ShelterPetInputDTO shelterPetInputDTO = new ShelterPetInputDTO();
 
-        PetInputDTO petInputDTO = getPetInputDTO(name, age);
-
-        // fills the shelterPetInputDTO with the petInputDTO and some extra fields
-        shelterPetInputDTO.setPet(petInputDTO);
+        shelterPetInputDTO.setName(name);
+        shelterPetInputDTO.setSpecies("dog");
+        shelterPetInputDTO.setBreed("labrador");
+        shelterPetInputDTO.setColor("brown");
+        shelterPetInputDTO.setAge(age);
+        shelterPetInputDTO.setGender(GenderEnum.FEMALE);
+        shelterPetInputDTO.setSize("large");
+        shelterPetInputDTO.setDescription("friendly dog");
+        shelterPetInputDTO.setSpayedNeutered(true);
+        shelterPetInputDTO.setGoodWithKids(true);
+        shelterPetInputDTO.setGoodWithDogs(true);
+        shelterPetInputDTO.setGoodWithCats(true);
         shelterPetInputDTO.setMonthsInShelter(monthsInShelter);
         shelterPetInputDTO.setMedicalHistory("healthy");
         shelterPetInputDTO.setSpecialNeeds(specialNeeds);
-        shelterPetInputDTO.setPreviousSituation("owner couldn't take care of him anymore"
-        );
+        shelterPetInputDTO.setPreviousSituation("owner couldn't take care of him anymore");
         return shelterPetInputDTO;
     }
 
@@ -64,48 +85,22 @@ class ShelterPetServiceTest {
     ) {
         ShelterPetPatchDTO shelterPetPatchDTO = new ShelterPetPatchDTO();
 
-        PetPatchDTO petPatchDTO = getPetPatchDTO(name, age);
-
-        // fills the shelterPetPatchDTO with the petPatchDTO and some extra fields
-        shelterPetPatchDTO.setPet(petPatchDTO);
+        shelterPetPatchDTO.setName(name);
+        shelterPetPatchDTO.setAge(age);
+        shelterPetPatchDTO.setSpecies("dog");
+        shelterPetPatchDTO.setBreed("labrador");
+        shelterPetPatchDTO.setColor("brown");
+        shelterPetPatchDTO.setAge(age);
+        shelterPetPatchDTO.setGender(GenderEnum.MALE);
+        shelterPetPatchDTO.setSize("large");
+        shelterPetPatchDTO.setDescription("friendly dog");
+        shelterPetPatchDTO.setSpayedNeutered(true);
+        shelterPetPatchDTO.setGoodWithKids(true);
+        shelterPetPatchDTO.setGoodWithDogs(true);
+        shelterPetPatchDTO.setGoodWithCats(true);
         shelterPetPatchDTO.setMonthsInShelter(monthsInShelter);
         shelterPetPatchDTO.setSpecialNeeds(specialNeeds);
         return shelterPetPatchDTO;
-    }
-
-    private PetInputDTO getPetInputDTO(String name, int age) {
-        PetInputDTO petInputDTO = new PetInputDTO();
-        petInputDTO.setName(name);
-        petInputDTO.setSpecies("dog");
-        petInputDTO.setBreed("labrador");
-        petInputDTO.setColor("brown");
-        petInputDTO.setAge(age);
-        petInputDTO.setGender(GenderEnum.FEMALE);
-        petInputDTO.setSize("large");
-        petInputDTO.setDescription("friendly dog");
-        petInputDTO.setSpayedNeutered(true);
-        petInputDTO.setGoodWithKids(true);
-        petInputDTO.setGoodWithDogs(true);
-        petInputDTO.setGoodWithCats(true);
-        return petInputDTO;
-    }
-
-    private PetPatchDTO getPetPatchDTO(String name, int age) {
-        PetPatchDTO petPatchDTO = new PetPatchDTO();
-        petPatchDTO.setName(name);
-        petPatchDTO.setAge(age);
-        petPatchDTO.setSpecies("dog");
-        petPatchDTO.setBreed("labrador");
-        petPatchDTO.setColor("brown");
-        petPatchDTO.setAge(age);
-        petPatchDTO.setGender(GenderEnum.MALE);
-        petPatchDTO.setSize("large");
-        petPatchDTO.setDescription("friendly dog");
-        petPatchDTO.setSpayedNeutered(true);
-        petPatchDTO.setGoodWithKids(true);
-        petPatchDTO.setGoodWithDogs(true);
-        petPatchDTO.setGoodWithCats(true);
-        return petPatchDTO;
     }
 
     @DisplayName("Fetch ShelterPet by ID")
@@ -156,9 +151,10 @@ class ShelterPetServiceTest {
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
 
-        when(shelterPetRepository.save(shelterPet)).thenReturn(shelterPet);
+        when(shelterPetRepository.save(any(ShelterPet.class)))
+                .thenReturn(shelterPet);
         // Act
-        ShelterPetOutputDTO storedPet = shelterPetService.registerNewShelterPet(shelterPetInputDTO);
+        ShelterPetOutputDTO storedPet = shelterPetService.registerNewShelterPet(232L, shelterPetInputDTO);
 
         // Assert
         assertEquals("bernie", storedPet.getName());
@@ -167,7 +163,7 @@ class ShelterPetServiceTest {
         assertEquals(5, storedPet.getMonthsInShelter());
         assertEquals("tasty treats", storedPet.getSpecialNeeds());
         assertEquals("owner couldn't take care of him anymore", storedPet.getPreviousSituation());
-        assertThat(storedPet.getDateOfArrival()).isNotNull();
+        assertThat(storedPet.getDateOfLastUpdate()).isNotNull();
     }
 
     @Test
@@ -196,13 +192,13 @@ class ShelterPetServiceTest {
         // Arrange
         Long shelterPetID = 1L;
         ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
-                        getShelterPetInputDTO(
-                                3,
-                                "Lots of love",
-                                "El Ratto",
-                                5),
-                        ShelterPet.class
-                );
+                getShelterPetInputDTO(
+                        3,
+                        "Lots of love",
+                        "El Ratto",
+                        5),
+                ShelterPet.class
+        );
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
         when(shelterPetRepository.findById(anyLong())).thenReturn(Optional.of(shelterPet));
@@ -247,7 +243,7 @@ class ShelterPetServiceTest {
         when(shelterPetRepository.save(shelterPet)).thenReturn(shelterPet);
 
         // Act
-        ShelterPetOutputDTO updatedPet = shelterPetService.updateShelterPetByID(shelterPetID,newShelterPetPatchDTO);
+        ShelterPetOutputDTO updatedPet = shelterPetService.updateShelterPetByID(shelterPetID, newShelterPetPatchDTO);
 
         // Assert
         assertEquals("zebadiah", updatedPet.getName());
@@ -285,5 +281,78 @@ class ShelterPetServiceTest {
                 "Shelter Pet: 1 has been successfully deleted.",
                 shelterPetService.deleteShelterPetByID(shelterPetID)
         );
+    }
+
+    @DisplayName("Update ShelterPetStatus")
+    @Test
+    void updateShelterPetStatus() {
+        // Arrange
+        Long shelterPetId = 5L;
+        ShelterPetStatusPatchDTO statusPatchDTO = new ShelterPetStatusPatchDTO();
+        statusPatchDTO.setStatus(ShelterPetStatus.RESERVED);
+
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
+                getShelterPetInputDTO(5, "has trouble looking", "bert", 2),
+                ShelterPet.class
+        );
+        ReflectionTestUtils.setField(shelterPet, "id", shelterPetId);
+        ShelterPet updatedShelterPet = ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPet.class);
+        ReflectionTestUtils.setField(updatedShelterPet, "id", shelterPetId);
+        updatedShelterPet.setStatus(ShelterPetStatus.RESERVED);
+
+        when(shelterPetRepository.findById(shelterPetId)).thenReturn(Optional.of(shelterPet));
+        when(shelterPetRepository.save(shelterPet)).thenReturn(updatedShelterPet);
+
+        // Act
+        ShelterPetOutputDTO updatedShelterPetDTO = shelterPetService
+                .updateShelterPetStatus(shelterPetId, statusPatchDTO);
+
+        // Assert
+        assertEquals(ShelterPetStatus.RESERVED, updatedShelterPetDTO.getStatus());
+    }
+
+    @DisplayName("Test find all shelter pets by parameters")
+    @Test
+    void findAllShelterPetsByParameters() {
+        // Arrange
+        ShelterPet shelterPet1 = new ShelterPet();
+        ShelterPet shelterPet2 = new ShelterPet();
+        ShelterPet shelterPet3 = new ShelterPet();
+        shelterPet1.setName("freddy");
+        shelterPet2.setName("freek");
+        shelterPet3.setName("frederick");
+        shelterPet1.setSpecies("dog");
+        shelterPet2.setSpecies("dog");
+        shelterPet3.setSpecies("dog");
+        shelterPet1.setBreed("labrador");
+        shelterPet2.setBreed("siamese");
+        shelterPet3.setBreed("golden retriever");
+        List<ShelterPet> shelterPets = List.of(shelterPet1, shelterPet2, shelterPet3);
+
+        when(shelterPetRepository.findAll(any(ShelterPetSpecification.class))).thenReturn(shelterPets);
+
+        // Act
+
+        List<ShelterPetOutputDTO> foundShelterPets = shelterPetService.findShelterPetsByParams(
+                "fre",
+                "dog",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // Assert
+        assertEquals(3, foundShelterPets.size());
+        assertEquals("freddy", foundShelterPets.get(0).getName());
+        assertEquals("freek", foundShelterPets.get(1).getName());
     }
 }

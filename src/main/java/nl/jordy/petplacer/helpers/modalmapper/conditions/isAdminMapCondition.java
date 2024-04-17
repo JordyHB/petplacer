@@ -6,8 +6,15 @@ import nl.jordy.petplacer.models.Donation;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.modelmapper.Condition;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation> {
+
+    @Autowired
+    private AccessValidator accessValidator;
+
     @Override
     public boolean applies(MappingContext<DonationPatchDTO, Donation> context) {
 
@@ -16,7 +23,7 @@ public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation
             return false;
         }
 
-        if(AccessValidator.isAdmin(AccessValidator.getAuth())) {
+        if(accessValidator.isAdmin(accessValidator.getAuth())) {
             return true;
         } else {
             throw new CustomAccessDeniedException("Only admins can change the donation amount");

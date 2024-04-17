@@ -24,15 +24,18 @@ public class DonationService {
     private final ShelterService shelterService;
     private final UserService userService;
     private final DonationRepository donationRepository;
+    private final AccessValidator accessValidator;
 
     public DonationService(
             ShelterService shelterService,
             UserService userService,
-            DonationRepository donationRepository
+            DonationRepository donationRepository,
+            AccessValidator accessValidator
     ) {
         this.userService = userService;
         this.shelterService = shelterService;
         this.donationRepository = donationRepository;
+        this.accessValidator = accessValidator;
     }
 
     public Donation fetchDonationByID(Long donationID) {
@@ -44,7 +47,7 @@ public class DonationService {
 
         Shelter shelter = shelterService.fetchShelterByID(shelterID);
         Donation donation = ModelMapperHelper.getModelMapper().map(donationInputDTO, Donation.class);
-        User user = userService.fetchUserByUsername(AccessValidator.getAuth().getName());
+        User user = userService.fetchUserByUsername(accessValidator.getAuth().getName());
 
         donation.setDonator(user);
         donation.setReceivingShelter(shelter);
@@ -66,7 +69,7 @@ public class DonationService {
 
         Donation donation = fetchDonationByID(donationID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), donation.getReceivingShelter());
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), donation.getReceivingShelter());
 
         return ModelMapperHelper.getModelMapper().map(fetchDonationByID(donationID), DonationOutputDTO.class);
     }
@@ -83,11 +86,11 @@ public class DonationService {
                 .stream()
                 // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
                 .filter(
-                        donation -> AccessValidator.isSheltersManagerOrAdminFilterOnly(
-                                AccessValidator.getAuth(),
+                        donation -> accessValidator.isSheltersManagerOrAdminFilterOnly(
+                                accessValidator.getAuth(),
                                 donation.getReceivingShelter()
                         )
-                                || donation.getDonator().getUsername().equals(AccessValidator.getAuth().getName())
+                                || donation.getDonator().getUsername().equals(accessValidator.getAuth().getName())
                 )
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();
@@ -98,7 +101,7 @@ public class DonationService {
         Donation requestedDonation = fetchDonationByID(donationID);
 
         // returns a 401 if the is not the donator of the donation or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), requestedDonation.getDonator().getUsername());
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), requestedDonation.getDonator().getUsername());
 
         ModelMapperHelper.getModelMapper().map(donationPatchDTO, requestedDonation);
         requestedDonation.setDateOfLastUpdate(new Date());
@@ -109,7 +112,7 @@ public class DonationService {
 
     public String deleteDonationById(Long donationID) throws CustomAccessDeniedException {
 
-        if (AccessValidator.isAdmin(AccessValidator.getAuth())) {
+        if (accessValidator.isAdmin(accessValidator.getAuth())) {
             Donation donation = fetchDonationByID(donationID);
 
             donationRepository.delete(donation);
