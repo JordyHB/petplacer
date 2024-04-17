@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
@@ -303,6 +304,29 @@ class ShelterPetServiceTest {
 
         // Assert
         assertEquals(ShelterPetStatus.RESERVED, updatedShelterPetDTO.getStatus());
+    }
+
+    @DisplayName("Update ShelterPetStatus throws exception when not authorized")
+    @Test
+    void updateShelterPetStatusThrowsException() {
+        // Arrange
+        Long shelterPetId = 5L;
+        ShelterPetStatusPatchDTO statusPatchDTO = new ShelterPetStatusPatchDTO();
+        statusPatchDTO.setStatus(ShelterPetStatus.RESERVED);
+
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
+                getShelterPetInputDTO(5, "has trouble looking", "bert", 2),
+                ShelterPet.class
+        );
+        ReflectionTestUtils.setField(shelterPet, "id", shelterPetId);
+
+        when(shelterPetRepository.findById(shelterPetId)).thenReturn(Optional.of(shelterPet));
+        doThrow(CustomAccessDeniedException.class).when(accessValidator).isSheltersManagerOrAdmin(any(), any());
+
+        // Act & Assert
+        assertThrows(CustomAccessDeniedException.class, () -> {
+            shelterPetService.updateShelterPetStatus(shelterPetId, statusPatchDTO);
+        });
     }
 
     @DisplayName("Test find all shelter pets by parameters")

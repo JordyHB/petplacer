@@ -3,7 +3,8 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;g
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
+import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.util.AccessValidator;
@@ -20,8 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -120,6 +120,7 @@ class UserServiceTest {
         });
     }
 
+    @DisplayName("Registers a new user")
     @Test
     void registerUser() {
         // Arrange
@@ -143,6 +144,7 @@ class UserServiceTest {
         verify(passwordEncoder).encode(userDTO.getPassword());
     }
 
+    @DisplayName("Find all users")
     @Test
     void findAllUsers() {
         // Arrange
@@ -161,8 +163,31 @@ class UserServiceTest {
 
     }
 
+    @DisplayName("Find user by username success")
     @Test
-    void findUserByUsername() {
+    void findUserByUsername_success() {
+        // Arrange
+        User user = getTestUser("test");
+
+        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+
+        // Act
+        UserOutputDTO result = userService.findUserByUsername("test");
+
+        // Assert
+        assertEquals(user.getUsername(), result.getUsername());
+    }
+
+    @DisplayName("Find user by username throws CustomAccessDeniedException when unauthorized")
+    @Test
+    void findUserByUsername_Unauthorized() {
+        // Arrange
+        doThrow(CustomAccessDeniedException.class).when(accessValidator).isUserOrAdmin(any(), anyString());
+
+        // Act & Assert
+        assertThrows(CustomAccessDeniedException.class, () -> {
+            userService.findUserByUsername("test");
+        });
     }
 
     @Test
