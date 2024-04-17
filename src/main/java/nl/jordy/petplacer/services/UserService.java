@@ -22,12 +22,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AccessValidator accessValidator;
 
     //Injects dependencies
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AccessValidator accessValidator
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-
+        this.accessValidator = accessValidator;
     }
 
     public User fetchUserByUsername(String username) {
@@ -74,7 +78,7 @@ public class UserService {
 
     public UserOutputDTO findUserByUsername(String username) {
         // Returns a 401 if the user is not the requested user or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);
         // uses private method to fetch and validate the user exists
         return ModelMapperHelper.getModelMapper().map(fetchUserByUsername(username), UserOutputDTO.class);
     }
@@ -93,7 +97,7 @@ public class UserService {
     public UserOutputDTO updateUserByUsername(String username, UserPatchDTO userPatchDTO) {
 
         // Returns a 401 if the user is not the requested user or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);
 
         User user = fetchUserByUsername(username);
 
@@ -107,7 +111,7 @@ public class UserService {
     public String deleteUserByID(String username) {
 
         // Returns a 401 if the user is not the requested user or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);
 
         userRepository.delete(fetchUserByUsername(username));
         return "User: " + username + " has been successfully deleted.";

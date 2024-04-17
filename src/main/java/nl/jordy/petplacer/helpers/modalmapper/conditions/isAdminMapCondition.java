@@ -8,6 +8,12 @@ import org.modelmapper.Condition;
 import org.modelmapper.spi.MappingContext;
 
 public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation> {
+
+    private final AccessValidator accessValidator;
+
+    public isAdminMapCondition(AccessValidator accessValidator) {
+        this.accessValidator = accessValidator;
+    }
     @Override
     public boolean applies(MappingContext<DonationPatchDTO, Donation> context) {
 
@@ -16,7 +22,7 @@ public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation
             return false;
         }
 
-        if(AccessValidator.isAdmin(AccessValidator.getAuth())) {
+        if(accessValidator.isAdmin(accessValidator.getAuth())) {
             return true;
         } else {
             throw new CustomAccessDeniedException("Only admins can change the donation amount");

@@ -13,7 +13,6 @@ import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import nl.jordy.petplacer.specifications.ShelterPetSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -24,10 +23,16 @@ public class ShelterPetService {
 
     private final ShelterPetRepository shelterPetRepository;
     private final ShelterService shelterService;
+    private final AccessValidator accessValidator;
 
-    public ShelterPetService(ShelterPetRepository shelterPetRepository, ShelterService shelterService) {
+    public ShelterPetService(
+            ShelterPetRepository shelterPetRepository,
+            ShelterService shelterService,
+            AccessValidator accessValidator
+    ) {
         this.shelterPetRepository = shelterPetRepository;
         this.shelterService = shelterService;
+        this.accessValidator = accessValidator;
     }
 
     public ShelterPet fetchShelterPetByID(Long shelterPetID) {
@@ -124,7 +129,7 @@ public class ShelterPetService {
 
         ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
 
-        AccessValidator.isSheltersManagerOrAdmin(AccessValidator.getAuth(), shelterPet.getShelter());
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
 
         shelterPet.setStatus(shelterPetStatusPatchDTO.getStatus());
         shelterPet.setDateOfLastUpdate(new Date());

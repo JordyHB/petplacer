@@ -23,15 +23,18 @@ public class AdoptionRequestService {
     private final AdoptionRequestRepository adoptionRequestRepository;
     private final UserService userService;
     private final ShelterPetService shelterPetService;
+    private final AccessValidator accessValidator;
 
     public AdoptionRequestService(
             AdoptionRequestRepository adoptionRequestRepository,
             UserService userService,
-            ShelterPetService shelterPetService
+            ShelterPetService shelterPetService,
+            AccessValidator accessValidator
     ) {
         this.adoptionRequestRepository = adoptionRequestRepository;
         this.userService = userService;
         this.shelterPetService = shelterPetService;
+        this.accessValidator = accessValidator;
     }
 
     public AdoptionRequest fetchAdoptionRequestById(Long id) {
@@ -48,7 +51,7 @@ public class AdoptionRequestService {
         AdoptionRequest adoptionRequest =
                 ModelMapperHelper.getModelMapper().map(adoptionRequestInputDTO, AdoptionRequest.class);
 
-        adoptionRequest.setAdoptionApplicant(userService.fetchUserByUsername(AccessValidator.getAuth().getName()));
+        adoptionRequest.setAdoptionApplicant(userService.fetchUserByUsername(accessValidator.getAuth().getName()));
         adoptionRequest.setRequestedPet(shelterPetService.fetchShelterPetByID(shelterPetID));
 
         adoptionRequestRepository.save(adoptionRequest);
@@ -90,8 +93,8 @@ public class AdoptionRequestService {
 
         return adoptionRequests.stream()
                 .filter(adoptionRequest ->
-                        AccessValidator.canAccessAdoptionInfo(
-                                AccessValidator.getAuth(), adoptionRequest
+                        accessValidator.canAccessAdoptionInfo(
+                                accessValidator.getAuth(), adoptionRequest
                         ))
                 .map(
                         adoptionRequest -> ModelMapperHelper.getModelMapper()
@@ -104,7 +107,7 @@ public class AdoptionRequestService {
         AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
 
         // checks if the request is made by the user that owns the pet or an admin
-        AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), adoptionRequest.getAdoptionApplicant().getUsername());
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), adoptionRequest.getAdoptionApplicant().getUsername());
 
         ModelMapperHelper.getModelMapper().map(adoptionRequestPatchDTO, adoptionRequest);
 
@@ -128,8 +131,8 @@ public class AdoptionRequestService {
 
         AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
 
-        AccessValidator.isSheltersManagerOrAdmin(
-                AccessValidator.getAuth(),
+        accessValidator.isSheltersManagerOrAdmin(
+                accessValidator.getAuth(),
                 adoptionRequest.getRequestedPet().getShelter()
         );
 

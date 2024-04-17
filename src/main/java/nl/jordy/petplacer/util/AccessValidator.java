@@ -1,12 +1,9 @@
 package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.repositories.ShelterRepository;
-import nl.jordy.petplacer.services.ShelterService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -14,21 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccessValidator {
 
-    private final ShelterRepository shelterRepository;
 
-    public AccessValidator(ShelterRepository shelterRepository) {
-        this.shelterRepository = shelterRepository;
-    }
-
-    public static Authentication getAuth() {
+    public Authentication getAuth() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public static boolean isAdmin(Authentication userAuth) {
+    public boolean isAdmin(Authentication userAuth) {
         return userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    public static void isUserOrAdmin(Authentication userAuth, String requestedUsername) {
+    public void isUserOrAdmin(Authentication userAuth, String requestedUsername) {
         // if the user is not the requested user
         if (!userAuth.getName().equals(requestedUsername) &&
                 // if the user is not an admin
@@ -38,14 +30,14 @@ public class AccessValidator {
         }
     }
 
-    public static boolean isSheltersManagerOrAdminFilterOnly(Authentication userAuth, Shelter requestedShelter) {
+    public boolean isSheltersManagerOrAdminFilterOnly(Authentication userAuth, Shelter requestedShelter) {
         return requestedShelter.getManagers()
                 .stream()
                 .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
                 isAdmin(userAuth);
     }
 
-    public static void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
+    public void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
         // will throw a 403 if the user is not the shelter manager or an admin
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&
                 !isAdmin(userAuth)) {
@@ -64,7 +56,7 @@ public class AccessValidator {
         }
     }
 
-    public static boolean canAccessAdoptionInfo(Authentication userAuth, AdoptionRequest adoptionRequest) {
+    public boolean canAccessAdoptionInfo(Authentication userAuth, AdoptionRequest adoptionRequest) {
         // checks if the user is an admin the shelter manager or the applicant
         return isAdmin(userAuth) ||
                 adoptionRequest.
