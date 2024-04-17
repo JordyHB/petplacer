@@ -6,7 +6,6 @@ import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.util.AccessValidator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,8 +56,10 @@ class UserServiceTest {
     @DisplayName("Throws a RecordNotFoundException when user is not found")
     @Test
     void fetchUserByUsernameNotFound() {
+        // Arrange
         when(userRepository.findByUsername("test")).thenReturn(Optional.empty());
 
+        // Act & Assert
         assertThrows(RecordNotFoundException.class, () -> {
             userService.fetchUserByUsername("test");
         });
@@ -67,50 +68,83 @@ class UserServiceTest {
     @DisplayName("Throws a AlreadyExistsException when username is not unique")
     @Test
     void validateUserUnique() {
+        // Arrange
         UserInputDTO userDTO = new UserInputDTO();
         userDTO.setUsername("existingUser");
 
-
         when(userRepository.existsByUsernameIgnoreCase("existingUser")).thenReturn(true);
 
+        // Act & Assert
         assertThrows(AlreadyExistsException.class, () -> {
             userService.validateUserUnique(userDTO);
         });
     }
 
+    @DisplayName("Throws a AlreadyExistsException when email is not unique")
     @Test
-    void registerUser() {
+    void validateUserUniqueEmail() {
+        // Arrange
+        UserInputDTO userDTO = new UserInputDTO();
+        userDTO.setEmail("existing@email.com");
+
+        when(userRepository.existsByEmailIgnoreCase("existing@email.com")).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(AlreadyExistsException.class, () -> {
+            userService.validateUserUnique(userDTO);
+        });
     }
 
+    @DisplayName(("passes if the user is unique"))
     @Test
-    void findAllUsers() {
+    void validateUserUniquePass() {
+        // Arrange
+        UserInputDTO userDTO = new UserInputDTO();
+        userDTO.setUsername("newUser");
+        userDTO.setEmail("new@email.com");
+
+        when(userRepository.existsByUsernameIgnoreCase("newUser")).thenReturn(false);
+        when(userRepository.existsByEmailIgnoreCase("new@email.com")).thenReturn(false);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> {
+            userService.validateUserUnique(userDTO);
+        });
     }
 
-    @Test
-    void findUserByUsername() {
-    }
+        @Test
+        void registerUser () {
+        }
 
-    @Test
-    void findUsersByParams() {
-    }
+        @Test
+        void findAllUsers () {
+        }
 
-    @Test
-    void updateUserByUsername() {
-    }
+        @Test
+        void findUserByUsername () {
+        }
 
-    @Test
-    void deleteUserByID() {
-    }
+        @Test
+        void findUsersByParams () {
+        }
 
-    @Test
-    void saveUser() {
-    }
+        @Test
+        void updateUserByUsername () {
+        }
 
-    @Test
-    void promoteToAdmin() {
-    }
+        @Test
+        void deleteUserByID () {
+        }
 
-    @Test
-    void demoteAdmin() {
+        @Test
+        void saveUser () {
+        }
+
+        @Test
+        void promoteToAdmin () {
+        }
+
+        @Test
+        void demoteAdmin () {
+        }
     }
-}
