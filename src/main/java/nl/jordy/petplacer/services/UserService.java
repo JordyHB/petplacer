@@ -10,6 +10,7 @@ import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
+import nl.jordy.petplacer.specifications.UserSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,17 @@ public class UserService {
         AccessValidator.isUserOrAdmin(AccessValidator.getAuth(), username);
         // uses private method to fetch and validate the user exists
         return ModelMapperHelper.getModelMapper().map(fetchUserByUsername(username), UserOutputDTO.class);
+    }
+
+    public List<UserOutputDTO> findUsersByParams(
+            String username,
+            String firstName,
+            String lastName,
+            List<String> roles
+    ) {
+        return userRepository.findAll(new UserSpecification(username, firstName, lastName, roles)).stream()
+                .map(user -> ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class))
+                .toList();
     }
 
     public UserOutputDTO updateUserByUsername(String username, UserPatchDTO userPatchDTO) {
