@@ -41,7 +41,12 @@ public class UserSpecification implements Specification<User> {
         }
         if (roles != null) {
             Join<User, Authority> join = root.join("authorities");
-            predicates.add(join.get("authority").in(roles));
+            Predicate rolePredicate = roles.stream().map(
+                    role -> criteriaBuilder.like(join.get("authority"),"%" +  role.toUpperCase() + "%"))
+                    .reduce(criteriaBuilder::and)
+                    .orElse(null);
+
+            predicates.add(rolePredicate);
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
