@@ -78,6 +78,7 @@ public class SecurityConfig {
                                 .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
                                 .requestMatchers("/ownedpets").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/ownedpets/filter").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/ownedpets/*").hasAuthority("ROLE_USER")
                                 .requestMatchers("/ownedpets/*/image").hasAuthority("ROLE_USER")
 
