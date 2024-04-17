@@ -6,14 +6,15 @@ import nl.jordy.petplacer.models.Donation;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.modelmapper.Condition;
 import org.modelmapper.spi.MappingContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation> {
 
-    private final AccessValidator accessValidator;
+    @Autowired
+    private AccessValidator accessValidator;
 
-    public isAdminMapCondition(AccessValidator accessValidator) {
-        this.accessValidator = accessValidator;
-    }
     @Override
     public boolean applies(MappingContext<DonationPatchDTO, Donation> context) {
 

@@ -10,7 +10,7 @@ import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
-import nl.jordy.petplacer.util.accessValidator;
+import nl.jordy.petplacer.util.AccessValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -38,7 +37,7 @@ class ShelterPetServiceTest {
     ShelterService shelterService;
 
     @Mock
-    accessValidator accessValidator;
+    AccessValidator accessValidator;
 
     @InjectMocks
     ShelterPetService shelterPetService;
