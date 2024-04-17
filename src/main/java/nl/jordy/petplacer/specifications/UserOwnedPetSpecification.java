@@ -1,19 +1,15 @@
 package nl.jordy.petplacer.specifications;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import nl.jordy.petplacer.enums.GenderEnum;
-import nl.jordy.petplacer.enums.ShelterPetStatus;
-import nl.jordy.petplacer.models.ShelterPet;
+import nl.jordy.petplacer.models.User;
+import nl.jordy.petplacer.models.UserOwnedPet;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShelterPetSpecification implements Specification<ShelterPet> {
+public class UserOwnedPetSpecification implements Specification<UserOwnedPet> {
 
     private final String name;
     private final String species;
@@ -25,13 +21,10 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
     private final Boolean goodWithKids;
     private final Boolean goodWithDogs;
     private final Boolean goodWithCats;
-    private final Long shelterID;
-    private final BigDecimal minAdoptionFee;
-    private final BigDecimal maxAdoptionFee;
-    private final ShelterPetStatus status;
+    private final String ownerUsername;
+    private final Boolean isAdopted;
 
-    public ShelterPetSpecification(
-
+    public UserOwnedPetSpecification(
             // pet attributes
             String name,
             String species,
@@ -44,11 +37,9 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             Boolean goodWithDogs,
             Boolean goodWithCats,
 
-            // shelter pet attributes
-            Long shelterID,
-            BigDecimal minAdoptionFee,
-            BigDecimal maxAdoptionFee,
-            ShelterPetStatus status
+            // user pet attributes
+            String ownerUsername,
+            Boolean isAdopted
     ) {
         this.name = name != null ? name.toLowerCase() : null;
         this.species = species != null ? species.toLowerCase() : null;
@@ -60,15 +51,14 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
         this.goodWithKids = goodWithKids;
         this.goodWithDogs = goodWithDogs;
         this.goodWithCats = goodWithCats;
-        this.shelterID = shelterID;
-        this.minAdoptionFee = minAdoptionFee;
-        this.maxAdoptionFee = maxAdoptionFee;
-        this.status = status;
+        this.ownerUsername = ownerUsername != null ? ownerUsername.toLowerCase() : null;
+        this.isAdopted = isAdopted;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public Predicate toPredicate(
-            Root<ShelterPet> root,
+            Root<UserOwnedPet> root,
             CriteriaQuery<?> query,
             CriteriaBuilder criteriaBuilder
     ) {
@@ -112,21 +102,13 @@ public class ShelterPetSpecification implements Specification<ShelterPet> {
             predicates.add(criteriaBuilder.equal(root.get("goodWithCats"), goodWithCats));
         }
 
-        // shelter pet attributes
-        if (shelterID != null) {
-            predicates.add(criteriaBuilder.equal(root.get("shelter").get("id"), shelterID));
+        // user pet attributes
+        if (ownerUsername != null) {
+            Join<UserOwnedPet, User> join = root.join("currentOwner");
+            predicates.add(criteriaBuilder.like(join.get("username"), "%" + ownerUsername + "%"));
         }
-        if (minAdoptionFee != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("adoptionFee"), minAdoptionFee));
-        }
-        if (maxAdoptionFee != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("adoptionFee"), maxAdoptionFee));
-        }
-        if (minAdoptionFee != null && maxAdoptionFee != null) {
-            predicates.add(criteriaBuilder.between(root.get("adoptionFee"), minAdoptionFee, maxAdoptionFee));
-        }
-        if (status != null) {
-            predicates.add(criteriaBuilder.equal(root.get("status"), status));
+        if (isAdopted != null) {
+            predicates.add(criteriaBuilder.equal(root.get("isAdopted"), isAdopted));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
