@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,21 @@ public class DonationController {
     @GetMapping("/{donationID}")
     public ResponseEntity<DonationOutputDTO> getDonationByID(@PathVariable Long donationID) {
         return ResponseEntity.ok(donationService.findDonationById(donationID));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<DonationOutputDTO>> getDonationsByFilter(
+            @RequestParam(required = false) Long shelterID,
+            @RequestParam(required = false) String donatorName,
+            @RequestParam(required = false) BigDecimal minDonationAmount,
+            @RequestParam(required = false) BigDecimal maxDonationAmount
+    ) {
+        return ResponseEntity.ok(donationService.findDonationsByParams(
+                shelterID,
+                donatorName,
+                minDonationAmount,
+                maxDonationAmount
+        ));
     }
 
     // Patches

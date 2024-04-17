@@ -21,6 +21,7 @@ public class ModelMapperHelper {
         // adds a converter to cast strings to lowercase
         ModelMapperHelper.modelMapper.addConverter(new StringToLowerConverter());
         // adds a property maps
+        ModelMapperHelper.modelMapper.addMappings(new AdoptionRequestToAdoptionRequestSummaryPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationOutputPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new DonationToDonationSummaryPropertyMap());
         ModelMapperHelper.modelMapper.addMappings(new DonationPatchToDonationPropertyMap());

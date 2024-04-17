@@ -12,6 +12,7 @@ import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.ShelterRepository;
+import nl.jordy.petplacer.specifications.ShelterSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +91,15 @@ public class ShelterService {
         Shelter shelter = fetchShelterByID(shelterID);
 
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
+    }
+
+    public List<ShelterOutputDTO> findSheltersByParams(String shelterName, String city) {
+
+        return shelterRepository.findAll(
+                new ShelterSpecification(shelterName, city)
+        ).stream()
+                .map(shelter -> ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class))
+                .toList();
     }
 
     public ShelterOutputDTO updateShelterByID(Long shelterID, ShelterPatchDTO shelterPatchDTO) {

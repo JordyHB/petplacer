@@ -4,11 +4,13 @@ import nl.jordy.petplacer.dtos.input.AdoptionRequestInputDTO;
 import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
+import nl.jordy.petplacer.enums.AdoptionRequestStatus;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.repositories.AdoptionRequestRepository;
+import nl.jordy.petplacer.specifications.AdoptionRequestSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +70,33 @@ public class AdoptionRequestService {
         AdoptionRequest requestedAdoptionRequest = fetchAdoptionRequestById(id);
 
         return ModelMapperHelper.getModelMapper().map(requestedAdoptionRequest, AdoptionRequestOutputDTO.class);
+    }
+
+    public List<AdoptionRequestOutputDTO> findAdoptionRequestByParams(
+            AdoptionRequestStatus status,
+            String applicantName,
+            Long petID,
+            Long shelterID
+    ) {
+
+        AdoptionRequestSpecification adoptionRequestSpecification = new AdoptionRequestSpecification(
+                status,
+                applicantName,
+                petID,
+                shelterID
+        );
+
+        List<AdoptionRequest> adoptionRequests = adoptionRequestRepository.findAll(adoptionRequestSpecification);
+
+        return adoptionRequests.stream()
+                .filter(adoptionRequest ->
+                        AccessValidator.canAccessAdoptionInfo(
+                                AccessValidator.getAuth(), adoptionRequest
+                        ))
+                .map(
+                        adoptionRequest -> ModelMapperHelper.getModelMapper()
+                                .map(adoptionRequest, AdoptionRequestOutputDTO.class))
+                .toList();
     }
 
     public AdoptionRequestOutputDTO updateAdoptionRequestById(Long adoptionRequestID, AdoptionRequestPatchDTO adoptionRequestPatchDTO) {

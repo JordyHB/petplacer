@@ -56,6 +56,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/users/filter").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/users/*").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/*/ownedpets").hasAuthority("ROLE_USER")
@@ -73,11 +74,11 @@ public class SecurityConfig {
                                 .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
                                 .requestMatchers("/shelterpets/*/image").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/donations").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/donations/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/donations").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
                                 .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
                                 .requestMatchers("/ownedpets").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/ownedpets/filter").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/ownedpets/*").hasAuthority("ROLE_USER")
                                 .requestMatchers("/ownedpets/*/image").hasAuthority("ROLE_USER")
 

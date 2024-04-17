@@ -2,6 +2,7 @@ package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.repositories.ShelterRepository;
 import nl.jordy.petplacer.services.ShelterService;
@@ -37,6 +38,13 @@ public class AccessValidator {
         }
     }
 
+    public static boolean isSheltersManagerOrAdminFilterOnly(Authentication userAuth, Shelter requestedShelter) {
+        return requestedShelter.getManagers()
+                .stream()
+                .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
+                isAdmin(userAuth);
+    }
+
     public static void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
         // will throw a 403 if the user is not the shelter manager or an admin
         if (!userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&
@@ -54,5 +62,15 @@ public class AccessValidator {
 
             throw new CustomAccessDeniedException();
         }
+    }
+
+    public static boolean canAccessAdoptionInfo(Authentication userAuth, AdoptionRequest adoptionRequest) {
+        // checks if the user is an admin the shelter manager or the applicant
+        return isAdmin(userAuth) ||
+                adoptionRequest.
+                        getRequestedPet().getShelter().getManagers()
+                        .stream()
+                        .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
+                adoptionRequest.getAdoptionApplicant().getUsername().equals(userAuth.getName());
     }
 }

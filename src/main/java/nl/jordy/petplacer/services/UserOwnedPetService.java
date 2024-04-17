@@ -3,10 +3,12 @@ package nl.jordy.petplacer.services;
 import nl.jordy.petplacer.dtos.input.UserOwnedPetInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOwnedPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserOwnedPetPatchDTO;
+import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.UserOwnedPet;
 import nl.jordy.petplacer.repositories.UserOwnedPetRepository;
+import nl.jordy.petplacer.specifications.UserOwnedPetSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,40 @@ public class UserOwnedPetService {
 
         UserOwnedPet userOwnedPet = fetchUserOwnedPetById(id);
         return ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class);
+    }
+
+    public List<UserOwnedPetOutputDTO> findUserOwnedPetsByParams(
+            String name,
+            String species,
+            String breed,
+            Integer minAge,
+            Integer maxAge,
+            GenderEnum genderEnum,
+            Boolean spayedNeutered,
+            Boolean goodWithKids,
+            Boolean goodWithDogs,
+            Boolean goodWithCats,
+            String ownerUsername,
+            Boolean isAdopted
+    ) {
+        return userOwnedPetRepository.findAll(
+                new UserOwnedPetSpecification(
+                        name,
+                        species,
+                        breed,
+                        minAge,
+                        maxAge,
+                        genderEnum,
+                        spayedNeutered,
+                        goodWithKids,
+                        goodWithDogs,
+                        goodWithCats,
+                        ownerUsername,
+                        isAdopted
+                )
+        ).stream()
+                .map(userOwnedPet -> ModelMapperHelper.getModelMapper().map(userOwnedPet, UserOwnedPetOutputDTO.class))
+                .toList();
     }
 
     public UserOwnedPetOutputDTO updateUserOwnedPetById(Long petID, UserOwnedPetPatchDTO userOwnedPetPatchDTO) {

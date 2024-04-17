@@ -3,11 +3,14 @@ package nl.jordy.petplacer.controllers;
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.output.UserOwnedPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserOwnedPetPatchDTO;
+import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 import nl.jordy.petplacer.services.ImageService;
 import nl.jordy.petplacer.services.UserOwnedPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +38,39 @@ public class UserOwnedPetController {
     @GetMapping("/{petID}")
     public ResponseEntity<UserOwnedPetOutputDTO> getUserOwnedPetById(@PathVariable Long petID) {
         return ResponseEntity.ok(userOwnedPetService.findUserOwnedPetById(petID));
+    }
+
+    @Validated
+    @GetMapping("/filter")
+    public ResponseEntity<List<UserOwnedPetOutputDTO>> getUserOwnedPetsByParams(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String species,
+            @RequestParam(required = false) String breed,
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
+            @ValidEnumValue(enumClass = GenderEnum.class, fieldName = "gender")
+            @RequestParam(required = false, name = "gender") GenderEnum genderEnum,
+            @RequestParam(required = false) Boolean spayedNeutered,
+            @RequestParam(required = false) Boolean goodWithKids,
+            @RequestParam(required = false) Boolean goodWithDogs,
+            @RequestParam(required = false) Boolean goodWithCats,
+            @RequestParam(required = false) String ownerUsername,
+            @RequestParam(required = false) Boolean isAdopted
+    ) {
+        return ResponseEntity.ok(userOwnedPetService.findUserOwnedPetsByParams(
+                name,
+                species,
+                breed,
+                minAge,
+                maxAge,
+                genderEnum,
+                spayedNeutered,
+                goodWithKids,
+                goodWithDogs,
+                goodWithCats,
+                ownerUsername,
+                isAdopted
+        ));
     }
 
     // Puts
@@ -66,7 +102,7 @@ public class UserOwnedPetController {
             @PathVariable Long userPetID,
             @RequestParam("image") MultipartFile imageFile
     ) {
-        return ResponseEntity.ok(imageService.uploadImageToUserPet(userPetID,imageFile));
+        return ResponseEntity.ok(imageService.uploadImageToUserPet(userPetID, imageFile));
     }
 
     // Deletes

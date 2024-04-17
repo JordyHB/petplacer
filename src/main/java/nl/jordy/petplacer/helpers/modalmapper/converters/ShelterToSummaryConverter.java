@@ -1,13 +1,11 @@
 package nl.jordy.petplacer.helpers.modalmapper.converters;
 
-import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
 import nl.jordy.petplacer.dtos.summary.DonationSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterPetSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.UserSummaryDTO;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.Shelter;
-import nl.jordy.petplacer.models.User;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 

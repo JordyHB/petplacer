@@ -107,6 +107,16 @@ public class UserController {
         return ResponseEntity.ok(userService.findUserByUsername(username));
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<UserOutputDTO>> getUsersByParams(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) List<String> roles
+    ) {
+        return ResponseEntity.ok(userService.findUsersByParams(username, firstName, lastName, roles));
+    }
+
 
     // Puts
 

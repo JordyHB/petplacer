@@ -4,13 +4,18 @@ import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
+import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
+import nl.jordy.petplacer.specifications.ShelterPetSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +61,45 @@ public class ShelterPetService {
     public ShelterPetOutputDTO findShelterPetById(Long shelterPetID) {
         return ModelMapperHelper.getModelMapper().
                 map(fetchShelterPetByID(shelterPetID), ShelterPetOutputDTO.class);
+    }
+
+    public List<ShelterPetOutputDTO> findShelterPetsByParams(
+            String name,
+            String species,
+            String breed,
+            Integer minAge,
+            Integer maxAge,
+            GenderEnum genderEnum,
+            Boolean spayedNeutered,
+            Boolean goodWithKids,
+            Boolean goodWithDogs,
+            Boolean goodWithCats,
+            Long shelterID,
+            BigDecimal minAdoptionFee,
+            BigDecimal maxAdoptionFee,
+            ShelterPetStatus status
+    ) {
+
+        return shelterPetRepository.findAll(
+                        new ShelterPetSpecification(
+                                name,
+                                species,
+                                breed,
+                                minAge,
+                                maxAge,
+                                genderEnum,
+                                spayedNeutered,
+                                goodWithKids,
+                                goodWithDogs,
+                                goodWithCats,
+                                shelterID,
+                                minAdoptionFee,
+                                maxAdoptionFee,
+                                status
+                        ))
+                .stream()
+                .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))
+                .toList();
     }
 
     public ShelterPetOutputDTO updateShelterPetByID(Long shelterPetID, ShelterPetPatchDTO shelterPetPatchDTO) {

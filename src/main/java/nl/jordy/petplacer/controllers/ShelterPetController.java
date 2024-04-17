@@ -6,17 +6,22 @@ import nl.jordy.petplacer.dtos.output.AdoptionRequestOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetStatusPatchDTO;
+import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import nl.jordy.petplacer.services.ImageService;
 import nl.jordy.petplacer.services.ShelterPetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -65,6 +70,45 @@ public class ShelterPetController {
         return ResponseEntity.ok(shelterPetService.findShelterPetById(shelterPetID));
     }
 
+    @Validated
+    @GetMapping("/filter")
+    public ResponseEntity<List<ShelterPetOutputDTO>> getShelterPetsByFilter(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String species,
+            @RequestParam(required = false) String breed,
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
+            @ValidEnumValue(enumClass = GenderEnum.class, fieldName = "genderEnum")
+            @RequestParam(required = false, name = "gender") GenderEnum genderEnum,
+            @RequestParam(required = false) Boolean spayedNeutered,
+            @RequestParam(required = false) Boolean goodWithKids,
+            @RequestParam(required = false) Boolean goodWithDogs,
+            @RequestParam(required = false) Boolean goodWithCats,
+            @RequestParam(required = false) Long shelterID,
+            @RequestParam(required = false) BigDecimal minAdoptionFee,
+            @RequestParam(required = false) BigDecimal maxAdoptionFee,
+            @ValidEnumValue(enumClass = ShelterPetStatus.class, fieldName = "status")
+            @RequestParam(required = false) ShelterPetStatus status
+    ) {
+        return ResponseEntity.ok(shelterPetService.findShelterPetsByParams(
+                name,
+                species,
+                breed,
+                minAge,
+                maxAge,
+                genderEnum,
+                spayedNeutered,
+                goodWithKids,
+                goodWithDogs,
+                goodWithCats,
+                shelterID,
+                minAdoptionFee,
+                maxAdoptionFee,
+                status
+        ));
+    }
+
+
     // Puts
     @PutMapping("/{shelterPetID}/image")
     public ResponseEntity<String> updateImage(
@@ -80,7 +124,7 @@ public class ShelterPetController {
 
     // Patch
     @PatchMapping("/{shelterPetID}")
-    public ResponseEntity<ShelterPetOutputDTO>updateShelterPetByID(
+    public ResponseEntity<ShelterPetOutputDTO> updateShelterPetByID(
             @PathVariable Long shelterPetID,
             @Valid
             @RequestBody ShelterPetPatchDTO shelterPetPatchDTO,
@@ -100,7 +144,7 @@ public class ShelterPetController {
             @PathVariable Long shelterPetID,
             @RequestParam("image") MultipartFile imageFile
     ) {
-        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID,imageFile));
+        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID, imageFile));
     }
 
     @PatchMapping("/{shelterPetID}/status")
