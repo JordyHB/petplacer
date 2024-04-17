@@ -142,3 +142,25 @@ VALUES (100, now(), now(), 'I would like to help the animals in need', 'msbear',
        (50, now(), now(), 'I would like to donate to my own shelter', 'jord', 1),
        (200, now(), now(), 'I would also like to help the animals in need', 'admin', 1),
        (300, now(), now(), 'I would like to help', 'msbear', 1);
+
+INSERT INTO user_owned_pets (age, good_with_cats, good_with_dogs, good_with_kids, is_adopted, spayed_neutered,
+                             years_owned, date_of_last_update, date_of_registration, breed, color,
+                             current_owner_username, description, gender, name, size, species)
+
+VALUES (8, true, true, true, false, true,
+        8, now(), now(), 'golden doodle', 'black',
+        'jord', 'the happiest and kindest dog, she does love eating things she shouldnt.', 'FEMALE', 'kyara', 'large',
+        'dog'),
+
+       (5, false, false, true, false, false,
+        1, now(), now(), 'budgerigar', 'green and yellow',
+        'msbear', 'a cheerful and chatty bird.', 'MALE', 'kiwi', 'small', 'bird'),
+
+       (1, true, false, false, false, true,
+        0, now(), now(), 'german shepherd', 'black and tan',
+        'admin', 'a loyal and energetic pup.', 'MALE', 'max', 'large', 'dog'),
+
+       (8, false, true, true, true, false,
+        5, now(), now(), 'siamese', 'cream and brown',
+        'msbear', 'a shy but affectionate cat.', 'FEMALE', 'bella', 'small', 'cat');
+
