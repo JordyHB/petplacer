@@ -1,8 +1,9 @@
 package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
+import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.exceptions.RecordNotFoundException;g
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.util.AccessValidator;
@@ -12,18 +13,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    private User getTestUser() {
+    private User getTestUser(String name) {
         User user = new User();
-        user.setUsername("test");
+        user.setUsername(name);
         user.setEmail("test@gmail.com");
         user.setFirstName("dummy");
         user.setLastName("tester");
@@ -36,6 +41,9 @@ class UserServiceTest {
     @Mock
     AccessValidator accessValidator;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     @InjectMocks
     UserService userService;
 
@@ -43,7 +51,7 @@ class UserServiceTest {
     @Test
     void fetchUserByUsername() {
         // Arrange
-        User user = getTestUser();
+        User user = getTestUser("test");
         when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
 
         // Act
@@ -112,39 +120,72 @@ class UserServiceTest {
         });
     }
 
-        @Test
-        void registerUser () {
-        }
+    @Test
+    void registerUser() {
+        // Arrange
+        UserInputDTO userDTO = new UserInputDTO();
+        userDTO.setUsername("test");
+        userDTO.setEmail("test@gmail.com");
+        userDTO.setFirstName("dummy");
+        userDTO.setLastName("tester");
+        userDTO.setPassword("password");;
+        User mappedUser = getTestUser("test");
 
-        @Test
-        void findAllUsers () {
-        }
+        when(userRepository.save(any(User.class))).thenReturn(mappedUser);
 
-        @Test
-        void findUserByUsername () {
-        }
+        // Act
+        UserOutputDTO result = userService.registerUser(userDTO);
 
-        @Test
-        void findUsersByParams () {
-        }
-
-        @Test
-        void updateUserByUsername () {
-        }
-
-        @Test
-        void deleteUserByID () {
-        }
-
-        @Test
-        void saveUser () {
-        }
-
-        @Test
-        void promoteToAdmin () {
-        }
-
-        @Test
-        void demoteAdmin () {
-        }
+        // Assert
+        assertEquals(userDTO.getUsername(), result.getUsername());
+        assertEquals(userDTO.getEmail(), result.getEmail());
+        assertEquals(userDTO.getFirstName(), result.getFirstName());
+        verify(passwordEncoder).encode(userDTO.getPassword());
     }
+
+    @Test
+    void findAllUsers() {
+        // Arrange
+        User user1 = getTestUser("test1");
+        User user2 = getTestUser("test2");
+
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
+
+        // Act
+        List<UserOutputDTO> result = userService.findAllUsers();
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(user1.getUsername(), result.get(0).getUsername());
+        assertEquals(user2.getUsername(), result.get(1).getUsername());
+
+    }
+
+    @Test
+    void findUserByUsername() {
+    }
+
+    @Test
+    void findUsersByParams() {
+    }
+
+    @Test
+    void updateUserByUsername() {
+    }
+
+    @Test
+    void deleteUserByID() {
+    }
+
+    @Test
+    void saveUser() {
+    }
+
+    @Test
+    void promoteToAdmin() {
+    }
+
+    @Test
+    void demoteAdmin() {
+    }
+}
