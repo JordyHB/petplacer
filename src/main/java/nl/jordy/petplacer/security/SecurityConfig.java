@@ -56,6 +56,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers("/users/*/admin").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/users/filter").hasAuthority("ROLE_ADMIN")
                                 .requestMatchers("/users/*").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/*/shelters").hasAuthority("ROLE_USER")
                                 .requestMatchers("/users/*/ownedpets").hasAuthority("ROLE_USER")

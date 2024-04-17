@@ -42,9 +42,12 @@ public class UserSpecification implements Specification<User> {
         if (roles != null) {
             Join<User, Authority> join = root.join("authorities");
             Predicate rolePredicate = roles.stream().map(
+                    // matches the input with authority in the database ignoring case and letters around the input
                     role -> criteriaBuilder.like(join.get("authority"),"%" +  role.toUpperCase() + "%"))
-                    .reduce(criteriaBuilder::and)
-                    .orElse(null);
+                    // reduce the predicates to a single predicate
+                    .reduce(criteriaBuilder::or)
+                    // return an empty predicate if the list is empty
+                    .orElse(criteriaBuilder.conjunction());
 
             predicates.add(rolePredicate);
         }
