@@ -1,9 +1,7 @@
 package nl.jordy.petplacer.services;
 
-import nl.jordy.petplacer.dtos.input.PetInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
-import nl.jordy.petplacer.dtos.patch.PetPatchDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPetPatchDTO;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
@@ -13,6 +11,7 @@ import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +31,9 @@ class ShelterPetServiceTest {
     @Mock
     ShelterPetRepository shelterPetRepository;
 
+    @Mock
+    ShelterService shelterService;
+
     @InjectMocks
     ShelterPetService shelterPetService;
 
@@ -44,10 +46,18 @@ class ShelterPetServiceTest {
     ) {
         ShelterPetInputDTO shelterPetInputDTO = new ShelterPetInputDTO();
 
-        PetInputDTO petInputDTO = getPetInputDTO(name, age);
-
-        // fills the shelterPetInputDTO with the petInputDTO and some extra fields
-        shelterPetInputDTO.setPet(petInputDTO);
+        shelterPetInputDTO.setName(name);
+        shelterPetInputDTO.setSpecies("dog");
+        shelterPetInputDTO.setBreed("labrador");
+        shelterPetInputDTO.setColor("brown");
+        shelterPetInputDTO.setAge(age);
+        shelterPetInputDTO.setGender(GenderEnum.FEMALE);
+        shelterPetInputDTO.setSize("large");
+        shelterPetInputDTO.setDescription("friendly dog");
+        shelterPetInputDTO.setSpayedNeutered(true);
+        shelterPetInputDTO.setGoodWithKids(true);
+        shelterPetInputDTO.setGoodWithDogs(true);
+        shelterPetInputDTO.setGoodWithCats(true);
         shelterPetInputDTO.setMonthsInShelter(monthsInShelter);
         shelterPetInputDTO.setMedicalHistory("healthy");
         shelterPetInputDTO.setSpecialNeeds(specialNeeds);
@@ -64,48 +74,22 @@ class ShelterPetServiceTest {
     ) {
         ShelterPetPatchDTO shelterPetPatchDTO = new ShelterPetPatchDTO();
 
-        PetPatchDTO petPatchDTO = getPetPatchDTO(name, age);
-
-        // fills the shelterPetPatchDTO with the petPatchDTO and some extra fields
-        shelterPetPatchDTO.setPet(petPatchDTO);
+        shelterPetPatchDTO.setName(name);
+        shelterPetPatchDTO.setAge(age);
+        shelterPetPatchDTO.setSpecies("dog");
+        shelterPetPatchDTO.setBreed("labrador");
+        shelterPetPatchDTO.setColor("brown");
+        shelterPetPatchDTO.setAge(age);
+        shelterPetPatchDTO.setGender(GenderEnum.MALE);
+        shelterPetPatchDTO.setSize("large");
+        shelterPetPatchDTO.setDescription("friendly dog");
+        shelterPetPatchDTO.setSpayedNeutered(true);
+        shelterPetPatchDTO.setGoodWithKids(true);
+        shelterPetPatchDTO.setGoodWithDogs(true);
+        shelterPetPatchDTO.setGoodWithCats(true);
         shelterPetPatchDTO.setMonthsInShelter(monthsInShelter);
         shelterPetPatchDTO.setSpecialNeeds(specialNeeds);
         return shelterPetPatchDTO;
-    }
-
-    private PetInputDTO getPetInputDTO(String name, int age) {
-        PetInputDTO petInputDTO = new PetInputDTO();
-        petInputDTO.setName(name);
-        petInputDTO.setSpecies("dog");
-        petInputDTO.setBreed("labrador");
-        petInputDTO.setColor("brown");
-        petInputDTO.setAge(age);
-        petInputDTO.setGender(GenderEnum.FEMALE);
-        petInputDTO.setSize("large");
-        petInputDTO.setDescription("friendly dog");
-        petInputDTO.setSpayedNeutered(true);
-        petInputDTO.setGoodWithKids(true);
-        petInputDTO.setGoodWithDogs(true);
-        petInputDTO.setGoodWithCats(true);
-        return petInputDTO;
-    }
-
-    private PetPatchDTO getPetPatchDTO(String name, int age) {
-        PetPatchDTO petPatchDTO = new PetPatchDTO();
-        petPatchDTO.setName(name);
-        petPatchDTO.setAge(age);
-        petPatchDTO.setSpecies("dog");
-        petPatchDTO.setBreed("labrador");
-        petPatchDTO.setColor("brown");
-        petPatchDTO.setAge(age);
-        petPatchDTO.setGender(GenderEnum.MALE);
-        petPatchDTO.setSize("large");
-        petPatchDTO.setDescription("friendly dog");
-        petPatchDTO.setSpayedNeutered(true);
-        petPatchDTO.setGoodWithKids(true);
-        petPatchDTO.setGoodWithDogs(true);
-        petPatchDTO.setGoodWithCats(true);
-        return petPatchDTO;
     }
 
     @DisplayName("Fetch ShelterPet by ID")
@@ -156,9 +140,10 @@ class ShelterPetServiceTest {
 
         ReflectionTestUtils.setField(shelterPet, "id", shelterPetID);
 
-        when(shelterPetRepository.save(shelterPet)).thenReturn(shelterPet);
+        when(shelterPetRepository.save(ArgumentMatchers.any(ShelterPet.class)))
+                .thenReturn(shelterPet);
         // Act
-        ShelterPetOutputDTO storedPet = shelterPetService.registerNewShelterPet(shelterPetInputDTO);
+        ShelterPetOutputDTO storedPet = shelterPetService.registerNewShelterPet(232L, shelterPetInputDTO);
 
         // Assert
         assertEquals("bernie", storedPet.getName());
@@ -167,7 +152,7 @@ class ShelterPetServiceTest {
         assertEquals(5, storedPet.getMonthsInShelter());
         assertEquals("tasty treats", storedPet.getSpecialNeeds());
         assertEquals("owner couldn't take care of him anymore", storedPet.getPreviousSituation());
-        assertThat(storedPet.getDateOfArrival()).isNotNull();
+        assertThat(storedPet.getDateOfLastUpdate()).isNotNull();
     }
 
     @Test
