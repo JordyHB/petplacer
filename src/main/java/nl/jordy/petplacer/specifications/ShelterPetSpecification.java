@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
-import nl.jordy.petplacer.models.Donation;
 import nl.jordy.petplacer.models.ShelterPet;
 import org.springframework.data.jpa.domain.Specification;
 

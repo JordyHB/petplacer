@@ -79,7 +79,7 @@ public class ShelterPetController {
             @RequestParam(required = false) Integer minAge,
             @RequestParam(required = false) Integer maxAge,
             @ValidEnumValue(enumClass = GenderEnum.class, fieldName = "genderEnum")
-            @RequestParam(required = false, name = "gender")GenderEnum genderEnum,
+            @RequestParam(required = false, name = "gender") GenderEnum genderEnum,
             @RequestParam(required = false) Boolean spayedNeutered,
             @RequestParam(required = false) Boolean goodWithKids,
             @RequestParam(required = false) Boolean goodWithDogs,
@@ -109,8 +109,8 @@ public class ShelterPetController {
     }
 
 
-            // Puts
-            @PutMapping("/{shelterPetID}/image")
+    // Puts
+    @PutMapping("/{shelterPetID}/image")
     public ResponseEntity<String> updateImage(
             @PathVariable Long shelterPetID,
             @RequestParam("image") MultipartFile imageFile
@@ -124,7 +124,7 @@ public class ShelterPetController {
 
     // Patch
     @PatchMapping("/{shelterPetID}")
-    public ResponseEntity<ShelterPetOutputDTO>updateShelterPetByID(
+    public ResponseEntity<ShelterPetOutputDTO> updateShelterPetByID(
             @PathVariable Long shelterPetID,
             @Valid
             @RequestBody ShelterPetPatchDTO shelterPetPatchDTO,
@@ -144,7 +144,7 @@ public class ShelterPetController {
             @PathVariable Long shelterPetID,
             @RequestParam("image") MultipartFile imageFile
     ) {
-        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID,imageFile));
+        return ResponseEntity.ok(imageService.uploadImageToShelterPet(shelterPetID, imageFile));
     }
 
     @PatchMapping("/{shelterPetID}/status")
