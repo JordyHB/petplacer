@@ -282,6 +282,20 @@ class UserServiceTest {
 
     }
 
+    @DisplayName("Promote admin throws ex")
+    @Test
+    void promoteToAdminThrowsEX() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(authChecker.fetchedUserHasAuthority(any(User.class), eq("ROLE_ADMIN"))).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(AlreadyExistsException.class, () -> userService.promoteToAdmin(username));
+    }
+
     @DisplayName("Demote Admin test")
     @Test
     void demoteAdmin() {
