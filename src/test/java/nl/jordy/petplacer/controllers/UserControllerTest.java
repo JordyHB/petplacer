@@ -22,8 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -408,7 +407,17 @@ class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("Demote an admin")
+    @WithMockUser(username = "freek", roles = {"USER", "ADMIN"})
     @Test
-    void demoteAdmin() {
+    void demoteAdmin() throws Exception {
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/users/admin/admin"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("admin"))
+                .andExpect(jsonPath("$.authorities[*].authority").value(hasItem("ROLE_USER")))
+                .andExpect(jsonPath("$.authorities[*].authority").value(not(hasItem("ROLE_ADMIN"))));
     }
 }
