@@ -146,12 +146,11 @@ public class UserService {
             throw new AlreadyExistsException("User: " + username + " is not an admin");
         }
 
-        for (Authority auth : user.getAuthorities()) {
-            if (auth.getAuthority().equals("ROLE_ADMIN")) {
-                user.removeAuthority(auth);
-                break;
-            }
-        }
+        user.removeAuthority(user.getAuthorities().stream()
+                .filter(a -> a.getAuthority().equals("ROLE_ADMIN"))
+                .findFirst()
+                .orElseThrow(() -> new RecordNotFoundException("User: " + username + " is not an admin"))
+        );
 
         userRepository.save(user);
 
