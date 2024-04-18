@@ -1,7 +1,9 @@
 package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
+import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.models.Shelter;
+import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.models.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,22 @@ class AccessValidatorTest {
         assertTrue(authentication.isAuthenticated());
     }
 
+    private AdoptionRequest createMockAdoptionRequest(String managerUsername) {
+        User manager = new User();
+        manager.setUsername(managerUsername);
+        User applicant = new User();
+        applicant.setUsername("applicant");
+        Shelter shelter = new Shelter();
+        shelter.setManagers(List.of(manager));
+        ShelterPet shelterPet = new ShelterPet();
+        shelterPet.setShelter(shelter);
+        AdoptionRequest adoptionRequest = new AdoptionRequest();
+        adoptionRequest.setAdoptionApplicant(applicant);
+        adoptionRequest.setRequestedPet(shelterPet);
+        return adoptionRequest;
+    }
+
+    @DisplayName("is admin")
     @Test
     void isAdmin() {
         // Arrange
@@ -141,11 +159,129 @@ class AccessValidatorTest {
         assertFalse(result, "The user should not be a manager");
     }
 
+    @DisplayName("is shelters manager or admin, admin match")
     @Test
-    void isSheltersManagerOrAdmin() {
+    void isSheltersManagerOrAdmin_AdminMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+
+        // Act
+        accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter);
+
+        // Assert
+        assertDoesNotThrow(() -> accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter));
     }
 
+    @DisplayName("is shelters manager or admin, manager match")
+    @WithMockUser(username = "dirk", roles = {"SHELTER_MANAGER"})
     @Test
-    void canAccessAdoptionInfo() {
+    void isSheltersManagerOrAdmin_ManagerMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("dirk");
+        requestedShelter.setManagers(List.of(manager));
+
+        // Act
+        accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter);
+
+        // Assert
+        assertDoesNotThrow(() -> accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter));
+    }
+
+    @DisplayName("is shelters manager or admin, shelter manager but not of the right shelter")
+    @WithMockUser(username = "dirk", roles = {"SHELTER_MANAGER"})
+    @Test
+    void isSheltersManagerOrAdmin_NoMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("admin");
+        requestedShelter.setManagers(List.of(manager));
+
+        // Act & Assert
+        assertThrows(CustomAccessDeniedException.class,
+                () -> accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter));
+    }
+
+    @DisplayName("is shelters manager or admin, no match, not a shelter manager")
+    @WithMockUser(username = "dirk")
+    @Test
+    void isSheltersManagerOrAdmin_NoMatchNoShelterManager() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("admin");
+        requestedShelter.setManagers(List.of(manager));
+
+        // Act & Assert
+        assertThrows(CustomAccessDeniedException.class,
+                () -> accessValidator.isSheltersManagerOrAdmin(authentication, requestedShelter));
+    }
+
+    @DisplayName("can access adoption info, manager match")
+    @WithMockUser(username = "dirk", roles = {"SHELTER_MANAGER"})
+    @Test
+    void canAccessAdoptionInfo_ManagerMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AdoptionRequest adoptionRequest = createMockAdoptionRequest("dirk");
+
+        // Act
+        boolean result = accessValidator.canAccessAdoptionInfo(authentication, adoptionRequest);
+
+        // Assert
+        assertTrue(result, "The user should be a manager");
+    }
+
+    @DisplayName("can access adoption info, applicant match")
+    @WithMockUser(username = "applicant")
+    @Test
+    void canAccessAdoptionInfo_ApplicantMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AdoptionRequest adoptionRequest =
+                createMockAdoptionRequest("manager");
+
+        // Act
+        boolean result = accessValidator.canAccessAdoptionInfo(authentication, adoptionRequest);
+
+        // Assert
+        assertTrue(result, "The user should be an applicant");
+    }
+
+    @DisplayName("can access adoption info, admin match")
+    @Test
+    void canAccessAdoptionInfo_AdminMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AdoptionRequest adoptionRequest =
+                createMockAdoptionRequest("manager");
+
+        // Act
+        boolean result = accessValidator.canAccessAdoptionInfo(authentication, adoptionRequest);
+
+        // Assert
+        assertTrue(result, "The user should be an admin");
+    }
+
+    @DisplayName("can access adoption info, no match")
+    @WithMockUser(username = "dirk")
+    @Test
+    void canAccessAdoptionInfo_NoMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AdoptionRequest adoptionRequest =
+                createMockAdoptionRequest("manager");
+
+        // Act
+        boolean result = accessValidator.canAccessAdoptionInfo(authentication, adoptionRequest);
+
+        // Assert
+        assertFalse(result, "The user should not be a manager, applicant or admin");
     }
 }
