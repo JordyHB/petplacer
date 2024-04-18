@@ -1,6 +1,8 @@
 package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
+import nl.jordy.petplacer.models.Shelter;
+import nl.jordy.petplacer.models.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,8 +90,55 @@ class AccessValidatorTest {
                 () -> accessValidator.isUserOrAdmin(authentication, requestedUsername));
     }
 
+    @DisplayName("is shelters manager or admin filter only, admin match")
     @Test
     void isSheltersManagerOrAdminFilterOnly() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+
+        // Act
+        boolean result = accessValidator.isSheltersManagerOrAdminFilterOnly(authentication, requestedShelter);
+
+        // Assert
+        assertTrue(result, "The user should be an admin");
+
+    }
+
+    @DisplayName("is shelters manager or admin filter only, manager match")
+    @WithMockUser(username = "dirk", roles = {"SHELTER_MANAGER"})
+    @Test
+    void isSheltersManagerOrAdminFilterOnly_ManagerMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("dirk");
+        requestedShelter.setManagers(List.of(manager));
+
+        // Act
+        boolean result = accessValidator.isSheltersManagerOrAdminFilterOnly(authentication, requestedShelter);
+
+        // Assert
+        assertTrue(result, "The user should be a manager");
+    }
+
+    @DisplayName("is shelters manager or admin filter only, no match")
+    @WithMockUser(username = "dirk")
+    @Test
+    void isSheltersManagerOrAdminFilterOnly_NoMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Shelter requestedShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("admin");
+        requestedShelter.setManagers(List.of(manager));
+
+        // Act
+        boolean result = accessValidator.isSheltersManagerOrAdminFilterOnly(authentication, requestedShelter);
+
+        // Assert
+        assertFalse(result, "The user should not be a manager");
     }
 
     @Test
