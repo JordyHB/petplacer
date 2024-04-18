@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.specifications.UserSpecification;
@@ -70,9 +71,7 @@ class UserServiceTest {
         when(userRepository.findByUsername("test")).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(RecordNotFoundException.class, () -> {
-            userService.fetchUserByUsername("test");
-        });
+        assertThrows(RecordNotFoundException.class, () -> userService.fetchUserByUsername("test"));
     }
 
     @DisplayName("Throws a AlreadyExistsException when username is not unique")
@@ -85,9 +84,7 @@ class UserServiceTest {
         when(userRepository.existsByUsernameIgnoreCase("existingUser")).thenReturn(true);
 
         // Act & Assert
-        assertThrows(AlreadyExistsException.class, () -> {
-            userService.validateUserUnique(userDTO);
-        });
+        assertThrows(AlreadyExistsException.class, () -> userService.validateUserUnique(userDTO));
     }
 
     @DisplayName("Throws a AlreadyExistsException when email is not unique")
@@ -100,9 +97,7 @@ class UserServiceTest {
         when(userRepository.existsByEmailIgnoreCase("existing@email.com")).thenReturn(true);
 
         // Act & Assert
-        assertThrows(AlreadyExistsException.class, () -> {
-            userService.validateUserUnique(userDTO);
-        });
+        assertThrows(AlreadyExistsException.class, () -> userService.validateUserUnique(userDTO));
     }
 
     @DisplayName(("passes if the user is unique"))
@@ -117,9 +112,7 @@ class UserServiceTest {
         when(userRepository.existsByEmailIgnoreCase("new@email.com")).thenReturn(false);
 
         // Act & Assert
-        assertDoesNotThrow(() -> {
-            userService.validateUserUnique(userDTO);
-        });
+        assertDoesNotThrow(() -> userService.validateUserUnique(userDTO));
     }
 
     @DisplayName("Registers a new user")
@@ -132,7 +125,6 @@ class UserServiceTest {
         userDTO.setFirstName("dummy");
         userDTO.setLastName("tester");
         userDTO.setPassword("password");
-        ;
         User mappedUser = getTestUser("test");
 
         when(userRepository.save(any(User.class))).thenReturn(mappedUser);
@@ -188,9 +180,7 @@ class UserServiceTest {
         doThrow(CustomAccessDeniedException.class).when(accessValidator).isUserOrAdmin(any(), anyString());
 
         // Act & Assert
-        assertThrows(CustomAccessDeniedException.class, () -> {
-            userService.findUserByUsername("test");
-        });
+        assertThrows(CustomAccessDeniedException.class, () -> userService.findUserByUsername("test"));
     }
 
     @DisplayName("Find users by params")
@@ -224,7 +214,7 @@ class UserServiceTest {
         UserPatchDTO userPatchDTO = new UserPatchDTO();
         userPatchDTO.setFirstName("newName");
 
-        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(updatedUser);
 
         // Act
@@ -243,7 +233,7 @@ class UserServiceTest {
         String username = "test";
         User user = getTestUser("test");
 
-        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // Act
         userService.deleteUserByUsername(username);
@@ -267,11 +257,44 @@ class UserServiceTest {
         verify(userRepository).save(mockUser);
     }
 
+    @DisplayName("Promote admin and helper tests")
     @Test
     void promoteToAdmin() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        // Act
+        UserOutputDTO result = userService.promoteToAdmin(username);
+
+        // Assert
+        verify(userRepository).save(user);
+        assertTrue(result.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+
     }
 
+    @DisplayName("Demote Admin test")
     @Test
     void demoteAdmin() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+        user.addAuthority(new Authority("test", "ROLE_ADMIN"));
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+
+        // Act
+        UserOutputDTO result = userService.demoteAdmin(username);
+
+        // Assert
+        verify(userRepository).save(user);
+        assertTrue(result.getAuthorities().stream()
+                .noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+
     }
 }
