@@ -135,21 +135,57 @@ void registerShelterPetAsUnauthorizedUser() throws Exception {
             .andExpect(status().isUnauthorized());
 }
 
-
+    @DisplayName("successfully add a donation")
+    @WithMockUser(username = "jord")
     @Test
-    void addDonation() {
+    void addDonation() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                        "donationAmount": 100.00,
+                        "donationMessage": "Thank you for the great work!"
+                        }
+                               """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/donations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.donationAmount").value(100.00))
+                .andExpect(jsonPath("$.donationMessage").value("thank you for the great work!"))
+                .andExpect(jsonPath("$.dateOfDonation").exists());
+    }
+
+    @DisplayName("successfully get all shelters")
+    @Test
+    void getAllShelters() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
+    }
+
+    @DisplayName("successfully get shelter by ID")
+    @Test
+    void getShelterByID() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void getAllShelters() {
-    }
-
-    @Test
-    void getShelterByID() {
-    }
-
-    @Test
-    void getShelterPetsByShelterID() {
+    void getShelterPetsByShelterID() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters/1/shelterpets"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
