@@ -130,7 +130,7 @@ public class UserService {
         User user = fetchUserByUsername(username);
 
         // If they are a shelter manager and the only manager of a shelter, delete the shelter
-        if (!user.getManagedShelters().isEmpty()) {
+        if (user.getManagedShelters() != null && !user.getManagedShelters().isEmpty()) {
             // Fetches the ID by filtering the list of shelters and getting the ID
             List<Long> onlyManagedSheltersIds = user.getManagedShelters().stream()
                     .peek(shelter -> {
