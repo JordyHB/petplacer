@@ -2,11 +2,13 @@ package nl.jordy.petplacer.services;
 
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
+import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
+import nl.jordy.petplacer.specifications.UserSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -129,7 +131,8 @@ class UserServiceTest {
         userDTO.setEmail("test@gmail.com");
         userDTO.setFirstName("dummy");
         userDTO.setLastName("tester");
-        userDTO.setPassword("password");;
+        userDTO.setPassword("password");
+        ;
         User mappedUser = getTestUser("test");
 
         when(userRepository.save(any(User.class))).thenReturn(mappedUser);
@@ -190,12 +193,46 @@ class UserServiceTest {
         });
     }
 
+    @DisplayName("Find users by params")
     @Test
     void findUsersByParams() {
+        // Arrange
+        User user1 = getTestUser("test1");
+        User user2 = getTestUser("test2");
+        List<User> users = List.of(user1, user2);
+
+        when(userRepository.findAll(any(UserSpecification.class))).thenReturn(users);
+
+        // Act
+        List<UserOutputDTO> result = userService
+                .findUsersByParams(null, "dummy", "tester", null);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(user1.getUsername(), result.get(0).getUsername());
+        assertEquals(user2.getLastName(), result.get(1).getLastName());
     }
 
     @Test
     void updateUserByUsername() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+        User updatedUser = getTestUser("test");
+        updatedUser.setFirstName("newName");
+        UserPatchDTO userPatchDTO = new UserPatchDTO();
+        userPatchDTO.setFirstName("newName");
+
+        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        // Act
+         UserOutputDTO result = userService.updateUserByUsername(username, userPatchDTO);
+
+        // Assert
+        assertEquals("test", result.getUsername());
+        assertEquals(updatedUser.getFirstName().toLowerCase(), result.getFirstName());
+        verify(accessValidator).isUserOrAdmin(any(), eq(username));
     }
 
     @Test
