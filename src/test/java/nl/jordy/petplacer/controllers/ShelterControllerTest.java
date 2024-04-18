@@ -193,7 +193,8 @@ class ShelterControllerTest {
     void getSheltersByParams() throws Exception {
         // Act & Assert
         this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters/filter")
-                        .param("city", "ha"))
+                        .param("city", "ha")
+                        .param("name", "shelter"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())

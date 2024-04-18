@@ -30,7 +30,19 @@ VALUES
  true,
  now(),
  now(),
- '$2a$10$9dtMcN92pXB41ZpPFRex8.fqOvOsxpYKdecDUaGCnn.XgszqLzFE6');
+ '$2a$10$9dtMcN92pXB41ZpPFRex8.fqOvOsxpYKdecDUaGCnn.XgszqLzFE6'),
+
+--     password is banaan
+('deletableuser',
+ 'test',
+ 'user',
+ 'test@email.com',
+ '0612345678',
+ true,
+ now(),
+ now(),
+ '$2a$12$56kTXHcE78Hyt9PgnU/GdOtD7xo5YAcBWFGE9nGljfYPPxkX9RWZi');
+
 
 
 INSERT INTO authorities (username, authority)
@@ -55,6 +67,7 @@ values ('animal shelter the farm',
         'monday to sunday: 09:00 - 17:00',
         now(),
         now()),
+
        ('second chance shelter',
         '0655667788',
         'adoptions@secondchance.nl',
@@ -67,6 +80,7 @@ values ('animal shelter the farm',
         'wednesday to sunday: 12:00 - 16:00',
         now(),
         now()),
+
        ('cozy corner animal shelter',
         '0611223344',
         'info@cozycorner.org',
@@ -78,8 +92,7 @@ values ('animal shelter the farm',
         'small animal rooms, rabbit runs, outdoor enclosures, volunteer training center',
         'tuesday to saturday: 11:00 - 16:00',
         now(),
-        now()
-       );
+        now());
 
 
 INSERT INTO shelter_managers (user_id, shelter_id)

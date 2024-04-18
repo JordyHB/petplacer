@@ -389,11 +389,11 @@ class UserControllerTest {
     }
 
     @DisplayName("Delete a user by username")
-    @WithMockUser(username = "msbear")
+    @WithMockUser(username = "deletableuser")
     @Test
     void deleteUserByUsername() throws Exception {
         // Act & Assert
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/users/msbear"))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/users/deletableuser"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
     }
