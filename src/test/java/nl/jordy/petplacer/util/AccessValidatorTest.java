@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = AccessValidator.class)
 @WithMockUser(username = "admin", roles = {"ADMIN"})
 @ActiveProfiles("test")
 class AccessValidatorTest {

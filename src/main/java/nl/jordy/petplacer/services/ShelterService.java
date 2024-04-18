@@ -69,6 +69,8 @@ public class ShelterService {
 
         validateShelterNameUnique(shelterInputDTO);
 
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), user.getUsername());
+
         // Maps the DTO and adds a timestamp of arrival;
         Shelter shelter = ModelMapperHelper.getModelMapper().map(shelterInputDTO, Shelter.class);
 

@@ -28,8 +28,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest(classes = UserController.class)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class UserControllerTest {
 
@@ -92,6 +92,7 @@ class UserControllerTest {
 
 
     @DisplayName("Register a shelter successfully")
+    @WithMockUser(username = "jord")
     @Test
     void registerShelter() throws Exception {
 
@@ -126,6 +127,7 @@ class UserControllerTest {
     }
 
     @DisplayName("Register a shelter with an existing name")
+    @WithMockUser(username = "randomuser")
     @Test
     void registerShelterWithExistingName() throws Exception {
         // Arrange
@@ -153,9 +155,10 @@ class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @DisplayName("Register a shelter with a non-existing user")
+    @DisplayName("Register a shelter with to a non-existing user")
+    @WithMockUser(username = "Admin", roles = {"USER", "ADMIN"})
     @Test
-    void registerShelterWithNonExistingUser() throws Exception {
+    void registerShelterToANonExistingUser() throws Exception {
         // Arrange
         String requestJson =
                 """
@@ -248,7 +251,7 @@ class UserControllerTest {
     }
 
     @DisplayName("Register a user owned pet successfully")
-    @WithMockUser(username = "Admin", roles = "ADMIN")
+    @WithMockUser(username = "Admin", roles = {"USER", "ADMIN"})
     @Test
     void registerUserOwnedPetAsAdmin() throws Exception {
         // Arrange
@@ -289,6 +292,16 @@ class UserControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("Get all users as a user")
+    @WithMockUser(username = "randomuser", roles = "USER")
+    @Test
+    void getAllUsersAsUser() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isForbidden());
     }
 
     @Test
