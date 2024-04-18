@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -188,12 +189,29 @@ void registerShelterPetAsUnauthorizedUser() throws Exception {
                 .andExpect(jsonPath("$").isArray());
     }
 
+    @DisplayName("successfully get shelters by params")
     @Test
-    void getSheltersByParams() {
+    void getSheltersByParams() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters/filter")
+                        .param("name", "shelter")
+                        .param("city", "amsterdam"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[*].city").exists());
     }
 
+    @DisplayName("add manager to shelter")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
     @Test
-    void addManagerToShelter() {
+    void addManagerToShelter() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/shelters/1/managers/admin")) //admin is the username
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.managers").isArray())
+                .andExpect(jsonPath("$.managers[*].username").value(hasItem("admin")));
     }
 
     @Test

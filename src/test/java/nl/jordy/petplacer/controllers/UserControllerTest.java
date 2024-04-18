@@ -336,7 +336,9 @@ class UserControllerTest {
     @Test
     void getUsersByParams() throws Exception {
         // Act & Assert
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/filter?username=jor"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/filter")
+                        .param("username", "jor")
+                )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].username").exists());
