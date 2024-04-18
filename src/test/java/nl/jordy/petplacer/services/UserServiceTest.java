@@ -236,7 +236,8 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserByID() {
+    void deleteUserByUsername() {
+
     }
 
     @Test

@@ -108,7 +108,7 @@ public class UserService {
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
-    public String deleteUserByID(String username) {
+    public String deleteUserByUsername(String username) {
 
         // Returns a 401 if the user is not the requested user or an admin
         accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);

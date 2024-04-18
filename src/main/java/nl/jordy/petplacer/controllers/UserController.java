@@ -145,8 +145,8 @@ public class UserController {
 
     // Deletes
     @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUserByID(@PathVariable String username) {
-        return ResponseEntity.ok(userService.deleteUserByID(username));
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.deleteUserByUsername(username));
     }
 
     @DeleteMapping("/{username}/admin")
