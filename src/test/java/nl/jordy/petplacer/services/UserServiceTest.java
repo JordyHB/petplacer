@@ -213,6 +213,7 @@ class UserServiceTest {
         assertEquals(user2.getLastName(), result.get(1).getLastName());
     }
 
+    @DisplayName("Update user by username")
     @Test
     void updateUserByUsername() {
         // Arrange
@@ -235,13 +236,35 @@ class UserServiceTest {
         verify(accessValidator).isUserOrAdmin(any(), eq(username));
     }
 
+    @DisplayName("Delete user by username")
     @Test
     void deleteUserByUsername() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+
+        when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+
+        // Act
+        userService.deleteUserByUsername(username);
+
+        // Assert
+        verify(userRepository).delete(user);
+        verify(accessValidator).isUserOrAdmin(any(), eq(username));
 
     }
 
+    @DisplayName("User service save user working")
     @Test
     void saveUser() {
+        // Arrange
+        User mockUser = mock(User.class);
+
+        // Act
+        userService.saveUser(mockUser);
+
+        // Assert
+        verify(userRepository).save(mockUser);
     }
 
     @Test
