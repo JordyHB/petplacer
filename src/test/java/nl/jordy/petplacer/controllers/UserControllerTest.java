@@ -4,6 +4,7 @@ import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.services.JwtService;
+import nl.jordy.petplacer.services.ShelterService;
 import nl.jordy.petplacer.services.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +37,6 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
 
     @DisplayName("Register a user successfully")
     @Test
@@ -211,8 +212,8 @@ class UserControllerTest {
                         """;
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/ownedpets")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.size").value("medium"))
@@ -353,16 +354,58 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[*].username").exists());
     }
 
+    @DisplayName("promote a user to admin as an admin")
+    @WithMockUser(username = "Admin", roles = {"USER", "ADMIN"})
     @Test
-    void promoteToAdmin() {
+    void promoteToAdmin() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/users/jord/admin"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("jord"))
+                .andExpect(jsonPath("$.authorities[*].authority").value(hasItem("ROLE_ADMIN")));
     }
 
+    @DisplayName("promote a user to admin as a user")
+    @WithMockUser(username = "randomuser")
     @Test
-    void updateUserByID() {
+    void promoteToAdminAsUser() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/users/jord/admin"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isForbidden());
     }
 
+    @DisplayName("update a user by username")
+    @WithMockUser(username = "jord")
     @Test
-    void deleteUserByUsername() {
+    void updateUserByUsername() throws Exception {
+        // Arrange
+        String requestJson = """
+                {
+                "firstName": "updatedfirstname",
+                "lastName": "updatedlastname"
+                }
+                """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/users/jord")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("updatedfirstname"))
+                .andExpect(jsonPath("$.lastName").value("updatedlastname"));
+    }
+
+    @DisplayName("Delete a user by username")
+    @WithMockUser(username = "jord")
+    @Test
+    void deleteUserByUsername() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/users/jord"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
     }
 
     @Test

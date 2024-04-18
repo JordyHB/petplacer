@@ -203,7 +203,7 @@ public class ShelterService {
         return ModelMapperHelper.getModelMapper().map(shelter, ShelterOutputDTO.class);
     }
 
-    public List<ShelterPetOutputDTO> getshelterPets(Long shelterID) {
+    public List<ShelterPetOutputDTO> getShelterPets(Long shelterID) {
         Shelter shelter = fetchShelterByID(shelterID);
         return shelter.getShelterPets().stream()
                 .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))

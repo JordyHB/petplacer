@@ -128,7 +128,7 @@ public class UserController {
     // Patch
 
     @PatchMapping("/{username}")
-    public ResponseEntity<UserOutputDTO> updateUserByID(
+    public ResponseEntity<UserOutputDTO> updateUserByUsername(
             @PathVariable String username,
             @Valid
             @RequestBody UserPatchDTO userPatchDTO,

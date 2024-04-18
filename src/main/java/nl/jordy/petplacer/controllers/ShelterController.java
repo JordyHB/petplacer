@@ -83,7 +83,7 @@ public class ShelterController {
 
     @GetMapping("/{shelterID}/shelterpets")
     public ResponseEntity<List<ShelterPetOutputDTO>> getShelterPetsByShelterID(@PathVariable Long shelterID) {
-        return ResponseEntity.ok(shelterService.getshelterPets(shelterID));
+        return ResponseEntity.ok(shelterService.getShelterPets(shelterID));
     }
 
     @GetMapping("/filter")
