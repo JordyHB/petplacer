@@ -103,7 +103,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserOutputDTO> getUserByID(@PathVariable String username) {
+    public ResponseEntity<UserOutputDTO> getUserByUsername(@PathVariable String username) {
         return ResponseEntity.ok(userService.findUserByUsername(username));
     }
 

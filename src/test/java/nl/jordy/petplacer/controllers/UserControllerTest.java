@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = UserController.class)
+@SpringBootTest()
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class UserControllerTest {
@@ -289,6 +289,7 @@ class UserControllerTest {
     @Test
     void getAllUsers() throws Exception {
 
+        // Act & Assert
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
@@ -304,12 +305,52 @@ class UserControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    @DisplayName("Get a user by username successfully")
+    @WithMockUser(username = "jord")
     @Test
-    void getUserByID() {
+    void getUserByUsername() throws Exception {
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/jord"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("jord"))
+                .andExpect(jsonPath("$.lastName").value("doe"));
     }
 
+    @DisplayName("Get a user by username successfully as an admin")
+    @WithMockUser(username = "Admin", roles = {"USER", "ADMIN"})
     @Test
-    void getUsersByParams() {
+    void getUserByUsernameAsAdmin() throws Exception {
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/jord"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("jord"))
+                .andExpect(jsonPath("$.lastName").value("doe"));
+    }
+
+    @DisplayName("Get a user by username unsuccessfully as incorrect user")
+    @WithMockUser(username = "randomuser")
+    @Test
+    void getUserByUsernameAsIncorrectUser() throws Exception {
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/jord"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Filter through users as an admin")
+    @WithMockUser(username = "Admin", roles = {"USER", "ADMIN"})
+    @Test
+    void getUsersByParams() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/filter?username=jor"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].username").exists());
     }
 
     @Test
