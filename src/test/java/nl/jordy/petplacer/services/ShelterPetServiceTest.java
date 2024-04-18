@@ -9,7 +9,6 @@ import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
-import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import nl.jordy.petplacer.specifications.ShelterPetSpecification;
@@ -19,10 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -309,6 +304,29 @@ class ShelterPetServiceTest {
 
         // Assert
         assertEquals(ShelterPetStatus.RESERVED, updatedShelterPetDTO.getStatus());
+    }
+
+    @DisplayName("Update ShelterPetStatus throws exception when not authorized")
+    @Test
+    void updateShelterPetStatusThrowsException() {
+        // Arrange
+        Long shelterPetId = 5L;
+        ShelterPetStatusPatchDTO statusPatchDTO = new ShelterPetStatusPatchDTO();
+        statusPatchDTO.setStatus(ShelterPetStatus.RESERVED);
+
+        ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(
+                getShelterPetInputDTO(5, "has trouble looking", "bert", 2),
+                ShelterPet.class
+        );
+        ReflectionTestUtils.setField(shelterPet, "id", shelterPetId);
+
+        when(shelterPetRepository.findById(shelterPetId)).thenReturn(Optional.of(shelterPet));
+        doThrow(CustomAccessDeniedException.class).when(accessValidator).isSheltersManagerOrAdmin(any(), any());
+
+        // Act & Assert
+        assertThrows(CustomAccessDeniedException.class, () -> {
+            shelterPetService.updateShelterPetStatus(shelterPetId, statusPatchDTO);
+        });
     }
 
     @DisplayName("Test find all shelter pets by parameters")

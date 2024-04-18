@@ -5,8 +5,8 @@ import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
-import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
+import nl.jordy.petplacer.interfaces.AuthorityChecker;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
@@ -23,15 +23,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccessValidator accessValidator;
+    private final AuthorityChecker authChecker;
 
     //Injects dependencies
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       AccessValidator accessValidator
+                       AccessValidator accessValidator,
+                       AuthorityChecker authChecker
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.accessValidator = accessValidator;
+        this.authChecker = authChecker;
     }
 
     public User fetchUserByUsername(String username) {
@@ -108,7 +111,7 @@ public class UserService {
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
-    public String deleteUserByID(String username) {
+    public String deleteUserByUsername(String username) {
 
         // Returns a 401 if the user is not the requested user or an admin
         accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);
@@ -125,7 +128,7 @@ public class UserService {
 
         User user = fetchUserByUsername(username);
 
-        if (AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
+        if (authChecker.fetchedUserHasAuthority(user, "ROLE_ADMIN")) {
             throw new AlreadyExistsException("User: " + username + " is already an admin");
         }
 
@@ -139,16 +142,15 @@ public class UserService {
         // uses private method to fetch and validate the user exists
         User user = fetchUserByUsername(username);
 
-        if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_ADMIN")) {
+        if (!authChecker.fetchedUserHasAuthority(user, "ROLE_ADMIN")) {
             throw new AlreadyExistsException("User: " + username + " is not an admin");
         }
 
-        for (Authority auth : user.getAuthorities()) {
-            if (auth.getAuthority().equals("ROLE_ADMIN")) {
-                user.removeAuthority(auth);
-                break;
-            }
-        }
+        user.removeAuthority(user.getAuthorities().stream()
+                .filter(a -> a.getAuthority().equals("ROLE_ADMIN"))
+                .findFirst()
+                .orElseThrow(() -> new RecordNotFoundException("User: " + username + " is not an admin"))
+        );
 
         userRepository.save(user);
 

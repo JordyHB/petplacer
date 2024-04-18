@@ -6,8 +6,8 @@ import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 import nl.jordy.petplacer.dtos.patch.ShelterPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
-import nl.jordy.petplacer.helpers.AlreadyHasRole;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
+import nl.jordy.petplacer.interfaces.AuthorityChecker;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
@@ -25,15 +25,18 @@ public class ShelterService {
     private final ShelterRepository shelterRepository;
     private final UserService userService;
     private final AccessValidator accessValidator;
+    private final AuthorityChecker authChecker;
 
     public ShelterService(
             ShelterRepository shelterRepository,
             UserService userService,
-            AccessValidator accessValidator
+            AccessValidator accessValidator,
+            AuthorityChecker authChecker
     ) {
         this.userService = userService;
         this.shelterRepository = shelterRepository;
         this.accessValidator = accessValidator;
+        this.authChecker = authChecker;
     }
 
     public Shelter fetchShelterByID(Long shelterID) {
@@ -73,7 +76,7 @@ public class ShelterService {
         shelter.getManagers().add(user);
         shelterRepository.save(shelter);
 
-        if (!AlreadyHasRole.hasRole("ROLE_SHELTER_MANAGER")) {
+        if (!authChecker.fetchedUserHasAuthority(user, "ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
             userService.saveUser(user);
         }
@@ -156,7 +159,7 @@ public class ShelterService {
         shelter.getManagers().add(user);
         shelter.setDateOfLastUpdate(new Date());
 
-        if (!AlreadyHasRole.fetchedUserHasRole(user, "ROLE_SHELTER_MANAGER")) {
+        if (!authChecker.fetchedUserHasAuthority(user, "ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
             userService.saveUser(user);
         }
