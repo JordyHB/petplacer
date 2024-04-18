@@ -58,7 +58,8 @@ VALUES ('animal shelter the farm',
 
 
 INSERT INTO shelter_managers (user_id, shelter_id)
-VALUES ('jord', 1);
+VALUES ('jord', 1),
+       ('admin', 1);
 
 
 INSERT INTO shelter_pets (name, species, breed, color, age, gender, size, description, spayed_neutered, good_with_kids,

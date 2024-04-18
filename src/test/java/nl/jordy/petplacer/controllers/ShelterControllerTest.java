@@ -277,11 +277,44 @@ class ShelterControllerTest {
     }
 
 
+    @DisplayName("delete shelter by ID as user")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
     @Test
-    void deleteShelterByID() {
+    void deleteShelterByID() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
     }
 
+    @DisplayName("fail to delete shelter by ID as unauthorized user")
+    @WithMockUser(username = "randomuser", roles = {"USER", "SHELTER_MANAGER"})
     @Test
-    void removeManagerFromShelter() {
+    void deleteShelterByIDAsUnauthorizedUser() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("remove manager from shelter")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void removeManagerFromShelter() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1/managers/admin")) //admin is the username
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+    }
+
+    @DisplayName("fail to remove manager from shelter as because it is not a manager")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void removeManagerFromShelterAsNotManager() throws Exception {
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1/managers/randomuser")) //randomuser is the username
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
     }
 }
