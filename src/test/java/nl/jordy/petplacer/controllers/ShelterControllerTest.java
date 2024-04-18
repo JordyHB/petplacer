@@ -101,40 +101,40 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.shelter.id").value("1"));
     }
 
-@DisplayName("fail to add a shelterpet as unauthorized user")
-@WithMockUser(username = "randomuser", roles = {"USER", "SHELTER_MANAGER"})
-@Test
-void registerShelterPetAsUnauthorizedUser() throws Exception {
+    @DisplayName("fail to add a shelterpet as unauthorized user")
+    @WithMockUser(username = "randomuser", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void registerShelterPetAsUnauthorizedUser() throws Exception {
 // Arrange
-    String requestJson =
-            """
-                    {
-                    "name": "Buddy",
-                    "species": "Dog",
-                    "breed": "Labrador Retriever",
-                    "color": "Golden",
-                    "age": 3,
-                    "gender": "MALE",
-                    "size": "Large",
-                     "description": "Friendly and energetic",
-                    "spayedNeutered": true,
-                    "goodWithKids": true,
-                    "goodWithDogs": true,
-                    "goodWithCats": false,
-                    "monthsInShelter": 2,
-                    "medicalHistory": "Vaccinated and tested",
-                    "specialNeeds": "",
-                    "previousSituation": "Rescued from the streets"
-                    }
-                           """;
+        String requestJson =
+                """
+                        {
+                        "name": "Buddy",
+                        "species": "Dog",
+                        "breed": "Labrador Retriever",
+                        "color": "Golden",
+                        "age": 3,
+                        "gender": "MALE",
+                        "size": "Large",
+                         "description": "Friendly and energetic",
+                        "spayedNeutered": true,
+                        "goodWithKids": true,
+                        "goodWithDogs": true,
+                        "goodWithCats": false,
+                        "monthsInShelter": 2,
+                        "medicalHistory": "Vaccinated and tested",
+                        "specialNeeds": "",
+                        "previousSituation": "Rescued from the streets"
+                        }
+                               """;
 
-    // Act & Assert
-    this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/shelterpets")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestJson))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isUnauthorized());
-}
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/shelterpets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized());
+    }
 
     @DisplayName("successfully add a donation")
     @WithMockUser(username = "jord")
@@ -214,9 +214,68 @@ void registerShelterPetAsUnauthorizedUser() throws Exception {
                 .andExpect(jsonPath("$.managers[*].username").value(hasItem("admin")));
     }
 
+    @DisplayName("update shelter by ID as shelters manager")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
     @Test
-    void updateShelterByID() {
+    void updateShelterByID() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                {
+                "city": "New City"
+                }
+            """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/shelters/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.city").value("new city"));
     }
+
+    @DisplayName("update shelter by ID as admin")
+    @WithMockUser(username = "randomadmin", roles = {"USER", "ADMIN"})
+    @Test
+    void updateShelterByIDAsAdmin() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                {
+                "city": "New City"
+                }
+            """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/shelters/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.city").value("new city"));
+    }
+
+    @DisplayName("fail to update shelter by ID as unauthorized user")
+    @WithMockUser(username = "randomuser", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void updateShelterByIDAsUnauthorizedUser() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                {
+                "city": "New City"
+                }
+            """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.patch("/shelters/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized());
+    }
+
 
     @Test
     void deleteShelterByID() {
