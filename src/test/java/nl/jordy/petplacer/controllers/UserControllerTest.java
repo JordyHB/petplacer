@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -112,7 +113,7 @@ class UserControllerTest {
                                 """;
 
         // Act & Assert
-        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/shelters")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/shelters")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andDo(MockMvcResultHandlers.print())
@@ -181,8 +182,103 @@ class UserControllerTest {
     }
 
 
+    @DisplayName("Register a user owned pet successfully")
+    @WithMockUser(username = "jord")
     @Test
-    void registerUserOwnedPet() {
+    void registerUserOwnedPet() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                          "name": "Fluffy",
+                          "species": "Cat",
+                          "breed": "Maine Coon",
+                          "color": "Brown Tabby",
+                          "age": 3,
+                          "gender": "FEMALE",
+                          "size": "Medium",
+                          "description": "Fluffy loves belly rubs and playing with yarn",
+                          "spayedNeutered": true,
+                          "goodWithKids": true,
+                          "goodWithDogs": true,
+                          "goodWithCats": false,
+                          "isAdopted": false,
+                          "yearsOwned": 2
+                        }
+                        """;
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/ownedpets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.size").value("medium"))
+                .andExpect(jsonPath("$.currentOwner.username").value("jord"));
+    }
+
+    @DisplayName("Register a user owned pet without being the owner")
+    @WithMockUser(username = "nonowner")
+    @Test
+    void registerUserOwnedPetWithoutBeingTheOwner() throws Exception {
+        String requestJson =
+                """
+                        {
+                          "name": "Fluffy",
+                          "species": "Cat",
+                          "breed": "Maine Coon",
+                          "color": "Brown Tabby",
+                          "age": 3,
+                          "gender": "FEMALE",
+                          "size": "Medium",
+                          "description": "Fluffy loves belly rubs and playing with yarn",
+                          "spayedNeutered": true,
+                          "goodWithKids": true,
+                          "goodWithDogs": true,
+                          "goodWithCats": false,
+                          "isAdopted": false,
+                          "yearsOwned": 2
+                        }
+                        """;
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/ownedpets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @DisplayName("Register a user owned pet successfully")
+    @WithMockUser(username = "Admin", roles = "ADMIN")
+    @Test
+    void registerUserOwnedPetAsAdmin() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                          "name": "Fluffy",
+                          "species": "Cat",
+                          "breed": "Maine Coon",
+                          "color": "Brown Tabby",
+                          "age": 3,
+                          "gender": "FEMALE",
+                          "size": "Medium",
+                          "description": "Fluffy loves belly rubs and playing with yarn",
+                          "spayedNeutered": true,
+                          "goodWithKids": true,
+                          "goodWithDogs": true,
+                          "goodWithCats": false,
+                          "isAdopted": false,
+                          "yearsOwned": 2
+                        }
+                        """;
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/ownedpets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.size").value("medium"))
+                .andExpect(jsonPath("$.currentOwner.username").value("jord"));
     }
 
     @Test
