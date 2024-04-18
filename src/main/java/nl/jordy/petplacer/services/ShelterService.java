@@ -209,5 +209,13 @@ public class ShelterService {
                 .map(shelterPet -> ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class))
                 .toList();
     }
+
+    public void saveShelter(Shelter shelter) {
+        shelterRepository.save(shelter);
+    }
+
+    public void deleteShelterByIDNoChecks(Long shelterID) {
+        shelterRepository.deleteById(shelterID);
+    }
 }
 

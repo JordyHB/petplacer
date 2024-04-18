@@ -399,7 +399,7 @@ class UserControllerTest {
     }
 
     @DisplayName("Delete a user by username")
-    @WithMockUser(username = "jord")
+    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
     @Test
     void deleteUserByUsername() throws Exception {
         // Act & Assert

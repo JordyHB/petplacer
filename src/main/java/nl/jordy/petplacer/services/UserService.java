@@ -15,6 +15,8 @@ import nl.jordy.petplacer.repositories.ShelterRepository;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.specifications.UserSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,20 +29,22 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AccessValidator accessValidator;
     private final AuthorityChecker authChecker;
-    private final ShelterRepository shelterRepository;
+
+    // lazy injects the service to prevent circular dependencies
+    @Lazy
+    @Autowired
+    private ShelterService shelterService;
 
     //Injects dependencies
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AccessValidator accessValidator,
-                       AuthorityChecker authChecker,
-                       ShelterRepository shelterRepository
+                       AuthorityChecker authChecker
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.accessValidator = accessValidator;
         this.authChecker = authChecker;
-        this.shelterRepository = shelterRepository;
     }
 
     public User fetchUserByUsername(String username) {
@@ -131,7 +135,7 @@ public class UserService {
             List<Long> onlyManagedSheltersIds = user.getManagedShelters().stream()
                     .peek(shelter -> {
                                 shelter.getManagers().remove(user);
-                                shelterRepository.save(shelter);
+                                shelterService.saveShelter(shelter);
                             }
 
                     )
@@ -141,7 +145,7 @@ public class UserService {
 
             // Loops through the list of shelter IDs and deletes them
             for (Long shelterId : onlyManagedSheltersIds) {
-                shelterRepository.deleteById(shelterId);
+                shelterService.deleteShelterByIDNoChecks(shelterId);
             }
         }
 
