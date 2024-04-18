@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
 import nl.jordy.petplacer.exceptions.AlreadyExistsException;
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
+import nl.jordy.petplacer.interfaces.AuthorityChecker;
 import nl.jordy.petplacer.models.Authority;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
@@ -46,6 +47,9 @@ class UserServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    AuthorityChecker authChecker;
 
     @InjectMocks
     UserService userService;
@@ -272,6 +276,7 @@ class UserServiceTest {
 
         // Assert
         verify(userRepository).save(user);
+        verify(authChecker).fetchedUserHasAuthority(user, "ROLE_ADMIN");
         assertTrue(result.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
 
@@ -285,6 +290,7 @@ class UserServiceTest {
         User user = getTestUser("test");
         user.addAuthority(new Authority("test", "ROLE_ADMIN"));
 
+        when(authChecker.fetchedUserHasAuthority(any(User.class), eq("ROLE_ADMIN"))).thenReturn(true);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
 
@@ -293,8 +299,24 @@ class UserServiceTest {
 
         // Assert
         verify(userRepository).save(user);
+        verify(authChecker).fetchedUserHasAuthority(user, "ROLE_ADMIN");
         assertTrue(result.getAuthorities().stream()
                 .noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+
+    }
+
+    @DisplayName("Demote admin, throws exception")
+    @Test
+    void demoteAdminThrowsEx() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+
+        when(authChecker.fetchedUserHasAuthority(any(User.class), eq("ROLE_ADMIN"))).thenReturn(false);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+
+        // Act & Assert
+        assertThrows(AlreadyExistsException.class, () -> userService.demoteAdmin(username));
 
     }
 }
