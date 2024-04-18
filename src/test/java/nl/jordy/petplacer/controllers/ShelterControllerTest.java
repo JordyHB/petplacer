@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -194,8 +193,7 @@ class ShelterControllerTest {
     void getSheltersByParams() throws Exception {
         // Act & Assert
         this.mockMvc.perform(MockMvcRequestBuilders.get("/shelters/filter")
-                        .param("name", "shelter")
-                        .param("city", "amsterdam"))
+                        .param("city", "ha"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -278,11 +276,11 @@ class ShelterControllerTest {
 
 
     @DisplayName("delete shelter by ID as user")
-    @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
+    @WithMockUser(username = "admin", roles = {"USER", "SHELTER_MANAGER"})
     @Test
     void deleteShelterByID() throws Exception {
         // Act & Assert
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1"))
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/3"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
     }
@@ -305,13 +303,12 @@ class ShelterControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1/managers/admin")) //admin is the username
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
-
     }
 
     @DisplayName("fail to remove manager from shelter as because it is not a manager")
     @WithMockUser(username = "jord", roles = {"USER", "SHELTER_MANAGER"})
     @Test
-    void removeManagerFromShelterAsNotManager() throws Exception {
+    void removeManagerFromShelterIsNotManager() throws Exception {
         // Act & Assert
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/shelters/1/managers/randomuser")) //randomuser is the username
                 .andDo(MockMvcResultHandlers.print())

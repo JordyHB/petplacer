@@ -8,6 +8,7 @@ import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
+import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.ShelterPet;
 import nl.jordy.petplacer.repositories.ShelterPetRepository;
 import nl.jordy.petplacer.specifications.ShelterPetSpecification;
@@ -47,9 +48,11 @@ public class ShelterPetService {
         // Maps the DTO and adds a timestamp of arrival;
         ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(shelterPetInputDTO, ShelterPet.class);
 
-        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
+        Shelter shelter = shelterService.fetchShelterByID(shelterID);
 
-        shelterPet.setShelter(shelterService.fetchShelterByID(shelterID));
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
+
+        shelterPet.setShelter(shelter);
 
         shelterPetRepository.save(shelterPet);
 
