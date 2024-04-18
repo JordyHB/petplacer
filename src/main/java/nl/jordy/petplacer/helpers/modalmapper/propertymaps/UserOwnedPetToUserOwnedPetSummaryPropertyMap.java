@@ -2,6 +2,7 @@ package nl.jordy.petplacer.helpers.modalmapper.propertymaps;
 
 import nl.jordy.petplacer.dtos.summary.UserOwnedPetSummaryDTO;
 import nl.jordy.petplacer.helpers.modalmapper.converters.ImageToImageLinkConverter;
+import nl.jordy.petplacer.helpers.modalmapper.converters.UserToUserSummaryConverter;
 import nl.jordy.petplacer.models.UserOwnedPet;
 import org.modelmapper.PropertyMap;
 
@@ -11,5 +12,8 @@ public class UserOwnedPetToUserOwnedPetSummaryPropertyMap extends PropertyMap<Us
     protected void configure() {
         using(new ImageToImageLinkConverter())
                 .map(source.getImage(), destination.getImageLink());
+
+        using(new UserToUserSummaryConverter())
+                .map(source.getCurrentOwner(), destination.getCurrentOwner());
     }
 }

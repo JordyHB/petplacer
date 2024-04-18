@@ -13,14 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = AccessValidator.class)
 @WithMockUser(username = "admin", roles = {"ADMIN"})
-@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 class AccessValidatorTest {
 
     @Autowired

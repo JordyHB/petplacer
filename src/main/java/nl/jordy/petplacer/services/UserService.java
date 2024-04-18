@@ -1,5 +1,6 @@
 package nl.jordy.petplacer.services;
 
+import jakarta.transaction.Transactional;
 import nl.jordy.petplacer.dtos.input.UserInputDTO;
 import nl.jordy.petplacer.dtos.output.UserOutputDTO;
 import nl.jordy.petplacer.dtos.patch.UserPatchDTO;
@@ -8,10 +9,14 @@ import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.interfaces.AuthorityChecker;
 import nl.jordy.petplacer.models.Authority;
+import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
+import nl.jordy.petplacer.repositories.ShelterRepository;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.specifications.UserSpecification;
 import nl.jordy.petplacer.util.AccessValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AccessValidator accessValidator;
     private final AuthorityChecker authChecker;
+
+    // lazy injects the service to prevent circular dependencies
+    @Lazy
+    @Autowired
+    private ShelterService shelterService;
 
     //Injects dependencies
     public UserService(UserRepository userRepository,
@@ -111,12 +121,36 @@ public class UserService {
         return ModelMapperHelper.getModelMapper().map(user, UserOutputDTO.class);
     }
 
+    @Transactional
     public String deleteUserByUsername(String username) {
 
         // Returns a 401 if the user is not the requested user or an admin
         accessValidator.isUserOrAdmin(accessValidator.getAuth(), username);
 
-        userRepository.delete(fetchUserByUsername(username));
+        User user = fetchUserByUsername(username);
+
+        // If they are a shelter manager and the only manager of a shelter, delete the shelter
+        if (user.getManagedShelters() != null && !user.getManagedShelters().isEmpty()) {
+            // Fetches the ID by filtering the list of shelters and getting the ID
+            List<Long> onlyManagedSheltersIds = user.getManagedShelters().stream()
+                    .peek(shelter -> {
+                                shelter.getManagers().remove(user);
+                                shelterService.saveShelter(shelter);
+                            }
+
+                    )
+                    .filter(shelter -> shelter.getManagers().isEmpty())
+                    .map(Shelter::getId)
+                    .toList();
+
+            // Loops through the list of shelter IDs and deletes them
+            for (Long shelterId : onlyManagedSheltersIds) {
+                shelterService.deleteShelterByIDNoChecks(shelterId);
+            }
+        }
+
+        userRepository.delete(user);
+
         return "User: " + username + " has been successfully deleted.";
     }
 

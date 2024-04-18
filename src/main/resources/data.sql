@@ -43,7 +43,7 @@ VALUES ('admin', 'ROLE_USER'),
 
 INSERT INTO shelters (shelter_name, phone_number, email, address, city, postal_code, description, website, facilities,
                       opening_hours, date_of_registration, date_of_last_update)
-VALUES ('dierenopvangcentrum het weitje',
+VALUES ('animal shelter the farm',
         '0612345678',
         'contactus@hetweitje.nl',
         'dierenlaan 1',
