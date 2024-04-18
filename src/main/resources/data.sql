@@ -30,7 +30,19 @@ VALUES
  true,
  now(),
  now(),
- '$2a$10$9dtMcN92pXB41ZpPFRex8.fqOvOsxpYKdecDUaGCnn.XgszqLzFE6');
+ '$2a$10$9dtMcN92pXB41ZpPFRex8.fqOvOsxpYKdecDUaGCnn.XgszqLzFE6'),
+
+--     password is banaan
+('deletableuser',
+ 'test',
+ 'user',
+ 'test@email.com',
+ '0612345678',
+ true,
+ now(),
+ now(),
+ '$2a$12$56kTXHcE78Hyt9PgnU/GdOtD7xo5YAcBWFGE9nGljfYPPxkX9RWZi');
+
 
 
 INSERT INTO authorities (username, authority)
@@ -43,22 +55,51 @@ VALUES ('admin', 'ROLE_USER'),
 
 INSERT INTO shelters (shelter_name, phone_number, email, address, city, postal_code, description, website, facilities,
                       opening_hours, date_of_registration, date_of_last_update)
-VALUES ('animal shelter the farm',
+values ('animal shelter the farm',
         '0612345678',
         'contactus@hetweitje.nl',
-        'dierenlaan 1',
+        'animal lane 1',
         'amsterdam',
         '1234ab',
-        'dierenopvangcentrum het weitje is een dierenopvangcentrum in amsterdam. wij vangen honden en katten op die geen huis hebben. wij zorgen voor ze totdat ze een nieuw huisje hebben gevonden.',
+        'animal shelter the farm is an animal shelter in amsterdam. we take in dogs and cats that dont have a home. we take care of them until they find a new home.',
         'www.hetweitje.nl',
-        'hondenkennels, kattenkennels, speelveld, dierenarts',
-        'maandag t/m zondag: 09:00 - 17:00',
+        'dog kennels, cat kennels, playground, veterinarian',
+        'monday to sunday: 09:00 - 17:00',
+        now(),
+        now()),
+
+       ('second chance shelter',
+        '0655667788',
+        'adoptions@secondchance.nl',
+        '1 oak road',
+        'the hague',
+        '2517kl',
+        'second chance sanctuary is dedicated to finding loving homes for senior and neglected animals. we believe every animal deserves a happy ending.',
+        'www.secondchance.nl',
+        'comfortable senior pet suites, enrichment areas, palliative care facilities, extensive volunteer network',
+        'wednesday to sunday: 12:00 - 16:00',
+        now(),
+        now()),
+
+       ('cozy corner animal shelter',
+        '0611223344',
+        'info@cozycorner.org',
+        '23 maple street',
+        'haarlem',
+        '5611xr',
+        'cozy corner animal rescue provides a safe haven for rescued animals of all kinds. we offer foster care, adoption services, and community outreach programs.',
+        'www.cozycorner.org',
+        'small animal rooms, rabbit runs, outdoor enclosures, volunteer training center',
+        'tuesday to saturday: 11:00 - 16:00',
         now(),
         now());
 
 
 INSERT INTO shelter_managers (user_id, shelter_id)
-VALUES ('jord', 1);
+VALUES ('jord', 1),
+       ('admin', 1),
+       ('msbear', 2),
+       ('admin', 3);
 
 
 INSERT INTO shelter_pets (name, species, breed, color, age, gender, size, description, spayed_neutered, good_with_kids,
