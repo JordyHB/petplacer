@@ -47,6 +47,8 @@ public class ShelterPetService {
         // Maps the DTO and adds a timestamp of arrival;
         ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(shelterPetInputDTO, ShelterPet.class);
 
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
+
         shelterPet.setShelter(shelterService.fetchShelterByID(shelterID));
 
         shelterPetRepository.save(shelterPet);

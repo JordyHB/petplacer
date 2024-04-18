@@ -51,16 +51,90 @@ class ShelterControllerTest {
                         }
                                """;
 
-        // Act
+        // Act & Assert
         this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/shelterpets")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("buddy"))
                 .andExpect(jsonPath("$.dateOfLastUpdate").exists())
                 .andExpect(jsonPath("$.shelter.id").value("1"));
     }
+
+    @DisplayName("successfully add a shelterpet as admin")
+    @WithMockUser(username = "randomadmin", roles = {"USER", "ADMIN"})
+    @Test
+    void registerShelterPetAsAdmin() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                        "name": "Buddy",
+                        "species": "Dog",
+                        "breed": "Labrador Retriever",
+                        "color": "Golden",
+                        "age": 3,
+                        "gender": "MALE",
+                        "size": "Large",
+                         "description": "Friendly and energetic",
+                        "spayedNeutered": true,
+                        "goodWithKids": true,
+                        "goodWithDogs": true,
+                        "goodWithCats": false,
+                        "monthsInShelter": 2,
+                        "medicalHistory": "Vaccinated and tested",
+                        "specialNeeds": "",
+                        "previousSituation": "Rescued from the streets"
+                        }
+                               """;
+
+// Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/shelterpets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("buddy"))
+                .andExpect(jsonPath("$.dateOfLastUpdate").exists())
+                .andExpect(jsonPath("$.shelter.id").value("1"));
+    }
+
+@DisplayName("fail to add a shelterpet as unauthorized user")
+@WithMockUser(username = "randomuser", roles = {"USER", "SHELTER_MANAGER"})
+@Test
+void registerShelterPetAsUnauthorizedUser() throws Exception {
+// Arrange
+    String requestJson =
+            """
+                    {
+                    "name": "Buddy",
+                    "species": "Dog",
+                    "breed": "Labrador Retriever",
+                    "color": "Golden",
+                    "age": 3,
+                    "gender": "MALE",
+                    "size": "Large",
+                     "description": "Friendly and energetic",
+                    "spayedNeutered": true,
+                    "goodWithKids": true,
+                    "goodWithDogs": true,
+                    "goodWithCats": false,
+                    "monthsInShelter": 2,
+                    "medicalHistory": "Vaccinated and tested",
+                    "specialNeeds": "",
+                    "previousSituation": "Rescued from the streets"
+                    }
+                           """;
+
+    // Act & Assert
+    this.mockMvc.perform(MockMvcRequestBuilders.post("/shelters/1/shelterpets")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestJson))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized());
+}
+
 
     @Test
     void addDonation() {
