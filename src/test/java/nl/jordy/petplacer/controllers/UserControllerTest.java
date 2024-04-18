@@ -281,8 +281,14 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.currentOwner.username").value("jord"));
     }
 
+    @DisplayName("Get all users as an admin")
+    @WithMockUser(username = "Admin", roles = "ADMIN")
     @Test
-    void getAllUsers() {
+    void getAllUsers() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
     }
 
     @Test
