@@ -68,7 +68,7 @@ class UserControllerTest {
 
     @DisplayName("register a user with an existing username")
     @Test
-void registerUserWithExistingUsername() throws Exception {
+    void registerUserWithExistingUsername() throws Exception {
         // Arrange
         String requestJson = """
                 {
@@ -88,7 +88,6 @@ void registerUserWithExistingUsername() throws Exception {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isConflict());
     }
-
 
 
     @DisplayName("Register a shelter successfully")
@@ -124,6 +123,63 @@ void registerUserWithExistingUsername() throws Exception {
                 .andReturn();
 
     }
+
+    @DisplayName("Register a shelter with an existing name")
+    @Test
+    void registerShelterWithExistingName() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                         "shelterName":"animal shelter the farm",
+                         "phoneNumber":"0612345678",
+                         "email":"example@example.com",
+                         "address":"123 Example Street",
+                         "city":"Example City",
+                         "postalCode":"1234AB",
+                         "description":"This is a description of the shelter.",
+                         "website":"https://www.example.com",
+                         "facilities":"Facility 1, Facility 2, Facility 3",
+                         "openingHours":"Monday to Friday: 9am to 5pm"
+                         }
+                         """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/jord/shelters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isConflict());
+    }
+
+    @DisplayName("Register a shelter with a non-existing user")
+    @Test
+    void registerShelterWithNonExistingUser() throws Exception {
+        // Arrange
+        String requestJson =
+                """
+                        {
+                         "shelterName":"animal shelter the city",
+                         "phoneNumber":"0612345678",
+                         "email":"example@example.com",
+                         "address":"123 Example Street",
+                         "city":"Example City",
+                         "postalCode":"1234AB",
+                         "description":"This is a description of the shelter.",
+                         "website":"https://www.example.com",
+                         "facilities":"Facility 1, Facility 2, Facility 3",
+                         "openingHours":"Monday to Friday: 9am to 5pm"
+                         }
+                         """;
+
+        // Act & Assert
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/users/nonexistinguser/shelters")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
 
     @Test
     void registerUserOwnedPet() {
