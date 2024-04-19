@@ -174,8 +174,8 @@ INSERT INTO donations (donation_amount, date_of_donation, date_of_last_update, d
                        receiving_shelter_id)
 VALUES (100, now(), now(), 'I would like to help the animals in need', 'msbear', 1),
        (50, now(), now(), 'I would like to donate to my own shelter', 'jord', 1),
-       (200, now(), now(), 'I would also like to help the animals in need', 'admin', 1),
-       (300, now(), now(), 'I would like to help', 'msbear', 1);
+       (200, now(), now(), 'I would also like to help the animals in need', 'admin', 2),
+       (300, now(), now(), 'I would like to help', 'msbear', 2);
 
 INSERT INTO user_owned_pets (age, good_with_cats, good_with_dogs, good_with_kids, is_adopted, spayed_neutered,
                              years_owned, date_of_last_update, date_of_registration, breed, color,

@@ -61,6 +61,13 @@ public class DonationService {
         List<Donation> donations = donationRepository.findAll();
 
         return donations.stream()
+                // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
+                .filter(donation -> accessValidator.isSheltersManagerOrAdminFilterOnly(
+                                accessValidator.getAuth(),
+                                donation.getReceivingShelter()
+                        )
+                                || donation.getDonator().getUsername().equals(accessValidator.getAuth().getName())
+                )
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();
     }
