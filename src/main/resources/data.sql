@@ -139,7 +139,7 @@ VALUES ('luna', 'dog', 'labrador retriever', 'black', 2, 'MALE', 'medium',
         'surrendered by previous owner', 'AVAILABLE', now(), now(), 5, 1, 300),
 
        ('charlie', 'cat', 'siamese', 'white', 1, 'FEMALE', 'small', 'affectionate and playful cat', true, true, false,
-        true, 'none', 'none', 'abandoned', 'AVAILABLE', now(), now(), 2, 1, 150.3131313),
+        true, 'none', 'none', 'abandoned', 'RESERVED', now(), now(), 2, 1, 150.3131313),
 
        ('ben', 'dog', 'english bulldog', 'reddish brown', 4, 'MALE', 'tiny',
         'an emotional support bulldog that is very attached to its owner but doest do well with strangers', true, false,
@@ -162,7 +162,13 @@ INSERT INTO adoption_requests (adoption_applicant_username, requested_pet_id, st
                                request_message)
 VALUES ('msbear', 1, 'REJECTED', now(), now(), 'I think im a good fit for this pet'),
        ('msbear', 1, 'PENDING', now(), null, 'I would like to try again for this pet'),
-       ('jord', 2, 'APPROVED', now(), now(), 'I would like to adopt this pet');
+       ('jord', 2, 'APPROVED', now(), now(), 'I would like to adopt this pet'),
+       ('jord', 3, 'REJECTED', now(), now(), 'I would like to adopt this poor thing'),
+       ('msbear', 3, 'APPROVED', now(), now(), 'I would like to adopt this pet for my parents'),
+       ('admin', 4, 'PENDING', now(), null, 'I would like to adopt this pet for my kids'),
+       ('admin', 5, 'APPROVED', now(), now(), 'I would like to adopt this pet for my nephew'),
+       ('jord', 6, 'PENDING', now(), null, 'I would like to adopt this pet for my aunt');
+
 
 INSERT INTO donations (donation_amount, date_of_donation, date_of_last_update, donation_message, donator_username,
                        receiving_shelter_id)
@@ -191,4 +197,5 @@ VALUES (8, true, true, true, false, true,
        (8, false, true, true, true, false,
         5, now(), now(), 'siamese', 'cream and brown',
         'msbear', 'a shy but affectionate cat.', 'FEMALE', 'bella', 'small', 'cat');
+
 
