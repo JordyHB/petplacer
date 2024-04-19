@@ -41,7 +41,18 @@ VALUES
  true,
  now(),
  now(),
- '$2a$12$56kTXHcE78Hyt9PgnU/GdOtD7xo5YAcBWFGE9nGljfYPPxkX9RWZi');
+ '$2a$12$56kTXHcE78Hyt9PgnU/GdOtD7xo5YAcBWFGE9nGljfYPPxkX9RWZi'),
+
+--     password is appel
+('basictestuser',
+ 'basic',
+ 'user',
+ 'testuser@email.com',
+ '0612345678',
+ true,
+ now(),
+ now(),
+ '$2a$12$6TNY.DR2nAWYbFbckJ/OqOvDw2gQgz0327qgHstka1OG3dsOmrLcG');
 
 
 
@@ -52,6 +63,7 @@ VALUES ('admin', 'ROLE_USER'),
        ('jord', 'ROLE_USER'),
        ('jord', 'ROLE_SHELTER_MANAGER'),
        ('deletableuser', 'ROLE_USER'),
+       ('basictestuser', 'ROLE_USER'),
        ('msbear', 'ROLE_SHELTER_MANAGER'),
        ('admin', 'ROLE_SHELTER_MANAGER');
 
@@ -95,6 +107,19 @@ values ('animal shelter the farm',
         'small animal rooms, rabbit runs, outdoor enclosures, volunteer training center',
         'tuesday to saturday: 11:00 - 16:00',
         now(),
+        now()),
+
+       ('cozy test shelter',
+        '0611223344',
+        'info@cozycorner.org',
+        '23 maple street',
+        'haren',
+        '5611xr',
+        'cozy test has a lot of pets',
+        'www.cozycorner.org',
+        'small animal rooms, rabbit runs, outdoor enclosures, volunteer training center',
+        'tuesday to saturday: 11:00 - 16:00',
+        now(),
         now());
 
 
@@ -102,7 +127,8 @@ INSERT INTO shelter_managers (user_id, shelter_id)
 VALUES ('jord', 1),
        ('admin', 1),
        ('msbear', 2),
-       ('admin', 3);
+       ('admin', 3),
+       ('jord', 4);
 
 
 INSERT INTO shelter_pets (name, species, breed, color, age, gender, size, description, spayed_neutered, good_with_kids,
