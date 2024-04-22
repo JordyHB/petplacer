@@ -6,6 +6,7 @@ import nl.jordy.petplacer.dtos.patch.AdoptionRequestPatchDTO;
 import nl.jordy.petplacer.dtos.patch.AdoptionRequestStatusPatchDTO;
 import nl.jordy.petplacer.enums.AdoptionRequestStatus;
 import nl.jordy.petplacer.enums.ShelterPetStatus;
+import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.helpers.modalmapper.ModelMapperHelper;
 import nl.jordy.petplacer.models.AdoptionRequest;
@@ -38,9 +39,17 @@ public class AdoptionRequestService {
     }
 
     public AdoptionRequest fetchAdoptionRequestById(Long id) {
-        return adoptionRequestRepository.findById(id).orElseThrow(
+
+        AdoptionRequest adoptionRequest = adoptionRequestRepository.findById(id).orElseThrow(
                 () -> new RecordNotFoundException("No adoption request found with id: " + id)
         );
+
+        // blocks access to the adoption request if the user is not the applicant, an admin or the shelter manager
+        if (!accessValidator.canAccessAdoptionInfo(accessValidator.getAuth(), adoptionRequest)) {
+            throw new CustomAccessDeniedException();
+        }
+
+        return adoptionRequest;
     }
 
     public AdoptionRequestOutputDTO registerAdoptionRequest(
@@ -64,7 +73,8 @@ public class AdoptionRequestService {
         List<AdoptionRequest> adoptionRequests = adoptionRequestRepository.findAll();
 
         return adoptionRequests.stream()
-                .map(adoptionRequest -> ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class))
+                .map(adoptionRequest ->
+                        ModelMapperHelper.getModelMapper().map(adoptionRequest, AdoptionRequestOutputDTO.class))
                 .toList();
     }
 
