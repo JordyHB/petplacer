@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccessValidator {
 
-
     public Authentication getAuth() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
     public boolean isAdmin(Authentication userAuth) {
+        // returns true if the user is an admin
         return userAuth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
@@ -31,6 +31,7 @@ public class AccessValidator {
     }
 
     public boolean isSheltersManagerOrAdminFilterOnly(Authentication userAuth, Shelter requestedShelter) {
+        // returns true if the user is the shelter manager or an admin
         return requestedShelter.getManagers()
                 .stream()
                 .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
@@ -38,7 +39,7 @@ public class AccessValidator {
     }
 
     public void isSheltersManagerOrAdmin(Authentication userAuth, Shelter requestedShelter) {
-        // will throw a 403 if the user is not the shelter manager or an admin
+        // will throw a 403 if the user is not a shelter manager or an admin
         if (userAuth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER")) &&
                 !isAdmin(userAuth)) {
 
@@ -47,7 +48,6 @@ public class AccessValidator {
 
 //         will throw a 403 if the user is not in the managers list of the shelter or an admin
         if (!isAdmin(userAuth) &&
-                // fetches the shelter and checks if the user is in the managers list
                 requestedShelter.getManagers()
                         // loops through the managers list and checks if the user is in the list
                         .stream().noneMatch(a -> a.getUsername().equals(userAuth.getName()))) {
@@ -57,19 +57,23 @@ public class AccessValidator {
     }
 
     public boolean canAccessAdoptionInfo(Authentication userAuth, AdoptionRequest adoptionRequest) {
-        // checks if the user is an admin the shelter manager or the applicant
+        // returns true if the user is an admin, the shelter manager, or the applicant
         return isAdmin(userAuth) ||
+                // checks if the user is in the managers list of the shelter
                 adoptionRequest.
                         getRequestedPet().getShelter().getManagers()
                         .stream()
                         .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
+                // checks if the user is the applicant
                 adoptionRequest.getAdoptionApplicant().getUsername().equals(userAuth.getName());
     }
 
     public boolean canAccessDonationInfo(Authentication userAuth, Donation donation) {
-        // checks if the user is an admin the shelter manager or the donator
+        // returns true if the user is an admin, the shelter manager, or the donator
         return isAdmin(userAuth) ||
+                // checks if the user is in the managers list of the shelter
                 isSheltersManagerOrAdminFilterOnly(userAuth, donation.getReceivingShelter()) ||
+                // checks if the user is the donator
                 donation.getDonator().getUsername().equals(userAuth.getName());
     }
 }

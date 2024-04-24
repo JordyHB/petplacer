@@ -44,7 +44,9 @@ public class AdoptionRequestSpecification implements Specification<AdoptionReque
         }
 
         if (applicantName != null) {
-            predicates.add(criteriaBuilder.like(root.get("adoptionApplicant").get("username"), "%" + applicantName + "%"));
+            predicates.add(
+                    criteriaBuilder.like(root.get("adoptionApplicant").get("username"), "%" + applicantName + "%")
+            );
         }
 
         if (petID != null) {
@@ -57,6 +59,4 @@ public class AdoptionRequestSpecification implements Specification<AdoptionReque
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
-
-
 }
