@@ -61,6 +61,4 @@ public class DonationSpecification implements Specification<Donation> {
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
-
-
 }

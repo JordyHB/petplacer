@@ -19,6 +19,7 @@ public class AdoptionRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // blocks the setter for ID
     @Setter(AccessLevel.NONE)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     @ManyToOne

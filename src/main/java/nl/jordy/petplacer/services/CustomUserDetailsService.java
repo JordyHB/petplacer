@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-
     private final UserRepository userRepository;
 
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -25,12 +24,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws BadLoginException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new BadLoginException("User not found or password is incorrect"));
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new BadLoginException("User not found or password is incorrect")
+        );
+
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Authority authority : user.getAuthorities()) {
             grantedAuthorities.add((new SimpleGrantedAuthority(authority.getAuthority())));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), grantedAuthorities
+        );
     }
 }

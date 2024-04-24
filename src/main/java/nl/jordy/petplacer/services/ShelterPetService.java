@@ -45,9 +45,8 @@ public class ShelterPetService {
 
     public ShelterPetOutputDTO registerNewShelterPet(Long shelterID, ShelterPetInputDTO shelterPetInputDTO) {
 
-        // Maps the DTO and adds a timestamp of arrival;
+        // prepares the shelterPet object to be saved
         ShelterPet shelterPet = ModelMapperHelper.getModelMapper().map(shelterPetInputDTO, ShelterPet.class);
-
         Shelter shelter = shelterService.fetchShelterByID(shelterID);
 
         accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
@@ -149,5 +148,4 @@ public class ShelterPetService {
         shelterPetRepository.save(shelterPet);
         return ModelMapperHelper.getModelMapper().map(shelterPet, ShelterPetOutputDTO.class);
     }
-
 }

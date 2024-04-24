@@ -17,6 +17,7 @@ public class UserOwnedPet extends Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // blocks the setter for ID
     @Setter(AccessLevel.NONE)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     private boolean isAdopted;

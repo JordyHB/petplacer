@@ -1,12 +1,13 @@
 package nl.jordy.petplacer.dtos.input;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import nl.jordy.petplacer.enums.GenderEnum;
 import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
-@Data
+@Getter
+@Setter
 public class PetInputDTO {
     @NotBlank(message = "Name is required")
     @Size(max = 20, message = "Name should be less than 20 characters")
@@ -25,6 +26,7 @@ public class PetInputDTO {
     private String color;
 
     @Min(value = 0, message = "Age must be 0 or greater")
+    @Max(value = 200, message = "Age must be 200 or less")
     private int age;
 
     @NotNull(message = "gender is required")

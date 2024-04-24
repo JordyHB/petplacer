@@ -18,12 +18,14 @@ public class ShelterPet extends Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     @ValidEnumValue(enumClass = ShelterPetStatus.class)
     @Enumerated(EnumType.STRING)
     private ShelterPetStatus status = ShelterPetStatus.AVAILABLE;
 
+    @Column(nullable = false)
     private BigDecimal adoptionFee;
     private Date dateOfRegistration = new Date();
     private Date dateOfLastUpdate = new Date();

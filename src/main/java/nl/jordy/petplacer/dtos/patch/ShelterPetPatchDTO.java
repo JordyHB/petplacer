@@ -27,5 +27,4 @@ public class ShelterPetPatchDTO extends PetPatchDTO {
 
     @Size(max = 500, message = "Previous situation message is too long")
     private String previousSituation;
-
 }

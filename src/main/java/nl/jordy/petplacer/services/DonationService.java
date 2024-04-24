@@ -45,6 +45,7 @@ public class DonationService {
 
     public DonationOutputDTO makeDonation(Long shelterID, DonationInputDTO donationInputDTO) {
 
+        //prepares all the necessary data for the donation
         Shelter shelter = shelterService.fetchShelterByID(shelterID);
         Donation donation = ModelMapperHelper.getModelMapper().map(donationInputDTO, Donation.class);
         User user = userService.fetchUserByUsername(accessValidator.getAuth().getName());
@@ -114,6 +115,7 @@ public class DonationService {
 
     public String deleteDonationById(Long donationID) throws CustomAccessDeniedException {
 
+        // blocks non admins from deleting donations and returns a 401
         if (accessValidator.isAdmin(accessValidator.getAuth())) {
             Donation donation = fetchDonationByID(donationID);
 
@@ -124,5 +126,4 @@ public class DonationService {
             throw new CustomAccessDeniedException("Only admins can delete donations");
         }
     }
-
 }

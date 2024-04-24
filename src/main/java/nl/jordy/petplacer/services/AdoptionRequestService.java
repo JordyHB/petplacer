@@ -60,6 +60,7 @@ public class AdoptionRequestService {
         AdoptionRequest adoptionRequest =
                 ModelMapperHelper.getModelMapper().map(adoptionRequestInputDTO, AdoptionRequest.class);
 
+        // sets the applicant and the requested pet
         adoptionRequest.setAdoptionApplicant(userService.fetchUserByUsername(accessValidator.getAuth().getName()));
         adoptionRequest.setRequestedPet(shelterPetService.fetchShelterPetByID(shelterPetID));
 
@@ -101,12 +102,14 @@ public class AdoptionRequestService {
 
         List<AdoptionRequest> adoptionRequests = adoptionRequestRepository.findAll(adoptionRequestSpecification);
 
+        // returns only the adoption requests that the user has access to
         return adoptionRequests.stream()
                 .filter(adoptionRequest ->
                         accessValidator.canAccessAdoptionInfo(
                                 accessValidator.getAuth(), adoptionRequest
                         ))
                 .map(
+                        // maps the permitted adoption requests to the output DTO
                         adoptionRequest -> ModelMapperHelper.getModelMapper()
                                 .map(adoptionRequest, AdoptionRequestOutputDTO.class))
                 .toList();
@@ -130,6 +133,9 @@ public class AdoptionRequestService {
 
         AdoptionRequest adoptionRequest = fetchAdoptionRequestById(adoptionRequestID);
 
+        // checks if the request is made by the user that owns the pet or an admin
+        accessValidator.isUserOrAdmin(accessValidator.getAuth(), adoptionRequest.getAdoptionApplicant().getUsername());
+
         adoptionRequestRepository.delete(adoptionRequest);
 
         return "Adoption request with id: " + adoptionRequestID + " has been deleted";
@@ -152,6 +158,7 @@ public class AdoptionRequestService {
         } else if (adoptionRequestStatusPatchDTO.getStatus().name().equals("REJECTED")) {
             adoptionRequest.getRequestedPet().setStatus(ShelterPetStatus.AVAILABLE);
         } else {
+            // if the status is pending, the pet is set to available
             adoptionRequest.getRequestedPet().setStatus(ShelterPetStatus.AVAILABLE);
         }
 

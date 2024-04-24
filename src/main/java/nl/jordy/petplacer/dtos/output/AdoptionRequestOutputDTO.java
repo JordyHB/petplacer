@@ -25,5 +25,4 @@ public class AdoptionRequestOutputDTO implements HasFetchableId {
     private Date decisionDate;
     private UserSummaryDTO adoptionApplicant;
     private ShelterPetSummaryDTO requestedPet;
-
 }

@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
-import nl.jordy.petplacer.dtos.output.ShelterPetOutputDTO;
 
 import java.util.Date;
 import java.util.List;

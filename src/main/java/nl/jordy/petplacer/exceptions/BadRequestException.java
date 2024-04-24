@@ -18,7 +18,6 @@ public class BadRequestException extends RuntimeException {
 
     private static String buildErrorMessage(BindingResult bindingResult) {
         StringBuilder errors = new StringBuilder();
-        System.out.println(bindingResult.getAllErrors());
         // loops through all the errors transforming them into a pretty string
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             errors.append(fieldError.getField())

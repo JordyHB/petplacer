@@ -45,7 +45,6 @@ public class AdoptionRequestController {
             @RequestParam(required = false) Long petID,
             @RequestParam(required = false) Long shelterID
     ) {
-
         return ResponseEntity.ok(adoptionRequestService.findAdoptionRequestByParams(
                 status,
                 applicantName,
@@ -63,7 +62,8 @@ public class AdoptionRequestController {
             BindingResult bindingResult
     ) {
         CheckBindingResult.checkBindingResult(bindingResult);
-        return ResponseEntity.ok(adoptionRequestService.updateAdoptionRequestById(adoptionRequestID, adoptionRequestPatchDTO));
+        return ResponseEntity.ok(
+                adoptionRequestService.updateAdoptionRequestById(adoptionRequestID, adoptionRequestPatchDTO));
     }
 
     @PatchMapping("/{adoptionRequestID}/status")
@@ -73,7 +73,6 @@ public class AdoptionRequestController {
             @RequestBody AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO,
             BindingResult bindingResult
     ) {
-
         CheckBindingResult.checkBindingResult(bindingResult);
         return ResponseEntity.ok(
                 adoptionRequestService.makeAdoptionRequestDecision(adoptionRequestID, adoptionRequestStatusPatchDTO)
@@ -85,5 +84,4 @@ public class AdoptionRequestController {
     public ResponseEntity<String> deleteAdoptionRequestByID(@PathVariable Long adoptionRequestID) {
         return ResponseEntity.ok(adoptionRequestService.deleteAdoptionRequestById(adoptionRequestID));
     }
-
 }

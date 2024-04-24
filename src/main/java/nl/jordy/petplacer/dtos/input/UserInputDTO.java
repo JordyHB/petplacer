@@ -1,10 +1,12 @@
 package nl.jordy.petplacer.dtos.input;
 
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 public class UserInputDTO {
 
     @NotBlank(message = "Username is required")

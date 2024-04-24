@@ -2,7 +2,6 @@ package nl.jordy.petplacer.controllers;
 
 import jakarta.validation.Valid;
 import nl.jordy.petplacer.dtos.input.DonationInputDTO;
-import nl.jordy.petplacer.dtos.input.ShelterInputDTO;
 import nl.jordy.petplacer.dtos.input.ShelterPetInputDTO;
 import nl.jordy.petplacer.dtos.output.DonationOutputDTO;
 import nl.jordy.petplacer.dtos.output.ShelterOutputDTO;
@@ -45,7 +44,6 @@ public class ShelterController {
             @RequestBody ShelterPetInputDTO shelterPetInputDTO,
             BindingResult bindingResult
     ) {
-
         CheckBindingResult.checkBindingResult(bindingResult);
 
         ShelterPetOutputDTO shelterPetOutputDTO = shelterPetService.registerNewShelterPet(shelterID, shelterPetInputDTO);
@@ -60,8 +58,7 @@ public class ShelterController {
             @Valid
             @RequestBody DonationInputDTO donationInputDTO,
             BindingResult bindingResult
-            ) {
-
+    ) {
         CheckBindingResult.checkBindingResult(bindingResult);
 
         DonationOutputDTO donationOutputDTO = donationService.makeDonation(shelterID, donationInputDTO);
@@ -103,7 +100,6 @@ public class ShelterController {
         return ResponseEntity.ok(shelterService.addManagerToShelter(shelterID, username));
     }
 
-
     // Patch
     @PatchMapping("/{shelterID}")
     public ResponseEntity<ShelterOutputDTO> updateShelterByID(
@@ -112,12 +108,9 @@ public class ShelterController {
             @RequestBody ShelterPatchDTO shelterPatchDTO,
             BindingResult bindingResult
     ) {
-
         CheckBindingResult.checkBindingResult(bindingResult);
-
         return ResponseEntity.ok(shelterService.updateShelterByID(shelterID, shelterPatchDTO));
     }
-
 
     // Deletes
     @DeleteMapping("/{shelterID}")
@@ -132,5 +125,4 @@ public class ShelterController {
     ) {
         return ResponseEntity.ok(shelterService.removeManagerFromShelter(shelterID, username));
     }
-
 }

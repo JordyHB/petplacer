@@ -49,10 +49,12 @@ public class ShelterService {
 
     public void validateShelterNameUnique(Object shelterDTO) {
 
+        // handles cases where the DTO is not an instance of a shelter input or patch dto
         if (!(shelterDTO instanceof ShelterInputDTO) && !(shelterDTO instanceof ShelterPatchDTO)) {
             throw new IllegalArgumentException("ShelterDTO is not an instance of ShelterInputDTO");
         }
 
+        // if else statement to ensure it the function works for both ShelterInputDTO and ShelterPatchDTO
         String shelterName;
         if (shelterDTO instanceof ShelterInputDTO) {
             shelterName = ((ShelterInputDTO) shelterDTO).getShelterName();
@@ -78,6 +80,7 @@ public class ShelterService {
         shelter.getManagers().add(user);
         shelterRepository.save(shelter);
 
+        // Adds the manager role to the user if they don't already have it
         if (!authChecker.fetchedUserHasAuthority(user, "ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
             userService.saveUser(user);
@@ -141,7 +144,9 @@ public class ShelterService {
                 user.removeAuthority(user.getAuthorities().stream()
                         .filter(a -> a.getAuthority().equals("ROLE_SHELTER_MANAGER"))
                         .findFirst()
-                        .orElseThrow(() -> new RecordNotFoundException("User: " + user.getUsername() + " is not a manager"))
+                        .orElseThrow(
+                                () -> new RecordNotFoundException("User: " + user.getUsername() + " is not a manager")
+                        )
                 );
                 userService.saveUser(user);
             }
@@ -161,6 +166,7 @@ public class ShelterService {
         shelter.getManagers().add(user);
         shelter.setDateOfLastUpdate(new Date());
 
+        // Adds the manager role to the user if they don't already have it
         if (!authChecker.fetchedUserHasAuthority(user, "ROLE_SHELTER_MANAGER")) {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_SHELTER_MANAGER"));
             userService.saveUser(user);
@@ -172,16 +178,17 @@ public class ShelterService {
 
     public ShelterOutputDTO removeManagerFromShelter(Long shelterID, String username) {
 
-
         Shelter shelter = fetchShelterByID(shelterID);
 
         accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelter);
 
         User user = userService.fetchUserByUsername(username);
 
+        // Checks if the user is a manager of the shelter
         if (!shelter.getManagers().contains(user)) {
             throw new RecordNotFoundException("User: " + username + " is not a manager of Shelter: " + shelterID);
-        } else if (shelter.getManagers().size() == 1) {
+        } // Checks if the shelter has at least one manager
+        else if (shelter.getManagers().size() == 1) {
             throw new IllegalArgumentException("Shelter: " + shelterID + " must have at least one manager");
         }
 

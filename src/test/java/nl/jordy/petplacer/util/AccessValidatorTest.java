@@ -5,7 +5,6 @@ import nl.jordy.petplacer.models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -369,5 +368,4 @@ class AccessValidatorTest {
         // Assert
         assertFalse(result, "The user is not a manager for this shelter.");
     }
-
 }

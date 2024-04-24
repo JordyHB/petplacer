@@ -17,6 +17,7 @@ public class Donation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,6 +26,7 @@ public class Donation {
     @ManyToOne()
     private Shelter receivingShelter;
 
+    @Column(nullable = false)
     private BigDecimal donationAmount;
     private String donationMessage;
     private Date dateOfDonation = new Date();

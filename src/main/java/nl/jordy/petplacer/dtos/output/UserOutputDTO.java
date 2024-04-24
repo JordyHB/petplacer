@@ -1,10 +1,7 @@
 package nl.jordy.petplacer.dtos.output;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.dtos.summary.AdoptionRequestSummaryDTO;
@@ -12,7 +9,6 @@ import nl.jordy.petplacer.dtos.summary.DonationSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.ShelterSummaryDTO;
 import nl.jordy.petplacer.dtos.summary.UserOwnedPetSummaryDTO;
 import nl.jordy.petplacer.models.Authority;
-import nl.jordy.petplacer.models.UserOwnedPet;
 
 import java.util.Date;
 import java.util.List;
