@@ -8,6 +8,7 @@ import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.interfaces.AuthorityChecker;
 import nl.jordy.petplacer.models.Authority;
+import nl.jordy.petplacer.models.Shelter;
 import nl.jordy.petplacer.models.User;
 import nl.jordy.petplacer.repositories.UserRepository;
 import nl.jordy.petplacer.specifications.UserSpecification;
@@ -18,6 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -29,15 +32,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-
-    private User getTestUser(String name) {
-        User user = new User();
-        user.setUsername(name);
-        user.setEmail("test@gmail.com");
-        user.setFirstName("dummy");
-        user.setLastName("tester");
-        return user;
-    }
 
     @Mock
     UserRepository userRepository;
@@ -51,8 +45,20 @@ class UserServiceTest {
     @Mock
     AuthorityChecker authChecker;
 
+    @Mock
+    ShelterService shelterService;
+
     @InjectMocks
     UserService userService;
+
+    private User getTestUser(String name) {
+        User user = new User();
+        user.setUsername(name);
+        user.setEmail("test@gmail.com");
+        user.setFirstName("dummy");
+        user.setLastName("tester");
+        return user;
+    }
 
     @DisplayName("Fetch user by username")
     @Test
@@ -230,7 +236,7 @@ class UserServiceTest {
         verify(accessValidator).isUserOrAdmin(any(), eq(username));
     }
 
-    @DisplayName("Delete user by username")
+    @DisplayName("Delete user by username no managed shelters")
     @Test
     void deleteUserByUsername() {
         // Arrange
@@ -245,6 +251,30 @@ class UserServiceTest {
         // Assert
         verify(userRepository).delete(user);
         verify(accessValidator).isUserOrAdmin(any(), eq(username));
+    }
+
+    @DisplayName("Delete user by username with managed shelters")
+    @Test
+    void deleteUserByUsernameManagedShelters() {
+        // Arrange
+        String username = "test";
+        User user = getTestUser("test");
+        Shelter shelter = new Shelter();
+        shelter.getManagers().add(user);
+        user.getManagedShelters().add(shelter);
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        doNothing().when(shelterService).saveShelter(any(Shelter.class));
+        doNothing().when(shelterService).deleteShelterByIDNoChecks(shelter.getId());
+
+        // Act
+        userService.deleteUserByUsername(username);
+
+        // Assert
+        verify(userRepository).delete(user);
+        verify(accessValidator).isUserOrAdmin(any(), eq(username));
+        verify(shelterService).saveShelter(shelter);
+        verify(shelterService).deleteShelterByIDNoChecks(shelter.getId());
 
     }
 
