@@ -1,7 +1,6 @@
 package nl.jordy.petplacer.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum AdoptionRequestStatus {
 
@@ -12,6 +11,7 @@ public enum AdoptionRequestStatus {
 
     @JsonCreator
     public static AdoptionRequestStatus valueOfOrDefault(String value) {
+        // catch illegal argument exception when being deserialized and sets it to invalid to handle invalid values later
         try {
             return valueOf(value);
         } catch (IllegalArgumentException e) {

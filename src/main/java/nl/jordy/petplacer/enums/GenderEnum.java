@@ -11,6 +11,7 @@ public enum GenderEnum {
 
     @JsonCreator
     public static GenderEnum valueOfOrDefault(String value) {
+        // catch illegal argument exception when being deserialized and sets it to invalid to handle invalid values later
         try {
             return valueOf(value);
         } catch (IllegalArgumentException e) {
