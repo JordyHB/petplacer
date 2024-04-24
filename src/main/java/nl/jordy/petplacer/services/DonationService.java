@@ -62,11 +62,7 @@ public class DonationService {
 
         return donations.stream()
                 // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
-                .filter(donation -> accessValidator.isSheltersManagerOrAdminFilterOnly(
-                                accessValidator.getAuth(),
-                                donation.getReceivingShelter()
-                        )
-                                || donation.getDonator().getUsername().equals(accessValidator.getAuth().getName())
+                .filter(donation -> accessValidator.canAccessDonationInfo(accessValidator.getAuth(), donation)
                 )
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();
@@ -76,7 +72,10 @@ public class DonationService {
 
         Donation donation = fetchDonationByID(donationID);
 
-        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), donation.getReceivingShelter());
+        // returns a 401 if user is not the donator of the donation, an admin or the manager of the shelter that received the donation
+        if (!accessValidator.canAccessDonationInfo(accessValidator.getAuth(), donation)) {
+            throw new CustomAccessDeniedException();
+        }
 
         return ModelMapperHelper.getModelMapper().map(fetchDonationByID(donationID), DonationOutputDTO.class);
     }
@@ -93,11 +92,7 @@ public class DonationService {
                 .stream()
                 // filters out donations that the user is not the donator of, unless the user is an admin or the shelter manager
                 .filter(
-                        donation -> accessValidator.isSheltersManagerOrAdminFilterOnly(
-                                accessValidator.getAuth(),
-                                donation.getReceivingShelter()
-                        )
-                                || donation.getDonator().getUsername().equals(accessValidator.getAuth().getName())
+                        donation -> accessValidator.canAccessDonationInfo(accessValidator.getAuth(), donation)
                 )
                 .map(donation -> ModelMapperHelper.getModelMapper().map(donation, DonationOutputDTO.class))
                 .toList();

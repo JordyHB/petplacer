@@ -2,6 +2,7 @@ package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
 import nl.jordy.petplacer.models.AdoptionRequest;
+import nl.jordy.petplacer.models.Donation;
 import nl.jordy.petplacer.models.Shelter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,5 +64,12 @@ public class AccessValidator {
                         .stream()
                         .anyMatch(a -> a.getUsername().equals(userAuth.getName())) ||
                 adoptionRequest.getAdoptionApplicant().getUsername().equals(userAuth.getName());
+    }
+
+    public boolean canAccessDonationInfo(Authentication userAuth, Donation donation) {
+        // checks if the user is an admin the shelter manager or the donator
+        return isAdmin(userAuth) ||
+                isSheltersManagerOrAdminFilterOnly(userAuth, donation.getReceivingShelter()) ||
+                donation.getDonator().getUsername().equals(userAuth.getName());
     }
 }
