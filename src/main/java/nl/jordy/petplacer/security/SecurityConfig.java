@@ -69,12 +69,12 @@ public class SecurityConfig {
                                 .requestMatchers("/shelters/*/donations").hasAuthority("ROLE_USER")
 
                                 .requestMatchers(HttpMethod.GET, "/shelterpets/**").permitAll()
-                                .requestMatchers("/shelterpets/*").permitAll()
+                                .requestMatchers("/shelterpets/*").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
                                 .requestMatchers("/shelterpets/*/adoptionrequests").hasAuthority("ROLE_USER")
                                 .requestMatchers("/shelterpets/*/status").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
                                 .requestMatchers("/shelterpets/*/image").hasAnyAuthority("ROLE_SHELTER_MANAGER", "ROLE_ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/donations").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/donations").hasAuthority("ROLE_USER")
                                 .requestMatchers("/donations/*").hasAuthority("ROLE_USER")
 
                                 .requestMatchers("/ownedpets").hasAuthority("ROLE_ADMIN")
@@ -88,6 +88,7 @@ public class SecurityConfig {
                                 .requestMatchers("/adoptionrequests/*/status").hasAnyAuthority("ROLE_ADMIN", "ROLE_SHELTER_MANAGER")
 
                                 .requestMatchers("/images").hasAuthority("ROLE_USER")
+                                .requestMatchers(HttpMethod.GET, "/images/*").permitAll()
                                 .requestMatchers("/images/*").hasAuthority("ROLE_USER")
 
                                 .anyRequest().denyAll()

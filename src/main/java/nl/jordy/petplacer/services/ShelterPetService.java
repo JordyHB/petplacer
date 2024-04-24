@@ -116,6 +116,8 @@ public class ShelterPetService {
 
         ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
 
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
+
         ModelMapperHelper.getModelMapper().map(shelterPetPatchDTO, shelterPet);
 
         shelterPetRepository.save(shelterPet);
@@ -123,6 +125,11 @@ public class ShelterPetService {
     }
 
     public String deleteShelterPetByID(Long shelterPetID) {
+
+        ShelterPet shelterPet = fetchShelterPetByID(shelterPetID);
+
+        accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
+
         // uses private method to fetch and validate the user exists
         shelterPetRepository.delete(fetchShelterPetByID(shelterPetID));
         return "Shelter Pet: " + shelterPetID + " has been successfully deleted.";

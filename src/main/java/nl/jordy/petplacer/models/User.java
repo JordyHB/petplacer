@@ -42,22 +42,22 @@ public class User {
 
 
     @ManyToMany(mappedBy = "managers", fetch = FetchType.LAZY)
-    private List<Shelter> managedShelters;
+    private List<Shelter> managedShelters = new ArrayList<>();
 
     @OneToMany(mappedBy = "currentOwner",
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
-    private List<UserOwnedPet> pets;
+    private List<UserOwnedPet> pets = new ArrayList<>();
 
     @OneToMany(mappedBy = "donator",
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
-    private List<Donation> donations;
+    private List<Donation> donations = new ArrayList<>();
 
     @OneToMany(mappedBy = "adoptionApplicant",
             cascade = CascadeType.REMOVE,
             orphanRemoval = true)
-    private List<AdoptionRequest> adoptionRequests;
+    private List<AdoptionRequest> adoptionRequests = new ArrayList<>();
 
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);

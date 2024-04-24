@@ -1,10 +1,7 @@
 package nl.jordy.petplacer.util;
 
 import nl.jordy.petplacer.exceptions.CustomAccessDeniedException;
-import nl.jordy.petplacer.models.AdoptionRequest;
-import nl.jordy.petplacer.models.Shelter;
-import nl.jordy.petplacer.models.ShelterPet;
-import nl.jordy.petplacer.models.User;
+import nl.jordy.petplacer.models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -285,4 +282,92 @@ class AccessValidatorTest {
         // Assert
         assertFalse(result, "The user should not be a manager, applicant or admin");
     }
+
+    @DisplayName("can access donation info as admin")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Test
+    void canAccessDonationInfoAsAdmin() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Donation donation = new Donation();
+        User donator = new User();
+        donator.setUsername("donator");
+        donation.setDonator(donator);
+
+        // Act
+        boolean result = accessValidator.canAccessDonationInfo(authentication, donation);
+
+        // Assert
+        assertTrue(result, "The user should be an admin");
+    }
+
+    @DisplayName("can access donation info as donator")
+    @WithMockUser(username = "donatorUsername")
+    @Test
+    void canAccessDonationInfoAsDonator() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Donation donation = new Donation();
+        Shelter receivingShelter = new Shelter();
+        User randomUser = new User();
+        randomUser.setUsername("randomUser");
+        receivingShelter.setManagers(List.of(randomUser));
+        User donator = new User();
+        donator.setUsername("donatorUsername");
+        donation.setDonator(donator);
+        donation.setReceivingShelter(receivingShelter);
+
+        // Act
+        boolean result = accessValidator.canAccessDonationInfo(authentication, donation);
+
+        // Assert
+        assertTrue(result, "The user should be the donator");
+    }
+
+    @DisplayName("can access donation info as shelter manager")
+    @WithMockUser(username = "manager", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void canAccessDonationInfoAsShelterManager() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Donation donation = new Donation();
+        Shelter receivingShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("manager");
+        receivingShelter.setManagers(List.of(manager));
+        User donator = new User();
+        donator.setUsername("donator");
+        donation.setDonator(donator);
+        donation.setReceivingShelter(receivingShelter);
+
+        // Act
+        boolean result = accessValidator.canAccessDonationInfo(authentication, donation);
+
+        // Assert
+        assertTrue(result, "The user should be the shelter manager");
+    }
+
+    @DisplayName("can access donation info as shelter manager, no match")
+    @WithMockUser(username = "different_manager", roles = {"USER", "SHELTER_MANAGER"})
+    @Test
+    void canAccessDonationInfoAsShelterManagerNoMatch() {
+        // Arrange
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Donation donation = new Donation();
+        Shelter receivingShelter = new Shelter();
+        User manager = new User();
+        manager.setUsername("manager");
+        receivingShelter.setManagers(List.of(manager));
+        User donator = new User();
+        donator.setUsername("donator");
+        donation.setDonator(donator);
+        donation.setReceivingShelter(receivingShelter);
+
+        // Act
+        boolean result = accessValidator.canAccessDonationInfo(authentication, donation);
+
+        // Assert
+        assertFalse(result, "The user is not a manager for this shelter.");
+    }
+
 }

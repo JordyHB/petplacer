@@ -3,7 +3,6 @@ package nl.jordy.petplacer.helpers;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import nl.jordy.petplacer.exceptions.BadRequestException;
-import nl.jordy.petplacer.exceptions.RecordNotFoundException;
 import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 import java.util.Arrays;
