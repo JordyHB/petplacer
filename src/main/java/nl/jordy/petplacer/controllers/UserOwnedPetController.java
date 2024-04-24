@@ -28,7 +28,6 @@ public class UserOwnedPetController {
         this.imageService = imageService;
     }
 
-
     // Gets
     @GetMapping()
     public ResponseEntity<List<UserOwnedPetOutputDTO>> getAllUserOwnedPets() {

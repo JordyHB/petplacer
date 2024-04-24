@@ -56,15 +56,13 @@ public class DonationController {
             @RequestBody DonationPatchDTO donationPatchDTO,
             BindingResult bindingResult
     ) {
-
         CheckBindingResult.checkBindingResult(bindingResult);
-
         return ResponseEntity.ok(donationService.updateDonationById(donationID, donationPatchDTO));
     }
 
     // Deletes
     @DeleteMapping("/{donationID}")
     public ResponseEntity<String> deleteDonation(@PathVariable Long donationID) {
-      return ResponseEntity.ok(donationService.deleteDonationById(donationID));
+        return ResponseEntity.ok(donationService.deleteDonationById(donationID));
     }
 }

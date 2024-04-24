@@ -11,7 +11,6 @@ import nl.jordy.petplacer.enums.ShelterPetStatus;
 import nl.jordy.petplacer.helpers.BuildUri;
 import nl.jordy.petplacer.helpers.CheckBindingResult;
 import nl.jordy.petplacer.interfaces.ValidEnumValue;
-import nl.jordy.petplacer.models.AdoptionRequest;
 import nl.jordy.petplacer.services.AdoptionRequestService;
 import nl.jordy.petplacer.services.ImageService;
 import nl.jordy.petplacer.services.ShelterPetService;
@@ -32,9 +31,10 @@ public class ShelterPetController {
     private final AdoptionRequestService adoptionRequestService;
     private final ImageService imageService;
 
-    public ShelterPetController(ShelterPetService shelterPetService,
-                                AdoptionRequestService adoptionRequestService,
-                                ImageService imageService
+    public ShelterPetController(
+            ShelterPetService shelterPetService,
+            AdoptionRequestService adoptionRequestService,
+            ImageService imageService
     ) {
         this.shelterPetService = shelterPetService;
         this.adoptionRequestService = adoptionRequestService;
@@ -49,7 +49,6 @@ public class ShelterPetController {
             @RequestBody AdoptionRequestInputDTO adoptionRequestInputDTO,
             BindingResult bindingResult
     ) {
-
         CheckBindingResult.checkBindingResult(bindingResult);
 
         AdoptionRequestOutputDTO adoptionRequestOutputDTO = adoptionRequestService
@@ -108,7 +107,6 @@ public class ShelterPetController {
         ));
     }
 
-
     // Puts
     @PutMapping("/{shelterPetID}/image")
     public ResponseEntity<String> updateImage(
@@ -120,7 +118,6 @@ public class ShelterPetController {
                 shelterPetService.fetchShelterPetByID(shelterPetID).getImage()
         ));
     }
-
 
     // Patch
     @PatchMapping("/{shelterPetID}")

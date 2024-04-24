@@ -4,7 +4,6 @@ import nl.jordy.petplacer.exceptions.BadLoginException;
 import nl.jordy.petplacer.security.LoginRequest;
 import nl.jordy.petplacer.security.LoginResponse;
 import nl.jordy.petplacer.services.JwtService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +21,6 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-
     private final JwtService jwtService;
 
     public AuthController(
@@ -45,7 +43,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
         } catch (BadCredentialsException exception) {
-            throw new BadLoginException("incorrect username or password");
+            throw new BadLoginException("User not found or password is incorrect");
         };
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
