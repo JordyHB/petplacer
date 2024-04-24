@@ -37,6 +37,7 @@ public class ImageService {
     private Image handleImageFile(MultipartFile imageFile) throws BadRequestException {
         Image image = new Image();
 
+        // catch exceptions that might occur from complex image data
         try {
             if (imageFile.isEmpty()) {
                 throw new BadRequestException("Image file is empty");
@@ -58,10 +59,13 @@ public class ImageService {
             throw new RecordNotFoundException("No image found to update");
         }
 
+        // checks if image belongs to a ShelterPet or UserOwnedPet before validating
         if (image.getShelterPet() != null) {
             accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), image.getShelterPet().getShelter());
         } else if (image.getUserOwnedPet() != null) {
-            accessValidator.isUserOrAdmin(accessValidator.getAuth(), image.getUserOwnedPet().getCurrentOwner().getUsername());
+            accessValidator.isUserOrAdmin(
+                    accessValidator.getAuth(), image.getUserOwnedPet().getCurrentOwner().getUsername()
+            );
         }
     }
 
@@ -83,6 +87,7 @@ public class ImageService {
         ShelterPet shelterPet = shelterPetService.fetchShelterPetByID(shelterPetID);
         accessValidator.isSheltersManagerOrAdmin(accessValidator.getAuth(), shelterPet.getShelter());
 
+        // handles people trying to upload multiple images to a ShelterPet
         if (shelterPet.getImage() != null) {
             throw new BadRequestException(
                     "ShelterPet already has an image, for updating use PUT /shelterpets/{shelterPetID}/image"
@@ -101,6 +106,7 @@ public class ImageService {
         UserOwnedPet userOwnedPet = userOwnedPetService.fetchUserOwnedPetById(userPetID);
         accessValidator.isUserOrAdmin(accessValidator.getAuth(), userOwnedPet.getCurrentOwner().getUsername());
 
+        // handles people trying to upload multiple images to a UserOwnedPet
         if (userOwnedPet.getImage() != null) {
             throw new BadRequestException(
                     "UserOwnedPet already has an image, for updating use PUT /ownedpets/{userPetID}/image"

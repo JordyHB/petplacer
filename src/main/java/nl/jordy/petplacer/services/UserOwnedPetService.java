@@ -25,7 +25,8 @@ public class UserOwnedPetService {
     public UserOwnedPetService(
             UserOwnedPetRepository userOwnedPetRepository,
             UserService userService,
-            AccessValidator accessValidator) {
+            AccessValidator accessValidator
+    ) {
         this.userOwnedPetRepository = userOwnedPetRepository;
         this.userService = userService;
         this.accessValidator = accessValidator;
