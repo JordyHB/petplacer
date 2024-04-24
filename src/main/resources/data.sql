@@ -196,6 +196,10 @@ VALUES (8, true, true, true, false, true,
 
        (8, false, true, true, true, false,
         5, now(), now(), 'siamese', 'cream and brown',
-        'msbear', 'a shy but affectionate cat.', 'FEMALE', 'bella', 'small', 'cat');
+        'msbear', 'a shy but affectionate cat.', 'FEMALE', 'bella', 'small', 'cat'),
+
+       (5, false, false, false, true, false,
+        1, now(), now(), 'mix', 'cream and brown',
+        'basictestuser', 'a grumpy cat.', 'FEMALE', 'brent', 'fat', 'cat');
 
 
