@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import nl.jordy.petplacer.enums.GenderEnum;
+import nl.jordy.petplacer.interfaces.ValidEnumValue;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class PetPatchDTO {
     @Min(value = 0, message = "Age must be 0 or greater")
     private int age;
 
-    //    @Pattern(regexp = "MALE|FEMALE|UKNOWN|OTHER", message="Gender must be MALE, FEMALE, UNKNOWN or OTHER")
+    @ValidEnumValue(enumClass = GenderEnum.class)
     private GenderEnum gender;
 
     @Size(max = 20, message = "Size should be less than 20 characters")

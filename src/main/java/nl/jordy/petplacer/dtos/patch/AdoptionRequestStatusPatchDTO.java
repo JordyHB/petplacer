@@ -11,5 +11,4 @@ public class AdoptionRequestStatusPatchDTO {
 
     @ValidEnumValue(enumClass = AdoptionRequestStatus.class)
     private AdoptionRequestStatus status;
-
 }

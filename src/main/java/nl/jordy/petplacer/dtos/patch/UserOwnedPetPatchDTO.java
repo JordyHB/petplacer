@@ -12,5 +12,4 @@ public class UserOwnedPetPatchDTO extends PetPatchDTO {
 
     @Min(value = 0, message = "years owned must be 0 or greater")
     private int yearsOwned;
-
 }
