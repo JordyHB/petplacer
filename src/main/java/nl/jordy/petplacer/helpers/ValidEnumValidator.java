@@ -17,6 +17,7 @@ public class ValidEnumValidator implements ConstraintValidator<ValidEnumValue, E
     @Override
     public void initialize(ValidEnumValue annotation) {
         enumClass = annotation.enumClass();
+        // Gets all valid values from the enum class excluding INVALID
         this.allowedValues = Arrays.stream(enumClass.getEnumConstants())
                 .filter(status -> !status.name().equals("INVALID"))
                 .map(Enum::name)
@@ -33,7 +34,7 @@ public class ValidEnumValidator implements ConstraintValidator<ValidEnumValue, E
         // Check if the value is INVALID
         if (value.name().equals("INVALID")) {
 
-            // catches @Validated and throws an exception
+            // catches @Validated specifically and throws an exception
             if (context.getDefaultConstraintMessageTemplate().equals("Invalid value. Must be any of: {enumClass}")) {
                 throw new BadRequestException(
                         "Invalid value for " + fieldName + ", must be any of: " + allowedValues
@@ -48,6 +49,7 @@ public class ValidEnumValidator implements ConstraintValidator<ValidEnumValue, E
             return false;
         }
 
+        // catches the cases from the DTOs and throws an exception
         try {
             Enum.valueOf(enumClass.asSubclass(Enum.class), value.name());
             return true;

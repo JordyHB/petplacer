@@ -8,7 +8,6 @@ import org.modelmapper.Condition;
 import org.modelmapper.spi.MappingContext;
 
 
-
 public class isAdminMapCondition implements Condition<DonationPatchDTO, Donation> {
 
     @Override
