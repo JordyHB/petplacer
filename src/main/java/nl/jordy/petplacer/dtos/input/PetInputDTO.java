@@ -26,6 +26,7 @@ public class PetInputDTO {
     private String color;
 
     @Min(value = 0, message = "Age must be 0 or greater")
+    @Max(value = 200, message = "Age must be 200 or less")
     private int age;
 
     @NotNull(message = "gender is required")

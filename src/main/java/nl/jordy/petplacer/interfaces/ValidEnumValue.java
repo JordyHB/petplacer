@@ -24,5 +24,4 @@ public @interface ValidEnumValue {
     Class<? extends Enum<?>> enumClass();
 
     String fieldName() default "field";
-
 }
