@@ -73,7 +73,7 @@ public class UserOwnedPetController {
     }
 
     // Puts
-    @PutMapping("/{petID}/image")
+    @PutMapping(value = "/{petID}/image", consumes = "multipart/form-data")
     public ResponseEntity<String> updateImage(
             @PathVariable Long petID,
             @RequestParam("image") MultipartFile imageFile
@@ -96,7 +96,7 @@ public class UserOwnedPetController {
         return ResponseEntity.ok(userOwnedPetService.updateUserOwnedPetById(petID, userOwnedPetPatchDTO));
     }
 
-    @PatchMapping("/{userPetID}/image")
+    @PatchMapping(value = "/{userPetID}/image", consumes = "multipart/form-data")
     public ResponseEntity<String> uploadImage(
             @PathVariable Long userPetID,
             @RequestParam("image") MultipartFile imageFile
